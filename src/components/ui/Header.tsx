@@ -4,10 +4,14 @@ export default function Header() {
       <nav>
         <ul className="flex gap-3 text-primaryText">
           <li>
-            <a className="cursor-pointer opacity-70 hover:opacity-100">Decks</a>
+            <a className="cursor-pointer opacity-70 hover:opacity-100 p-3 hover:bg-primary-200 rounded">
+              Decks
+            </a>
           </li>
           <li>
-            <a className="cursor-pointer opacity-70 hover:opacity-100">Dictionary</a>
+            <a className="cursor-pointer opacity-70 hover:opacity-100 p-3 hover:bg-primary-200 rounded">
+              Dictionary
+            </a>
           </li>
         </ul>
       </nav>

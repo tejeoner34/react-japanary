@@ -1,9 +1,9 @@
-import { DictionaryDSMockImpl } from '@/infrastructure/datas-sources/dictionary/dictionaryDSMockImpl';
+import { DictionaryDataSourceImpl } from '@/infrastructure/datas-sources/dictionary/dictionaryDataSourceImpl';
 import { SearchResult } from '@/models/dictionary/searchResult';
 import { initializeRepository } from '@/repositories/dictionary/dictionaryRespositoryImpl';
 import { useState } from 'react';
 
-const repository = initializeRepository(new DictionaryDSMockImpl());
+const repository = initializeRepository(new DictionaryDataSourceImpl());
 
 export const useDictionary = () => {
   const [searchedWordResult, setSearchedWordResult] = useState<SearchResult[]>([]);

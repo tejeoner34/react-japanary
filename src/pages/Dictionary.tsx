@@ -2,7 +2,7 @@ import Form from '@/components/ui/Form';
 import SearchResultsList from '@/components/ui/SearchResultsList';
 import { useDictionary } from '@/hooks/useDictionary';
 
-export default function Dictionary() {
+export default function DictionaryScreen() {
   const { searchWord, searchedWordResult } = useDictionary();
   const handleSearch = (word: string) => {
     console.log(word);

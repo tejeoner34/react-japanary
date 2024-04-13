@@ -9,8 +9,9 @@ const seeAlsoTpl = (seeAlso: string[]) =>
 
 const tagsTpl = (tags: string[]) => !!tags.length && <p>Tags: {tags.map((item) => item)}</p>;
 
-const meaningsTpl = (meanings: string[]) =>
-  meanings.map((definition) => <span className="font-semibold">{definition}, &nbsp;</span>);
+const meaningsTpl = (meanings: string[]) => (
+  <p className="font-semibold">{meanings.map((meaning) => `${meaning}, `)}</p>
+);
 
 export default function WordMeaningItem({ senses }: WordMeaningItemProps) {
   return (

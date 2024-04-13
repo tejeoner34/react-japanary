@@ -5,12 +5,12 @@ import LoginScreen from './pages/LoginScreen';
 import RegisterScreen from './pages/RegisterScreen';
 
 const router = createBrowserRouter([
+  // {
+  //   path: '/',
+  //   element: <DictionaryScreen />,
+  // },
   {
     path: '/',
-    element: <DictionaryScreen />,
-  },
-  {
-    path: '/login',
     element: <LoginScreen />,
   },
   {

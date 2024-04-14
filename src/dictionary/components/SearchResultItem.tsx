@@ -1,6 +1,6 @@
 import { SearchResult } from '@/models/dictionary/searchResult';
 import WordMeaningItem from './WordMeaningItem';
-import { Badge } from './badge';
+import { Badge } from '../../common/components/ui/badge';
 
 type SearchResultItemProps = {
   searchItem: SearchResult;

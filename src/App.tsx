@@ -1,8 +1,8 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import Header from './components/ui/Header';
-import DictionaryScreen from './pages/Dictionary';
-import LoginScreen from './pages/LoginScreen';
-import RegisterScreen from './pages/RegisterScreen';
+import Header from './common/components/ui/Header';
+import DictionaryScreen from './dictionary/pages/Dictionary';
+import LoginScreen from './auth/pages/LoginScreen';
+import RegisterScreen from './auth/pages/RegisterScreen';
 
 const router = createBrowserRouter([
   // {

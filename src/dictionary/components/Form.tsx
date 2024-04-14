@@ -1,5 +1,5 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
-import { Input } from './input';
+import { Input } from '../../common/components/ui/input';
 
 type FormProps = {
   onSubmit: (value: string) => void;

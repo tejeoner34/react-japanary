@@ -1,31 +1,11 @@
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { EMAIL_REQUIREMENT_OPTIONS, PASSWORD_REQUIREMENT_OPTIONS } from '../utils';
+import { Button, Input } from '@/common/components/ui';
+import ErrorMessage from '@/common/components/ui/errors/ErrorMessage';
 
 type FormFields = {
   email: string;
   password: string;
-};
-
-const EMAIL_REQUIREMENT_OPTIONS = {
-  required: 'Email is required',
-  pattern: {
-    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-    message: 'Invalid email address',
-  },
-};
-
-const PASSWORD_REQUIREMENT_OPTIONS = {
-  required: 'Password is required',
-  minLength: { value: 8, message: 'Password must be at least 8 characters' },
-};
-
-const errorTpl = (errorMessage: string) => {
-  return (
-    <div>
-      <p>{errorMessage}</p>
-    </div>
-  );
 };
 
 export default function LoginForm() {
@@ -41,17 +21,17 @@ export default function LoginForm() {
 
   return (
     <form
-      className="flex flex-col justify-center items-center gap-2 p-5 max-w-md m-auto"
+      className="flex flex-col justify-center gap-2 p-5 max-w-md m-auto"
       onSubmit={handleSubmit(onSubmit)}
     >
       <Input {...register('email', EMAIL_REQUIREMENT_OPTIONS)} type="text" placeholder="email..." />
-      {errors.email?.message && errorTpl(errors.email.message)}
+      {errors.email?.message && <ErrorMessage message={errors.email.message} />}
       <Input
         {...register('password', PASSWORD_REQUIREMENT_OPTIONS)}
         type="password"
         placeholder="password..."
       />
-      {errors.password?.message && errorTpl(errors.password.message)}
+      {errors.password?.message && <ErrorMessage message={errors.password.message} />}
 
       <Button disabled={isSubmitting} type="submit" variant="default">
         Login

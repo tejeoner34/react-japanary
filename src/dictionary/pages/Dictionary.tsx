@@ -1,6 +1,6 @@
-import Form from '@/components/ui/Form';
-import SearchResultsList from '@/components/ui/SearchResultsList';
-import { useDictionary } from '@/hooks/useDictionary';
+import Form from '@/dictionary/components/Form';
+import SearchResultsList from '@/dictionary/components/SearchResultsList';
+import { useDictionary } from '@/dictionary/hooks/useDictionary';
 
 export default function DictionaryScreen() {
   const { searchWord, searchedWordResult } = useDictionary();

@@ -5,15 +5,21 @@ import { Badge } from '../../common/components/ui/badge';
 type SearchResultItemProps = {
   searchItem: SearchResult;
 };
-export default function SearchResultItem({ searchItem }: SearchResultItemProps) {
+export default function SearchResultItem({
+  searchItem: { slug, japaneseReadings, isCommon, jlptLevels, senses },
+}: SearchResultItemProps) {
   return (
-    <div className="mb-5 pb-4">
-      <span className="text-sm">{searchItem.japaneseReadings[0].reading}</span>
-      <h3 className="text-2xl font-semibold">{searchItem.slug}</h3>
+    <div className="mb-5 p-4 border-b-2">
       <div className="flex-col gap-10 sm:flex sm:flex-row">
         <div className="flex flex-col gap-2">
-          <Badge variant="accent">{searchItem.isCommon ? 'Common' : 'Not common'}</Badge>
-          {searchItem.jlptLevels.map((level, index) => (
+          <ruby className="text-2xl font-semibold">
+            {slug}
+            {japaneseReadings[0].reading && (
+              <rt className="text-xs font-normal">{japaneseReadings[0].reading}</rt>
+            )}
+          </ruby>
+          <Badge variant="accent">{isCommon ? 'Common' : 'Not common'}</Badge>
+          {jlptLevels.map((level, index) => (
             <Badge key={index} variant="secondary">
               {level}
             </Badge>
@@ -21,7 +27,7 @@ export default function SearchResultItem({ searchItem }: SearchResultItemProps) 
         </div>
 
         <div>
-          <WordMeaningItem senses={searchItem.senses} />
+          <WordMeaningItem senses={senses} />
         </div>
       </div>
     </div>

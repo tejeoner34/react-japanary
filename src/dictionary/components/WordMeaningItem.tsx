@@ -18,7 +18,10 @@ export default function WordMeaningItem({ senses }: WordMeaningItemProps) {
   return (
     <>
       {senses.map((sense, senseIndex) => (
-        <div key={senseIndex} className="flex flex-col mb-4 pb-2 border-b-2">
+        <div
+          key={senseIndex}
+          className={`flex flex-col mb-4 pb-2 ${senseIndex != senses.length - 1 && ' border-b-2'}`}
+        >
           <p>
             <span className="font-semibold">Word type: </span>
             {sense.wordTypes[0]}

@@ -13,9 +13,11 @@ export default function LoginForm() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    setError,
   } = useForm<FormFields>();
 
   const onSubmit: SubmitHandler<FormFields> = (data) => {
+    // Podemos tener un try catch y en el caso de tener un error del back indicarlo a traves del método setError
     console.log(data);
   };
 

@@ -1,11 +1,12 @@
 import Form from '@/dictionary/components/Form';
 import SearchResultsList from '@/dictionary/components/SearchResultsList';
 import { useDictionary } from '@/dictionary/hooks/useDictionary';
+import SampleSentenceSection from '../components/SampleSentenceSection';
 
 export default function DictionaryScreen() {
-  const { searchWord, searchedWordResult } = useDictionary();
+  const { searchWord, searchSampleSenteces, sampleSentences, searchedWordResult } = useDictionary();
   const handleSearch = (word: string) => {
-    console.log(word);
+    searchSampleSenteces(word);
     searchWord(word);
   };
   return (
@@ -16,6 +17,7 @@ export default function DictionaryScreen() {
 
       <div className="w-full contents">
         <SearchResultsList searchResultsList={searchedWordResult} />
+        <SampleSentenceSection exampleSentences={sampleSentences} />
       </div>
     </div>
   );

@@ -7,13 +7,16 @@ type SearchResultItemProps = {
 };
 export default function SearchResultItem({ searchItem }: SearchResultItemProps) {
   return (
-    <div className=" border-b-2 mb-5 pb-4">
+    <div className="mb-5 pb-4">
+      <span className="text-sm">{searchItem.japaneseReadings[0].reading}</span>
       <h3 className="text-2xl font-semibold">{searchItem.slug}</h3>
       <div className="flex-col gap-10 sm:flex sm:flex-row">
         <div className="flex flex-col gap-2">
           <Badge variant="accent">{searchItem.isCommon ? 'Common' : 'Not common'}</Badge>
-          {searchItem.jlptLevels.map((level) => (
-            <Badge variant="secondary">{level}</Badge>
+          {searchItem.jlptLevels.map((level, index) => (
+            <Badge key={index} variant="secondary">
+              {level}
+            </Badge>
           ))}
         </div>
 

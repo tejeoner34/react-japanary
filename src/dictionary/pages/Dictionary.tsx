@@ -5,7 +5,14 @@ import SampleSentenceSection from '../components/SampleSentenceSection';
 import CustomText from '@/common/components/ui/CustomText';
 
 export default function DictionaryScreen() {
-  const { searchWord, searchSampleSenteces, sampleSentences, searchedWordResult } = useDictionary();
+  const {
+    searchWord,
+    searchSampleSenteces,
+    sampleSentences,
+    searchedWordResult,
+    isSampleSentenceLoading,
+    isSearchWordLoading,
+  } = useDictionary();
   const _isSearchDone = searchedWordResult.length;
   const handleSearch = (word: string) => {
     searchSampleSenteces(word);
@@ -30,11 +37,18 @@ export default function DictionaryScreen() {
         <div className="h-fit">
           <CustomText tag="h3" text="Meanings" styles="text-xl font-bold pb-2" />
           <div className="bg-backgroundSecondary h-fit">
-            <SearchResultsList searchResultsList={searchedWordResult} />
+            <SearchResultsList
+              searchResultsList={searchedWordResult}
+              isLoading={isSearchWordLoading}
+            />
           </div>
         </div>
-        <div className={`max-w-md  bg-backgroundSecondary ${!sampleSentences.length && 'hidden'}`}>
-          <SampleSentenceSection exampleSentences={sampleSentences} />
+
+        <div className={`max-w-md  bg-backgroundSecondary ${!_isSearchDone && 'hidden'}`}>
+          <SampleSentenceSection
+            exampleSentences={sampleSentences}
+            isLoading={isSampleSentenceLoading}
+          />
         </div>
       </div>
     </div>

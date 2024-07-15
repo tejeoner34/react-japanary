@@ -1,5 +1,5 @@
 import { FlashCardDataSource } from '@/flash-cards/domain/datasource/flashCardDataSource';
-import { FlashCard } from '@/flash-cards/domain/models/flashCards.model';
+import { FlashCard, Grade } from '@/flash-cards/domain/models/flashCards.model';
 import { FlashCardRepository } from '@/flash-cards/domain/repositories/flashCardRepository';
 
 export class FlashCardRepositoryImpl implements FlashCardRepository {
@@ -16,7 +16,10 @@ export class FlashCardRepositoryImpl implements FlashCardRepository {
   getFlashCards(): FlashCard[] {
     return this.flashCardDataSource.getFlashCards();
   }
-  updateFlashCardRevision(flashCard: FlashCard, grade: number): void {
+  updateFlashCardRevision(flashCard: FlashCard, grade: Grade): void {
     throw new Error('Method not implemented.');
   }
 }
+
+export const initializeRepository = (dataSource: FlashCardDataSource): FlashCardRepositoryImpl =>
+  new FlashCardRepositoryImpl(dataSource);

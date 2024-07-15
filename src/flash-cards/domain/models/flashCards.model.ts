@@ -7,3 +7,9 @@ export interface FlashCard {
   easeFactor: number;
   nextReview: Date;
 }
+
+export enum Grade {
+  Easy = 3,
+  Hard = 1,
+  Medium = 2,
+}

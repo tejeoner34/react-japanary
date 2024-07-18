@@ -11,4 +11,5 @@ export default function CustomText({ tag: Tag, text, styles }: CustomTextProps) 
 CustomText.defaultProps = {
   tag: 'p',
   styles: '',
+  text: '',
 };

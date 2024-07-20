@@ -2,9 +2,10 @@ import { useState } from 'react';
 import { DictionaryDataSourceImpl } from '@/infrastructure/datas-sources/dictionary/dictionaryDataSourceImpl';
 import { ExampleSentence, SearchResult } from '@/models/dictionary/searchResult';
 import { initializeRepository } from '@/repositories/dictionary/dictionaryRespositoryImpl';
-const repository = initializeRepository(new DictionaryDataSourceImpl());
+import { DictionaryRepository } from '@/repositories/dictionary/dictionaryRepository';
+const defaultRepository = initializeRepository(new DictionaryDataSourceImpl());
 
-export const useDictionary = () => {
+export const useDictionary = (repository: DictionaryRepository = defaultRepository) => {
   const [isSearchWordLoading, setIsSearchWordLoading] = useState(false);
   const [isSampleSentenceLoading, setIsSampleSenteceLoading] = useState(false);
   const [searchedWordResult, setSearchedWordResult] = useState<SearchResult[]>([]);

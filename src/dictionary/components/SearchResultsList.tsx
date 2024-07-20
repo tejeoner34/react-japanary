@@ -8,7 +8,7 @@ type SearchResultsListProps = {
 };
 
 const SkeletonSearchResultItem = ({ skeletonNumber = 4 }: { skeletonNumber?: number }) => (
-  <div>
+  <div data-testid="skeleton">
     {[...Array(skeletonNumber)].map((_, index) => (
       <div key={index} className="flex flex-col space-y-3 p-3">
         <Skeleton className="h-6 w-[50%] rounded-xl" />

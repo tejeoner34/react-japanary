@@ -1,0 +1,35 @@
+import { useState } from 'react';
+import { DictionaryDataSourceImpl } from '@/infrastructure/datas-sources/dictionary/dictionaryDataSourceImpl';
+import { ExampleSentence, SearchResult } from '@/models/dictionary/searchResult';
+import { initializeRepository } from '@/repositories/dictionary/dictionaryRespositoryImpl';
+import { DictionaryRepository } from '@/repositories/dictionary/dictionaryRepository';
+const defaultRepository = initializeRepository(new DictionaryDataSourceImpl());
+
+export const useDictionary = (repository: DictionaryRepository = defaultRepository) => {
+  const [isSearchWordLoading, setIsSearchWordLoading] = useState(false);
+  const [isSampleSentenceLoading, setIsSampleSenteceLoading] = useState(false);
+  const [searchedWordResult, setSearchedWordResult] = useState<SearchResult[]>([]);
+  const [sampleSentences, setsampleSentences] = useState<ExampleSentence[]>([]);
+
+  const searchSampleSenteces = async (word: string) => {
+    setIsSampleSenteceLoading(true);
+    const response = await repository.searchSampleSenteces(word);
+    setsampleSentences(response);
+    setIsSampleSenteceLoading(false);
+  };
+
+  const searchWord = async (word: string) => {
+    setIsSearchWordLoading(true);
+    const response = await repository.searchWord(word);
+    setSearchedWordResult(response);
+    setIsSearchWordLoading(false);
+  };
+  return {
+    searchWord,
+    searchSampleSenteces,
+    searchedWordResult,
+    sampleSentences,
+    isSearchWordLoading,
+    isSampleSentenceLoading,
+  };
+};

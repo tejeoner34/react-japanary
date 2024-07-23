@@ -1,4 +1,4 @@
-import { Sense } from '@/models/dictionary/searchResult';
+import { Sense } from '../models/searchResult';
 
 type WordMeaningItemProps = {
   senses: Sense[];

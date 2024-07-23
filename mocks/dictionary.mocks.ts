@@ -1,4 +1,4 @@
-import { ExampleSentence, SearchResult } from '../src/models/dictionary/searchResult';
+import { ExampleSentence, SearchResult } from '../src/dictionary/models/searchResult';
 
 export const WORD_QUERY_MOCK: SearchResult[] = [
   {

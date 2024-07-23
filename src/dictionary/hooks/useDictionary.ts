@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { DictionaryDataSourceImpl } from '@/infrastructure/datas-sources/dictionary/dictionaryDataSourceImpl';
-import { ExampleSentence, SearchResult } from '@/models/dictionary/searchResult';
-import { initializeRepository } from '@/repositories/dictionary/dictionaryRespositoryImpl';
-import { DictionaryRepository } from '@/repositories/dictionary/dictionaryRepository';
+import { DictionaryDataSourceImpl } from '../infrastructure/datas-sources/dictionaryDataSourceImpl';
+import { ExampleSentence, SearchResult } from '../models/searchResult';
+import { DictionaryRepository } from '../repositories/dictionaryRepository';
+import { initializeRepository } from '../repositories/dictionaryRespositoryImpl';
 const defaultRepository = initializeRepository(new DictionaryDataSourceImpl());
 
 export const useDictionary = (repository: DictionaryRepository = defaultRepository) => {

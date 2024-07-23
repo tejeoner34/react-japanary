@@ -1,5 +1,5 @@
 import { Skeleton } from '@/common/components/ui/skeleton';
-import { ExampleSentence } from '@/models/dictionary/searchResult';
+import { ExampleSentence } from '../models/searchResult';
 
 interface Props {
   exampleSentences: ExampleSentence[];

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { DictionaryDataSourceImpl } from '../../../../src/infrastructure/datas-sources/dictionary/dictionaryDataSourceImpl';
-import { DictionaryDataSource } from '@/infrastructure/datas-sources/dictionary/dictionaryDataSource';
 import { SAMPLE_SENTENCES_MOCK, WORD_QUERY_MOCK } from '@/dictionary/mocks/dictionary.mocks';
+import { DictionaryDataSourceImpl } from '@/dictionary/infrastructure/datas-sources/dictionaryDataSourceImpl';
+import { DictionaryDataSource } from '@/dictionary/infrastructure/datas-sources/dictionaryDataSource';
 
 describe('DictionaryDataSourceImpl', () => {
   let dataSource: DictionaryDataSource;

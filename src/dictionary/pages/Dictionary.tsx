@@ -13,7 +13,7 @@ export default function DictionaryScreen() {
     isSampleSentenceLoading,
     isSearchWordLoading,
   } = useDictionary();
-  const _isSearchDone = searchedWordResult.length;
+  const _isSearchDone = searchedWordResult.length || isSearchWordLoading;
   const handleSearch = (word: string) => {
     searchSampleSenteces(word);
     searchWord(word);
@@ -21,7 +21,7 @@ export default function DictionaryScreen() {
 
   return (
     <div className="container grid place-items-center gap-4 p-5">
-      <div className="fixed bottom-0 p-5 bg-backgroundSecondary max-w-md w-full md:relative md:p-0">
+      <div className="z-100 fixed bottom-0 p-5 bg-backgroundSecondary max-w-md w-full md:relative md:p-0">
         <Form onSubmit={handleSearch} />
       </div>
 

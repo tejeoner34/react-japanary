@@ -33,7 +33,7 @@ export default function DictionaryScreen() {
         />
       </div>
 
-      <div className={`flex flex-col gap-5 w-full md:flex-row ${!_isSearchDone && 'hidden'}`}>
+      <div className={`flex flex-col gap-5 w-full pb-20 md:flex-row ${!_isSearchDone && 'hidden'}`}>
         <div className="h-fit">
           <CustomText tag="h3" text="Meanings" styles="text-xl font-bold pb-2" />
           <div className="bg-backgroundSecondary h-fit">

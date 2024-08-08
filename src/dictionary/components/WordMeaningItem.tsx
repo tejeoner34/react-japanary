@@ -14,7 +14,7 @@ const seeAlsoTpl = (seeAlso: string[], searchWord: (item: string) => void) =>
       </p>
       <div className="flex gap-2">
         {seeAlso.map((item) => (
-          <Button variant="primary" size="sm" onClick={() => searchWord(item)}>
+          <Button key={item} variant="primary" size="sm" onClick={() => searchWord(item)}>
             {item}
           </Button>
         ))}

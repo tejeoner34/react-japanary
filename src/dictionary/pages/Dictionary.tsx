@@ -1,28 +1,23 @@
+import { useDictionaryContext } from '../hooks/useDictionaryContext';
 import Form from '@/dictionary/components/Form';
 import SearchResultsList from '@/dictionary/components/SearchResultsList';
-import { useDictionary } from '@/dictionary/hooks/useDictionary';
 import SampleSentenceSection from '../components/SampleSentenceSection';
 import CustomText from '@/common/components/ui/CustomText';
 
 export default function DictionaryScreen() {
   const {
     searchWord,
-    searchSampleSenteces,
     sampleSentences,
     searchedWordResult,
     isSampleSentenceLoading,
     isSearchWordLoading,
-  } = useDictionary();
+  } = useDictionaryContext();
   const _isSearchDone = searchedWordResult.length || isSearchWordLoading;
-  const handleSearch = (word: string) => {
-    searchSampleSenteces(word);
-    searchWord(word);
-  };
 
   return (
     <div className="container grid place-items-center gap-4 p-5">
       <div className="z-100 fixed bottom-0 p-5 bg-backgroundSecondary max-w-md w-full md:relative md:p-0">
-        <Form onSubmit={handleSearch} />
+        <Form onSubmit={searchWord} />
       </div>
 
       <div className={`flex flex-col gap-3 ${_isSearchDone && 'hidden'}`}>

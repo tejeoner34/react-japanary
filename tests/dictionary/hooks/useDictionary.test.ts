@@ -27,7 +27,7 @@ describe('useDictionary', () => {
     const { result } = renderHook(() => useDictionary(testRepository));
 
     expect(result.current.sampleSentences).toEqual([]);
-    await act(() => result.current.searchSampleSenteces('test'));
+    await act(() => result.current.searchWord('test'));
     expect(result.current.sampleSentences).not.toBe([]);
   });
 });

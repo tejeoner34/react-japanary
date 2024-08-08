@@ -1,4 +1,5 @@
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
+import { render } from '../../config/test-utils';
 import SearchResultItem from '@/dictionary/components/SearchResultItem';
 import { WORD_QUERY_MOCK } from '@/dictionary/mocks/dictionary.mocks';
 

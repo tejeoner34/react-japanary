@@ -1,5 +1,6 @@
 import Header from '@/common/components/ui/Header';
-import { render, screen } from '@testing-library/react';
+import { render } from '../../../config/test-utils';
+import { screen } from '@testing-library/react';
 
 describe('Header', () => {
   it('renders the header component', () => {

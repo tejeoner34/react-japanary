@@ -21,7 +21,7 @@ export default function Form({ onSubmit }: FormProps) {
   };
   return (
     <form className="flex gap-2" onSubmit={handleSubmit}>
-      <Input type="text" placeholder="入力..." onChange={handleInputChange} />
+      <Input type="text" placeholder="入力..." onChange={handleInputChange} value={inputValue} />
       <Button type="submit" variant="primary">
         Search
       </Button>

@@ -4,6 +4,7 @@ import DictionaryScreen from './dictionary/pages/Dictionary';
 // import LoginScreen from './auth/pages/LoginScreen';
 // import RegisterScreen from './auth/pages/RegisterScreen';
 import DecksPage from './flash-cards/pages/Decks.page';
+import DictionaryContextProvider from './dictionary/context/dictionaryContext';
 
 const router = createBrowserRouter([
   {
@@ -12,7 +13,11 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <DictionaryScreen />,
+        element: (
+          <DictionaryContextProvider>
+            <DictionaryScreen />
+          </DictionaryContextProvider>
+        ),
       },
       {
         path: 'decks',

@@ -18,18 +18,31 @@ export const useDictionary = (repository: DictionaryRepository = defaultReposito
     setIsSampleSenteceLoading(false);
   };
 
-  const searchWord = async (word: string) => {
+  const searchMeaning = async (word: string) => {
     setIsSearchWordLoading(true);
     const response = await repository.searchWord(word);
     setSearchedWordResult(response);
     setIsSearchWordLoading(false);
   };
+
+  const searchWord = (word: string) => {
+    searchMeaning(word);
+    searchSampleSenteces(word);
+  };
+
   return {
     searchWord,
-    searchSampleSenteces,
     searchedWordResult,
     sampleSentences,
     isSearchWordLoading,
     isSampleSentenceLoading,
   };
 };
+
+export interface UseDictionaryType {
+  searchWord: (word: string) => void;
+  searchedWordResult: SearchResult[];
+  sampleSentences: ExampleSentence[];
+  isSearchWordLoading: boolean;
+  isSampleSentenceLoading: boolean;
+}

@@ -1,11 +1,12 @@
 import { Button } from '@/common/components/ui';
 import { Sense } from '../models/searchResult';
+import { useDictionaryContext } from '../hooks/useDictionaryContext';
 
 type WordMeaningItemProps = {
   senses: Sense[];
 };
 
-const seeAlsoTpl = (seeAlso: string[]) =>
+const seeAlsoTpl = (seeAlso: string[], searchWord: (item: string) => void) =>
   !!seeAlso.length && (
     <div className="flex items-center gap-2">
       <p>
@@ -13,7 +14,7 @@ const seeAlsoTpl = (seeAlso: string[]) =>
       </p>
       <div className="flex gap-2">
         {seeAlso.map((item) => (
-          <Button variant="primary" size="sm">
+          <Button variant="primary" size="sm" onClick={() => searchWord(item)}>
             {item}
           </Button>
         ))}
@@ -29,6 +30,7 @@ const meaningsTpl = (meanings: string[]) => (
 );
 
 export default function WordMeaningItem({ senses }: WordMeaningItemProps) {
+  const { searchWord } = useDictionaryContext();
   return (
     <>
       {senses.map((sense, senseIndex) => (
@@ -49,7 +51,7 @@ export default function WordMeaningItem({ senses }: WordMeaningItemProps) {
           </div>
 
           {tagsTpl(sense.tags)}
-          {seeAlsoTpl(sense.seeAlso)}
+          {seeAlsoTpl(sense.seeAlso, searchWord)}
         </div>
       ))}
     </>

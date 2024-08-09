@@ -26,6 +26,7 @@ export const useDictionary = (repository: DictionaryRepository = defaultReposito
   };
 
   const searchWord = (word: string) => {
+    if (!word) return;
     searchMeaning(word);
     searchSampleSenteces(word);
   };

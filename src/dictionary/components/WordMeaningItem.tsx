@@ -1,6 +1,6 @@
 import { Button } from '@/common/components/ui';
 import { Sense } from '../models/searchResult';
-import { useDictionaryContext } from '../hooks/useDictionaryContext';
+import { useNavigate } from 'react-router-dom';
 
 type WordMeaningItemProps = {
   senses: Sense[];
@@ -30,7 +30,12 @@ const meaningsTpl = (meanings: string[]) => (
 );
 
 export default function WordMeaningItem({ senses }: WordMeaningItemProps) {
-  const { searchWord } = useDictionaryContext();
+  const navigate = useNavigate();
+
+  const handleSearch = (word: string) => {
+    navigate(`/dictionary/search/${word}`);
+  };
+
   return (
     <>
       {senses.map((sense, senseIndex) => (
@@ -51,7 +56,7 @@ export default function WordMeaningItem({ senses }: WordMeaningItemProps) {
           </div>
 
           {tagsTpl(sense.tags)}
-          {seeAlsoTpl(sense.seeAlso, searchWord)}
+          {seeAlsoTpl(sense.seeAlso, handleSearch)}
         </div>
       ))}
     </>

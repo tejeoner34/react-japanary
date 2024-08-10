@@ -14,7 +14,7 @@ export default function DictionaryScreen() {
         <Form onSubmit={handleSearch} />
       </div>
       <div className="flex flex-col gap-3">
-        <CustomText tag="h2" styles="text-4xl font-bold text-center" text="Japanese Dictionary" />
+        <CustomText tag="h1" styles="text-4xl font-bold text-center" text="Japanese Dictionary" />
         <CustomText
           styles="text-center"
           text="Search for a word in Kanji, Hiragana or Katakana. Ex: 辞書"

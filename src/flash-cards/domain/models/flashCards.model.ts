@@ -9,7 +9,8 @@ export interface FlashCard {
 }
 
 export enum Grade {
-  Easy = 3,
+  Again = 0,
   Hard = 1,
   Medium = 2,
+  Easy = 3,
 }

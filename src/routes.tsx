@@ -3,10 +3,11 @@ import App from './App';
 import DictionaryScreen from './dictionary/pages/Dictionary';
 // import LoginScreen from './auth/pages/LoginScreen';
 // import RegisterScreen from './auth/pages/RegisterScreen';
-import DecksPage from './flash-cards/pages/Decks.page';
+import DecksPage from './flash-cards/pages/DecksPage';
 import DictionaryContextProvider from './dictionary/context/dictionaryContext';
 import SearchResultsScreen from './dictionary/pages/SearchResultScreen';
-import DictionaryModuleLayout from './dictionary/pages/DictionaryModuleLayout';
+import DictionaryModuleLayout from './dictionary/layout/DictionaryModuleLayout';
+import FlashCardsModuleLayout from './flash-cards/layout/FlashCardsModuleLayout';
 
 const router = createBrowserRouter([
   {
@@ -36,8 +37,14 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: 'decks',
-        element: <DecksPage />,
+        path: '/',
+        element: <FlashCardsModuleLayout />,
+        children: [
+          {
+            path: '/decks',
+            element: <DecksPage />,
+          },
+        ],
       },
     ],
   },

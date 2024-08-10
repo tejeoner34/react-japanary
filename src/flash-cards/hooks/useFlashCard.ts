@@ -22,7 +22,7 @@ export function useFlashCard() {
   }, [flashCards]);
 
   const getFlashCards = () => {
-    return repository.getFlashCards();
+    setFlashCards(repository.getFlashCards());
   };
 
   const updateFlashCardRevision = (grade: Grade) => {
@@ -45,6 +45,10 @@ export function useFlashCard() {
     // const nextCard = updatedFlashcards.find((card) => new Date(card.nextReview) <= new Date());
     // setCurrentCard(nextCard || null);
   };
+
+  useEffect(() => {
+    getFlashCards();
+  }, []);
 
   return {
     getFlashCards,

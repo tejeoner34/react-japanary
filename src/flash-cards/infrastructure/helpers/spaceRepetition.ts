@@ -6,7 +6,12 @@ export class SpaceRepetition {
   static updateSpaceRepetitionData(flashCard: FlashCard, grade: Grade): FlashCard {
     let { interval, repetitions, easeFactor, nextReview } = flashCard;
 
-    if (grade === 3) {
+    if (grade === 0) {
+      // has to repeat today
+      repetitions += 1;
+      interval = 1;
+      easeFactor -= 0.15;
+    } else if (grade === 3) {
       // Respuesta fácil
       repetitions += 1;
       interval *= easeFactor;

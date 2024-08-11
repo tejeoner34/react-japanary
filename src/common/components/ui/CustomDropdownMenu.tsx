@@ -11,6 +11,7 @@ import CustomText from './CustomText';
 interface Item {
   name: string;
   icon?: React.ReactNode;
+  action: () => void;
 }
 interface CustomDropdownMenuProps {
   items: Item[];
@@ -22,14 +23,14 @@ export default function CustomDropdownMenu({ items, children }: CustomDropdownMe
     <DropdownMenu>
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
-        {items.map(({ name, icon }, index, array) => (
-          <>
-            <DropdownMenuItem>
+        {items.map(({ name, icon, action }, index, array) => (
+          <div key={index}>
+            <DropdownMenuItem onClick={action}>
               {icon}
               <CustomText tag="p" text={name} />
             </DropdownMenuItem>
             <DropdownMenuSeparator className={`${index === array.length - 1 && 'hidden'}`} />
-          </>
+          </div>
         ))}
       </DropdownMenuContent>
     </DropdownMenu>

@@ -1,22 +1,26 @@
-import CustomText from '@/common/components/ui/CustomText';
+import { useState } from 'react';
 import { useFlashCard } from '../hooks/useFlashCard';
+import CustomText from '@/common/components/ui/CustomText';
 import { Button } from '@/common/components/ui';
 import { Folders, CreditCard, Plus } from 'lucide-react';
 import CustomDropdownMenu from '@/common/components/ui/CustomDropdownMenu';
-
-const dropdownMenuItems = [
-  {
-    name: 'Create new deck',
-    icon: <Folders className="mr-2 h-4 w-4" />,
-  },
-  {
-    name: 'Create new flash card',
-    icon: <CreditCard className="mr-2 h-4 w-4" />,
-  },
-];
+import { DeckForm } from '../components/ui/DeckForm';
 
 export default function DecksPage() {
-  const { flashCards } = useFlashCard();
+  const [isDeckFormVisible, setIsDeckFormVisible] = useState(false);
+  const { createDeck } = useFlashCard();
+  const dropdownMenuItems = [
+    {
+      name: 'Create new deck',
+      icon: <Folders className="mr-2 h-4 w-4" />,
+      action: () => setIsDeckFormVisible(true),
+    },
+    {
+      name: 'Create new flash card',
+      icon: <CreditCard className="mr-2 h-4 w-4" />,
+      action: () => {},
+    },
+  ];
   return (
     <>
       <CustomText tag="h1" text="Your decks" />
@@ -28,6 +32,12 @@ export default function DecksPage() {
           </Button>
         </CustomDropdownMenu>
       </div>
+
+      <DeckForm
+        isVisible={isDeckFormVisible}
+        onCloseVisibility={() => setIsDeckFormVisible(false)}
+        onSubmit={createDeck}
+      />
     </>
   );
 }

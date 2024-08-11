@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 import { FlashCard, Grade } from '../domain/models/flashCards.model';
 import { LocalFlashCardDataSourceImpl } from '../infrastructure/datasource/localFlashCardDataSource.impl';
 import { initializeRepository } from '../infrastructure/repositories/flashCardRepository.impl';
+import { Deck } from '../domain/models/deck.model';
 
-const repository = initializeRepository(new LocalFlashCardDataSourceImpl());
+const defaultRepository = initializeRepository(new LocalFlashCardDataSourceImpl());
 
-export function useFlashCard() {
+export function useFlashCard(repository: DictionaryRepository = defaultRepository) {
   const [flashCards, setFlashCards] = useState<FlashCard[]>([]);
   const [currentCard, setCurrentCard] = useState<FlashCard | null>(null);
 
@@ -20,6 +21,10 @@ export function useFlashCard() {
     const nextCard = flashCards.find((card) => new Date(card.nextReview) <= new Date());
     setCurrentCard(nextCard || null);
   }, [flashCards]);
+
+  const createDeck = (newDeck: Deck) => {
+    repository.createDeck(newDeck);
+  };
 
   const getFlashCards = () => {
     setFlashCards(repository.getFlashCards());
@@ -51,6 +56,7 @@ export function useFlashCard() {
   }, []);
 
   return {
+    createDeck,
     getFlashCards,
     handleGrade,
     setFlashCards,

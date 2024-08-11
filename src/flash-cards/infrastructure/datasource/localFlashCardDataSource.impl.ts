@@ -27,7 +27,8 @@ export class LocalFlashCardDataSourceImpl implements FlashCardDataSource {
   }
 
   createDeck(deck: Deck): Deck[] {
-    throw new Error('Method not implemented.');
+    console.log(deck);
+    return [];
   }
 
   editDeck(deck: Deck): Deck[] {

@@ -26,9 +26,18 @@ export class LocalFlashCardDataSourceImpl implements FlashCardDataSource {
     throw new Error('Method not implemented.');
   }
 
+  getDecks(): Deck[] {
+    const rawDecksData = localStorage.getItem('decks');
+    return rawDecksData ? JSON.parse(rawDecksData) : [];
+  }
+
   createDeck(deck: Deck): Deck[] {
-    console.log(deck);
-    return [];
+    const rawDecksData = localStorage.getItem('decks');
+    const storedDecks: Deck[] = rawDecksData ? JSON.parse(rawDecksData) : [];
+    storedDecks.push(deck);
+    localStorage.setItem('decks', JSON.stringify(storedDecks));
+    console.log(storedDecks);
+    return storedDecks;
   }
 
   editDeck(deck: Deck): Deck[] {

@@ -8,6 +8,7 @@ import DictionaryContextProvider from './dictionary/context/dictionaryContext';
 import SearchResultsScreen from './dictionary/pages/SearchResultScreen';
 import DictionaryModuleLayout from './dictionary/layout/DictionaryModuleLayout';
 import FlashCardsModuleLayout from './flash-cards/layout/FlashCardsModuleLayout';
+import { FlashCardsContextProvider } from './flash-cards/context/flashCardsContext';
 
 const router = createBrowserRouter([
   {
@@ -38,7 +39,11 @@ const router = createBrowserRouter([
       },
       {
         path: '/',
-        element: <FlashCardsModuleLayout />,
+        element: (
+          <FlashCardsContextProvider>
+            <FlashCardsModuleLayout />
+          </FlashCardsContextProvider>
+        ),
         children: [
           {
             path: '/decks',

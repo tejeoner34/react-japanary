@@ -10,6 +10,7 @@ import {
   DialogTitle,
 } from '@/common/components/ui';
 import { Deck } from '@/flash-cards/domain/models/deck.model';
+import { useId, useState } from 'react';
 
 interface DeckFormProps {
   isVisible: boolean;
@@ -18,19 +19,32 @@ interface DeckFormProps {
 }
 
 export function DeckForm({ isVisible, onCloseVisibility, onSubmit }: DeckFormProps) {
-  const handleSumbit = (ev) => {
-    // console.log(ev.target.name);
-    // ev.preventDefault();
-    // const form = ev.currentTarget;
-    // const newDeck: Deck = {
-    //   cards: [],
-    //   description: (form.elements.namedItem('description') as HTMLInputElement).value,
-    //   id: '', // tenemos que crear un Id unico
-    //   name: (form.elements.namedItem('name') as HTMLInputElement).value,
-    // };
-    // onSubmit(newDeck);
-    // onCloseVisibility();
+  const deckId = useId();
+  const [form, setForm] = useState({
+    name: '',
+    description: '',
+  });
+  const isValidForm = form.name.trim() !== '';
+
+  const handleSumbit = (ev: React.FormEvent) => {
+    ev.preventDefault();
+    if (!isValidForm) return;
+    console.log(form);
+    const newDeck: Deck = {
+      cards: [],
+      description: form.description,
+      id: deckId,
+      name: form.name,
+    };
+    onSubmit(newDeck);
+    onCloseVisibility();
   };
+
+  const handleInputChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = ev.target;
+    setForm({ ...form, [name]: value });
+  };
+
   return (
     <Dialog
       open={isVisible}
@@ -49,21 +63,29 @@ export function DeckForm({ isVisible, onCloseVisibility, onSubmit }: DeckFormPro
               <Label htmlFor="name" className="text-right">
                 Name
               </Label>
-              <Input id="name" placeholder="Kanji level..." className="col-span-3" />
+              <Input
+                name="name"
+                placeholder="Kanji level..."
+                className="col-span-3"
+                onChange={handleInputChange}
+              />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="descripton" className="text-right">
+              <Label htmlFor="description" className="text-right">
                 Descripton
               </Label>
               <Input
-                id="descripton"
+                name="description"
                 placeholder="This deck is used for..."
                 className="col-span-3"
+                onChange={handleInputChange}
               />
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit">Create Deck</Button>
+            <Button type="submit" disabled={!isValidForm}>
+              Create Deck
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

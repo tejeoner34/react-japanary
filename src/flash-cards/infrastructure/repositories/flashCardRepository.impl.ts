@@ -21,6 +21,10 @@ export class FlashCardRepositoryImpl implements FlashCardRepository {
     this.flashCardDataSource.updateFlashCardRevision(flashCard, grade);
   }
 
+  getDecks(): Deck[] {
+    return this.flashCardDataSource.getDecks();
+  }
+
   createDeck(deck: Deck): Deck[] {
     return this.flashCardDataSource.createDeck(deck);
   }

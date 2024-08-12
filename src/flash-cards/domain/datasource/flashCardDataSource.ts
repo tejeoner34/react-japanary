@@ -7,6 +7,7 @@ export interface FlashCardDataSource {
   editFlashCard(flashCard: FlashCard): void;
   getFlashCards(): FlashCard[];
   updateFlashCardRevision(flashCard: FlashCard, grade: Grade): void;
+  getDecks(): Deck[];
   createDeck(deck: Deck): Deck[];
   editDeck(deck: Deck): Deck[];
   deleteDeck(deck: Deck): Deck[];

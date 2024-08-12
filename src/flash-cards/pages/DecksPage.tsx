@@ -1,14 +1,15 @@
 import { useState } from 'react';
-import { useFlashCard } from '../hooks/useFlashCard';
+import { useFlashCardsContext } from '../hooks/useFlashCardsContext';
 import CustomText from '@/common/components/ui/CustomText';
 import { Button } from '@/common/components/ui';
 import { Folders, CreditCard, Plus } from 'lucide-react';
 import CustomDropdownMenu from '@/common/components/ui/CustomDropdownMenu';
 import { DeckForm } from '../components/ui/DeckForm';
+import DeckItem from '../components/ui/DeckItem';
 
 export default function DecksPage() {
   const [isDeckFormVisible, setIsDeckFormVisible] = useState(false);
-  const { createDeck } = useFlashCard();
+  const { decks, createDeck } = useFlashCardsContext();
   const dropdownMenuItems = [
     {
       name: 'Create new deck',
@@ -24,6 +25,12 @@ export default function DecksPage() {
   return (
     <>
       <CustomText tag="h1" text="Your decks" />
+
+      <div className="flex flex-col gap-3 w-full">
+        {decks.map((deck) => (
+          <DeckItem deck={deck} key={deck.id} />
+        ))}
+      </div>
 
       <div className="flex justify-end z-100 fixed bottom-0 p-6 w-full">
         <CustomDropdownMenu items={dropdownMenuItems}>

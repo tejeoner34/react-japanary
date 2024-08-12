@@ -3,19 +3,21 @@ import { FlashCard, Grade } from '../domain/models/flashCards.model';
 import { LocalFlashCardDataSourceImpl } from '../infrastructure/datasource/localFlashCardDataSource.impl';
 import { initializeRepository } from '../infrastructure/repositories/flashCardRepository.impl';
 import { Deck } from '../domain/models/deck.model';
+import { FlashCardRepository } from '../domain/repositories/flashCardRepository';
 
 const defaultRepository = initializeRepository(new LocalFlashCardDataSourceImpl());
 
-export function useFlashCard(repository: DictionaryRepository = defaultRepository) {
+export function useFlashCard(repository: FlashCardRepository = defaultRepository) {
+  const [decks, setDecks] = useState<Deck[]>([]);
   const [flashCards, setFlashCards] = useState<FlashCard[]>([]);
   const [currentCard, setCurrentCard] = useState<FlashCard | null>(null);
 
   useEffect(() => {
-    const storedCards = localStorage.getItem('flashcards');
-    if (storedCards) {
-      setFlashCards(JSON.parse(storedCards));
-    }
-  }, []);
+    const storedDecks = repository.getDecks();
+    console.log(storedDecks);
+
+    setDecks(storedDecks);
+  }, [repository]);
 
   useEffect(() => {
     const nextCard = flashCards.find((card) => new Date(card.nextReview) <= new Date());
@@ -23,7 +25,9 @@ export function useFlashCard(repository: DictionaryRepository = defaultRepositor
   }, [flashCards]);
 
   const createDeck = (newDeck: Deck) => {
-    repository.createDeck(newDeck);
+    const storedDecks = repository.createDeck(newDeck);
+    console.log(storedDecks);
+    setDecks(storedDecks);
   };
 
   const getFlashCards = () => {
@@ -60,7 +64,18 @@ export function useFlashCard(repository: DictionaryRepository = defaultRepositor
     getFlashCards,
     handleGrade,
     setFlashCards,
+    decks,
     flashCards,
     currentCard,
   };
+}
+
+export interface useFlashCardType {
+  createDeck: (newDeck: Deck) => void;
+  getFlashCards: () => void;
+  handleGrade: (grade: Grade) => void;
+  setFlashCards: (flashCards: FlashCard[]) => void;
+  decks: Deck[];
+  flashCards: FlashCard[];
+  currentCard: FlashCard | null;
 }

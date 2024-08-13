@@ -7,11 +7,13 @@ import CustomDropdownMenu from '@/common/components/ui/CustomDropdownMenu';
 import { DeckForm } from '../components/ui/DeckForm';
 import DeckItem from '../components/ui/DeckItem';
 import FlashCardForm from '../components/ui/FlashCardForm';
+import { Spinner } from '@/common/components/ui/Spinner';
 
 export default function DecksPage() {
   const [isDeckFormVisible, setIsDeckFormVisible] = useState(false);
   const [isFlashCardFormVisible, setIsFlashCardFormVisible] = useState(false);
-  const { decks, createDeck, editDeck, deleteDeck, createFlashCard } = useFlashCardsContext();
+  const { isLoading, decks, createDeck, editDeck, deleteDeck, createFlashCard } =
+    useFlashCardsContext();
   const dropdownMenuItems = [
     {
       name: 'Create new deck',
@@ -24,6 +26,10 @@ export default function DecksPage() {
       action: () => setIsFlashCardFormVisible(true),
     },
   ];
+
+  if (isLoading) {
+    return <Spinner size="large" />;
+  }
   return (
     <>
       <CustomText tag="h1" text="Your decks" />

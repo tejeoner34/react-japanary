@@ -39,7 +39,7 @@ export default function FlashCardForm({
   const [form, setForm] = useState({
     front: '',
     back: '',
-    belongsToDeck: flashCardToEdit?.deckId ?? '',
+    belongsToDeck: flashCardToEdit?.deckId ?? availableDecks[0].id,
   });
 
   const isValidForm = form.front.trim() !== '';
@@ -88,7 +88,7 @@ export default function FlashCardForm({
               </Label>
               <Select
                 name="deck"
-                defaultValue={availableDecks[0]?.id}
+                defaultValue={availableDecks[0].id}
                 onValueChange={handleSelectChange}
               >
                 <SelectTrigger className="w-[180px]">

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { FlashCard, Grade } from '../domain/models/flashCards.model';
+import { FlashCardModel, Grade } from '../domain/models/flashCards.model';
 import { LocalFlashCardDataSourceImpl } from '../infrastructure/datasource/localFlashCardDataSource.impl';
 import { initializeRepository } from '../infrastructure/repositories/flashCardRepository.impl';
 import { DeckModel } from '../domain/models/deck.model';
@@ -9,8 +9,8 @@ const defaultRepository = initializeRepository(new LocalFlashCardDataSourceImpl(
 
 export function useFlashCard(repository: FlashCardRepository = defaultRepository) {
   const [decks, setDecks] = useState<DeckModel[]>([]);
-  const [flashCards, setFlashCards] = useState<FlashCard[]>([]);
-  const [currentCard, setCurrentCard] = useState<FlashCard | null>(null);
+  const [flashCards, setFlashCards] = useState<FlashCardModel[]>([]);
+  const [currentCard, setCurrentCard] = useState<FlashCardModel | null>(null);
 
   useEffect(() => {
     const storedDecks = repository.getDecks();
@@ -45,6 +45,11 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
     setFlashCards(repository.getFlashCards());
   };
 
+  const createFlashCard = (newCard: FlashCardModel) => {
+    const updatedDecks = repository.createFlashCard(newCard);
+    setDecks(updatedDecks);
+  };
+
   const updateFlashCardRevision = (grade: Grade) => {
     if (currentCard) {
       repository.updateFlashCardRevision(currentCard, grade);
@@ -66,15 +71,16 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
     // setCurrentCard(nextCard || null);
   };
 
-  useEffect(() => {
-    getFlashCards();
-  }, []);
+  // useEffect(() => {
+  //   getFlashCards();
+  // }, []);
 
   return {
     createDeck,
     editDeck,
     deleteDeck,
     getFlashCards,
+    createFlashCard,
     handleGrade,
     setFlashCards,
     decks,
@@ -85,12 +91,13 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
 
 export interface useFlashCardType {
   createDeck: (newDeck: DeckModel) => void;
-  editDeck: (deck: DeckModelModel) => void;
+  editDeck: (deck: DeckModel) => void;
   deleteDeck: (deck: DeckModel) => void;
   getFlashCards: () => void;
+  createFlashCard: (newCard: FlashCardModel) => void;
   handleGrade: (grade: Grade) => void;
-  setFlashCards: (flashCards: FlashCard[]) => void;
+  setFlashCards: (flashCards: FlashCardModel[]) => void;
   decks: DeckModel[];
-  flashCards: FlashCard[];
-  currentCard: FlashCard | null;
+  flashCards: FlashCardModel[];
+  currentCard: FlashCardModel | null;
 }

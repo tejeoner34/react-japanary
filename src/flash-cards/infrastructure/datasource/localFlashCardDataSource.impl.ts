@@ -1,28 +1,42 @@
 import { FlashCardDataSource } from '@/flash-cards/domain/datasource/flashCardDataSource';
-import { FlashCard, Grade } from '@/flash-cards/domain/models/flashCards.model';
+import { FlashCardModel, Grade } from '@/flash-cards/domain/models/flashCards.model';
 import { SpaceRepetition } from '../helpers/spaceRepetition';
 import { DeckModel } from '@/flash-cards/domain/models/deck.model';
 
 export class LocalFlashCardDataSourceImpl implements FlashCardDataSource {
-  createFlashCard(flashCard: FlashCard): void {
+  createFlashCard(flashCard: FlashCardModel): DeckModel[] {
+    const decks = this.getDecks();
+    const deck = decks.find((deck) => deck.id === flashCard.deckId);
+
+    if (!deck) {
+      throw new Error('Deck not found');
+    }
+
+    const { allCards, pedingStudyCards } = deck.cards;
+    allCards.push(flashCard);
+    pedingStudyCards.push(flashCard);
+    deck.cards.pendingStudyAmount++;
+    deck.cards.totalAmount++;
+
+    localStorage.setItem('decks', JSON.stringify(decks));
+    return decks;
+  }
+
+  editFlashCard(flashCard: FlashCardModel): void {
     throw new Error('Method not implemented.');
   }
 
-  editFlashCard(flashCard: FlashCard): void {
-    throw new Error('Method not implemented.');
-  }
-
-  updateFlashCardRevision(flashCard: FlashCard, grade: Grade): void {
+  updateFlashCardRevision(flashCard: FlashCardModel, grade: Grade): void {
     const updatedCard = SpaceRepetition.updateSpaceRepetitionData(flashCard, grade);
     // Tenemos que actualizar el local storage
   }
 
-  getFlashCards(): FlashCard[] {
+  getFlashCards(): FlashCardModel[] {
     const storedCards = localStorage.getItem('flashcards');
     return storedCards ? JSON.parse(storedCards) : [];
   }
 
-  deleteFlashCard(flashCard: FlashCard): void {
+  deleteFlashCard(flashCard: FlashCardModel): DeckModel[] {
     throw new Error('Method not implemented.');
   }
 

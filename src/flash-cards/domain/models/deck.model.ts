@@ -18,7 +18,7 @@ interface NewDeckConfig {
 export class Deck implements DeckModel {
   id: string;
   name: string;
-  description?: string;
+  description: string;
   cards: FlashCardsData;
 
   constructor({ name, description, cards, id }: NewDeckConfig) {
@@ -30,6 +30,6 @@ export class Deck implements DeckModel {
       pendingStudyAmount: 0,
       totalAmount: 0,
     };
-    this.description = description;
+    this.description = description || '';
   }
 }

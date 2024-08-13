@@ -1,23 +1,23 @@
 import { FlashCardDataSource } from '@/flash-cards/domain/datasource/flashCardDataSource';
 import { DeckModel } from '@/flash-cards/domain/models/deck.model';
-import { FlashCard, Grade } from '@/flash-cards/domain/models/flashCards.model';
+import { FlashCardModel, Grade } from '@/flash-cards/domain/models/flashCards.model';
 import { FlashCardRepository } from '@/flash-cards/domain/repositories/flashCardRepository';
 
 export class FlashCardRepositoryImpl implements FlashCardRepository {
   constructor(private flashCardDataSource: FlashCardDataSource) {}
-  createFlashCard(flashCard: FlashCard): void {
-    this.flashCardDataSource.createFlashCard(flashCard);
+  createFlashCard(flashCard: FlashCardModel): DeckModel[] {
+    return this.flashCardDataSource.createFlashCard(flashCard);
   }
-  deleteFlashCard(flashCard: FlashCard): void {
-    this.flashCardDataSource.deleteFlashCard(flashCard);
+  deleteFlashCard(flashCard: FlashCardModel): DeckModel[] {
+    return this.flashCardDataSource.deleteFlashCard(flashCard);
   }
-  editFlashCard(flashCard: FlashCard): void {
+  editFlashCard(flashCard: FlashCardModel): void {
     this.flashCardDataSource.editFlashCard(flashCard);
   }
-  getFlashCards(): FlashCard[] {
+  getFlashCards(): FlashCardModel[] {
     return this.flashCardDataSource.getFlashCards();
   }
-  updateFlashCardRevision(flashCard: FlashCard, grade: Grade): void {
+  updateFlashCardRevision(flashCard: FlashCardModel, grade: Grade): void {
     this.flashCardDataSource.updateFlashCardRevision(flashCard, grade);
   }
 

@@ -1,7 +1,7 @@
 import { FlashCardDataSource } from '@/flash-cards/domain/datasource/flashCardDataSource';
 import { FlashCard, Grade } from '@/flash-cards/domain/models/flashCards.model';
 import { SpaceRepetition } from '../helpers/spaceRepetition';
-import { Deck } from '@/flash-cards/domain/models/deck.model';
+import { DeckModel } from '@/flash-cards/domain/models/deck.model';
 
 export class LocalFlashCardDataSourceImpl implements FlashCardDataSource {
   createFlashCard(flashCard: FlashCard): void {
@@ -26,25 +26,39 @@ export class LocalFlashCardDataSourceImpl implements FlashCardDataSource {
     throw new Error('Method not implemented.');
   }
 
-  getDecks(): Deck[] {
-    const rawDecksData = localStorage.getItem('decks');
-    return rawDecksData ? JSON.parse(rawDecksData) : [];
+  getDecks(): DeckModel[] {
+    const storedDecks: DeckModel[] = LocalFlashCardDataSourceImpl._getLocalStorageData('decks');
+    return storedDecks;
   }
 
-  createDeck(deck: Deck): Deck[] {
-    const rawDecksData = localStorage.getItem('decks');
-    const storedDecks: Deck[] = rawDecksData ? JSON.parse(rawDecksData) : [];
+  createDeck(deck: DeckModel): DeckModel[] {
+    const storedDecks: DeckModel[] = LocalFlashCardDataSourceImpl._getLocalStorageData('decks');
     storedDecks.push(deck);
     localStorage.setItem('decks', JSON.stringify(storedDecks));
     console.log(storedDecks);
     return storedDecks;
   }
 
-  editDeck(deck: Deck): Deck[] {
-    throw new Error('Method not implemented.');
+  editDeck(deck: DeckModel): DeckModel[] {
+    const storedDecks: DeckModel[] = LocalFlashCardDataSourceImpl._getLocalStorageData('decks');
+    const foundIndex = storedDecks.findIndex((storedDeck) => storedDeck.id === deck.id);
+    if (foundIndex === -1) {
+      throw new Error('Deck not found');
+    }
+    storedDecks[foundIndex] = deck;
+    localStorage.setItem('decks', JSON.stringify(storedDecks));
+    return storedDecks;
   }
 
-  deleteDeck(deck: Deck): Deck[] {
-    throw new Error('Method not implemented.');
+  deleteDeck(deck: DeckModel): DeckModel[] {
+    const storedDecks: DeckModel[] = LocalFlashCardDataSourceImpl._getLocalStorageData('decks');
+    const filteredDecks = storedDecks.filter((storedDeck) => storedDeck.id !== deck.id);
+    localStorage.setItem('decks', JSON.stringify(filteredDecks));
+    return filteredDecks;
+  }
+
+  static _getLocalStorageData(key: string): any {
+    const rawData = localStorage.getItem(key);
+    return rawData ? JSON.parse(rawData) : [];
   }
 }

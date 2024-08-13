@@ -1,11 +1,18 @@
 export interface FlashCard {
   id: string;
-  question: string;
-  answer: string;
+  front: string;
+  back: string;
   interval: number;
   repetitions: number;
   easeFactor: number;
   nextReview: Date;
+}
+
+export interface FlashCardsData {
+  totalAmount: number;
+  pendingStudyAmount: number;
+  allCards: FlashCard[];
+  pedingStudyCards: FlashCard[];
 }
 
 export enum Grade {

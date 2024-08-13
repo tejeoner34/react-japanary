@@ -6,10 +6,12 @@ import { Folders, CreditCard, Plus } from 'lucide-react';
 import CustomDropdownMenu from '@/common/components/ui/CustomDropdownMenu';
 import { DeckForm } from '../components/ui/DeckForm';
 import DeckItem from '../components/ui/DeckItem';
+import FlashCardForm from '../components/ui/FlashCardForm';
 
 export default function DecksPage() {
   const [isDeckFormVisible, setIsDeckFormVisible] = useState(false);
-  const { decks, createDeck } = useFlashCardsContext();
+  const [isFlashCardFormVisible, setIsFlashCardFormVisible] = useState(false);
+  const { decks, createDeck, editDeck, deleteDeck } = useFlashCardsContext();
   const dropdownMenuItems = [
     {
       name: 'Create new deck',
@@ -19,7 +21,7 @@ export default function DecksPage() {
     {
       name: 'Create new flash card',
       icon: <CreditCard className="mr-2 h-4 w-4" />,
-      action: () => {},
+      action: () => setIsFlashCardFormVisible(true),
     },
   ];
   return (
@@ -28,7 +30,7 @@ export default function DecksPage() {
 
       <div className="flex flex-col gap-3 w-full">
         {decks.map((deck) => (
-          <DeckItem deck={deck} key={deck.id} />
+          <DeckItem deck={deck} key={deck.id} onDelete={deleteDeck} onEdit={editDeck} />
         ))}
       </div>
 
@@ -43,6 +45,11 @@ export default function DecksPage() {
       <DeckForm
         isVisible={isDeckFormVisible}
         onCloseVisibility={() => setIsDeckFormVisible(false)}
+        onSubmit={createDeck}
+      />
+      <FlashCardForm
+        isVisible={isFlashCardFormVisible}
+        onCloseVisibility={() => setIsFlashCardFormVisible(false)}
         onSubmit={createDeck}
       />
     </>

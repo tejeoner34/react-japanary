@@ -13,14 +13,14 @@ describe('SampleSentenceSection', () => {
   it('should render component when not loading', () => {
     render(<SampleSentenceSection exampleSentences={SAMPLE_SENTENCES_MOCK} isLoading={false} />);
 
-    const subTitle = screen.getByRole('heading', { name: /sentences/ });
+    const subTitle = screen.getByRole('heading', { name: /Sentences/ });
     expect(subTitle).toBeInTheDocument();
   });
 
   it('should render sentences', () => {
     render(<SampleSentenceSection exampleSentences={SAMPLE_SENTENCES_MOCK} isLoading={false} />);
 
-    const subTitle = screen.getByRole('heading', { name: /sentences/ });
+    const subTitle = screen.getByRole('heading', { name: /Sentences/ });
     expect(subTitle).toBeInTheDocument();
     SAMPLE_SENTENCES_MOCK.forEach((sentence) => {
       expect(screen.getByText(sentence.english)).toBeInTheDocument();

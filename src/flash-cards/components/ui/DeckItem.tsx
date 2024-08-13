@@ -1,18 +1,29 @@
 import CustomDropdownMenu from '@/common/components/ui/CustomDropdownMenu';
 import CustomText from '@/common/components/ui/CustomText';
-import { Deck } from '@/flash-cards/domain/models/deck.model';
-import { EllipsisVertical, Pencil } from 'lucide-react';
+import { DeckModel } from '@/flash-cards/domain/models/deck.model';
+import { EllipsisVertical, Pencil, X } from 'lucide-react';
+import { DeckForm } from './DeckForm';
+import { useState } from 'react';
 
 interface DeckItemProps {
-  deck: Deck;
+  deck: DeckModel;
+  onDelete: (deck: DeckModel) => void;
+  onEdit: (deck: DeckModel) => void;
 }
 
-export default function DeckItem({ deck }: DeckItemProps) {
+export default function DeckItem({ deck, onDelete, onEdit }: DeckItemProps) {
+  const [isDeckFormVisible, setIsDeckFormVisible] = useState(false);
+
   const dropdownMenuItems = [
     {
       name: 'Edit deck',
       icon: <Pencil className="mr-2 h-4 w-4" />,
-      action: () => {},
+      action: () => setIsDeckFormVisible(true),
+    },
+    {
+      name: 'Delete deck',
+      icon: <X className="mr-2 h-4 w-4" />,
+      action: () => onDelete(deck),
     },
   ];
   return (
@@ -21,11 +32,21 @@ export default function DeckItem({ deck }: DeckItemProps) {
         <CustomText tag="h4" text={deck.name} />
         <CustomText styles="opacity-80" text={deck.description} />
       </div>
-      <div>
+      <div className="flex gap-3">
+        <div>
+          <CustomText text={`Total: ${String(deck.cards.allCards.length)}`} />
+        </div>
         <CustomDropdownMenu items={dropdownMenuItems}>
-          <EllipsisVertical />
+          <EllipsisVertical role="button" />
         </CustomDropdownMenu>
       </div>
+      <DeckForm
+        isVisible={isDeckFormVisible}
+        mode="edit"
+        deck={deck}
+        onCloseVisibility={() => setIsDeckFormVisible(false)}
+        onSubmit={onEdit}
+      />
     </div>
   );
 }

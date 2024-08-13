@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react';
 import { FlashCard, Grade } from '../domain/models/flashCards.model';
 import { LocalFlashCardDataSourceImpl } from '../infrastructure/datasource/localFlashCardDataSource.impl';
 import { initializeRepository } from '../infrastructure/repositories/flashCardRepository.impl';
-import { Deck } from '../domain/models/deck.model';
+import { DeckModel } from '../domain/models/deck.model';
 import { FlashCardRepository } from '../domain/repositories/flashCardRepository';
 
 const defaultRepository = initializeRepository(new LocalFlashCardDataSourceImpl());
 
 export function useFlashCard(repository: FlashCardRepository = defaultRepository) {
-  const [decks, setDecks] = useState<Deck[]>([]);
+  const [decks, setDecks] = useState<DeckModel[]>([]);
   const [flashCards, setFlashCards] = useState<FlashCard[]>([]);
   const [currentCard, setCurrentCard] = useState<FlashCard | null>(null);
 
@@ -24,9 +24,20 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
     setCurrentCard(nextCard || null);
   }, [flashCards]);
 
-  const createDeck = (newDeck: Deck) => {
+  const createDeck = (newDeck: DeckModel) => {
     const storedDecks = repository.createDeck(newDeck);
     console.log(storedDecks);
+    setDecks(storedDecks);
+  };
+
+  const deleteDeck = (deck: DeckModel) => {
+    const storedDecks = repository.deleteDeck(deck);
+    setDecks(storedDecks);
+  };
+
+  const editDeck = (deck: DeckModel) => {
+    console.log(deck);
+    const storedDecks = repository.editDeck(deck);
     setDecks(storedDecks);
   };
 
@@ -61,6 +72,8 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
 
   return {
     createDeck,
+    editDeck,
+    deleteDeck,
     getFlashCards,
     handleGrade,
     setFlashCards,
@@ -71,11 +84,13 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
 }
 
 export interface useFlashCardType {
-  createDeck: (newDeck: Deck) => void;
+  createDeck: (newDeck: DeckModel) => void;
+  editDeck: (deck: DeckModelModel) => void;
+  deleteDeck: (deck: DeckModel) => void;
   getFlashCards: () => void;
   handleGrade: (grade: Grade) => void;
   setFlashCards: (flashCards: FlashCard[]) => void;
-  decks: Deck[];
+  decks: DeckModel[];
   flashCards: FlashCard[];
   currentCard: FlashCard | null;
 }

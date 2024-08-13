@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { FlashCardModel, Grade } from '../domain/models/flashCards.model';
 import { LocalFlashCardDataSourceImpl } from '../infrastructure/datasource/localFlashCardDataSource.impl';
 import { initializeRepository } from '../infrastructure/repositories/flashCardRepository.impl';
@@ -11,34 +11,37 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
   const [decks, setDecks] = useState<DeckModel[]>([]);
   const [flashCards, setFlashCards] = useState<FlashCardModel[]>([]);
   const [currentCard, setCurrentCard] = useState<FlashCardModel | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
+  const getDecks = useCallback(() => {
+    setIsLoading(true);
     const storedDecks = repository.getDecks();
     console.log(storedDecks);
-
     setDecks(storedDecks);
+    setIsLoading(false);
   }, [repository]);
 
-  useEffect(() => {
-    const nextCard = flashCards.find((card) => new Date(card.nextReview) <= new Date());
-    setCurrentCard(nextCard || null);
-  }, [flashCards]);
-
   const createDeck = (newDeck: DeckModel) => {
+    setIsLoading(true);
     const storedDecks = repository.createDeck(newDeck);
     console.log(storedDecks);
     setDecks(storedDecks);
+    setIsLoading(false);
   };
 
   const deleteDeck = (deck: DeckModel) => {
+    setIsLoading(true);
     const storedDecks = repository.deleteDeck(deck);
     setDecks(storedDecks);
+    setIsLoading(false);
   };
 
   const editDeck = (deck: DeckModel) => {
+    setIsLoading(true);
     console.log(deck);
     const storedDecks = repository.editDeck(deck);
     setDecks(storedDecks);
+    setIsLoading(false);
   };
 
   const getFlashCards = () => {
@@ -46,8 +49,10 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
   };
 
   const createFlashCard = (newCard: FlashCardModel) => {
+    setIsLoading(true);
     const updatedDecks = repository.createFlashCard(newCard);
     setDecks(updatedDecks);
+    setIsLoading(false);
   };
 
   const updateFlashCardRevision = (grade: Grade) => {
@@ -75,6 +80,15 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
   //   getFlashCards();
   // }, []);
 
+  useEffect(() => {
+    getDecks();
+  }, [getDecks]);
+
+  // useEffect(() => {
+  //   const nextCard = flashCards.find((card) => new Date(card.nextReview) <= new Date());
+  //   setCurrentCard(nextCard || null);
+  // }, [flashCards]);
+
   return {
     createDeck,
     editDeck,
@@ -86,6 +100,7 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
     decks,
     flashCards,
     currentCard,
+    isLoading,
   };
 }
 
@@ -100,4 +115,5 @@ export interface useFlashCardType {
   decks: DeckModel[];
   flashCards: FlashCardModel[];
   currentCard: FlashCardModel | null;
+  isLoading: boolean;
 }

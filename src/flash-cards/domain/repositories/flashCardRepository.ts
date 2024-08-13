@@ -1,4 +1,4 @@
-import { Deck } from '../models/deck.model';
+import { DeckModel } from '../models/deck.model';
 import { FlashCard, Grade } from '../models/flashCards.model';
 
 export interface FlashCardRepository {
@@ -7,8 +7,8 @@ export interface FlashCardRepository {
   editFlashCard(flashCard: FlashCard): void;
   getFlashCards(): FlashCard[];
   updateFlashCardRevision(flashCard: FlashCard, grade: Grade): void;
-  getDecks(): Deck[];
-  createDeck(deck: Deck): Deck[];
-  editDeck(deck: Deck): Deck[];
-  deleteDeck(deck: Deck): Deck[];
+  getDecks(): DeckModel[];
+  createDeck(deck: DeckModel): DeckModel[];
+  editDeck(deck: DeckModel): DeckModel[];
+  deleteDeck(deck: DeckModel): DeckModel[];
 }

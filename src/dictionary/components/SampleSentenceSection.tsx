@@ -1,5 +1,6 @@
 import { Skeleton } from '@/common/components/ui/skeleton';
 import { ExampleSentence } from '../models/searchResult';
+import CustomText from '@/common/components/ui/CustomText';
 
 interface Props {
   exampleSentences: ExampleSentence[];
@@ -28,9 +29,10 @@ export default function SampleSentenceSection({ exampleSentences, isLoading }: P
         <SkeletonSampleSentence />
       ) : (
         <div className="flex flex-col gap-5 p-5">
-          <h3 className="font-semibold text-lg">
-            {exampleSentences.length ? 'Sample sentecenes' : 'No Sample Senteces :('}
-          </h3>
+          <CustomText
+            tag="h3"
+            text={exampleSentences.length ? 'Sample Sentences' : 'No Sample Sentences :('}
+          />
           <div className="flex flex-col gap-10">
             {exampleSentences.map((sentece, index) => (
               <div key={index} className="pb-2 border-b border-gray-300">

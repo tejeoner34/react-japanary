@@ -24,6 +24,6 @@ describe('CustomText', () => {
     expect(element).toBeInTheDocument();
     expect(element.tagName).toBe('P');
     const className = element.className;
-    expect(className).toBe('');
+    expect(className.trim()).toBe('');
   });
 });

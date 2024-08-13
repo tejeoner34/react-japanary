@@ -11,7 +11,7 @@ import FlashCardForm from '../components/ui/FlashCardForm';
 export default function DecksPage() {
   const [isDeckFormVisible, setIsDeckFormVisible] = useState(false);
   const [isFlashCardFormVisible, setIsFlashCardFormVisible] = useState(false);
-  const { decks, createDeck, editDeck, deleteDeck } = useFlashCardsContext();
+  const { decks, createDeck, editDeck, deleteDeck, createFlashCard } = useFlashCardsContext();
   const dropdownMenuItems = [
     {
       name: 'Create new deck',
@@ -48,9 +48,10 @@ export default function DecksPage() {
         onSubmit={createDeck}
       />
       <FlashCardForm
+        availableDecks={decks}
         isVisible={isFlashCardFormVisible}
         onCloseVisibility={() => setIsFlashCardFormVisible(false)}
-        onSubmit={createDeck}
+        onSubmit={createFlashCard}
       />
     </>
   );

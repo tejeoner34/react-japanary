@@ -7,5 +7,6 @@ export * from './DropdownMenu';
 export * from './errors';
 export * from './Header';
 export * from './input';
-export * from './skeleton';
 export * from './Label';
+export * from './Select';
+export * from './skeleton';

@@ -9,6 +9,7 @@ import SearchResultsScreen from './dictionary/pages/SearchResultScreen';
 import DictionaryModuleLayout from './dictionary/layout/DictionaryModuleLayout';
 import FlashCardsModuleLayout from './flash-cards/layout/FlashCardsModuleLayout';
 import { FlashCardsContextProvider } from './flash-cards/context/flashCardsContext';
+import StudyPage from './flash-cards/pages/StudyPage';
 
 const router = createBrowserRouter([
   {
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
           {
             path: '/decks',
             element: <DecksPage />,
+          },
+          {
+            path: '/decks/study/:deckId',
+            element: <StudyPage />,
           },
         ],
       },

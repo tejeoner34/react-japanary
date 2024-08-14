@@ -55,6 +55,12 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
     setIsLoading(false);
   };
 
+  const editFlashCard = (flashCard: FlashCardModel) => {
+    setIsLoading(true);
+    setDecks(repository.editFlashCard(flashCard));
+    setIsLoading(false);
+  };
+
   const updateFlashCardRevision = (grade: Grade) => {
     if (currentCard) {
       repository.updateFlashCardRevision(currentCard, grade);
@@ -95,6 +101,7 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
     deleteDeck,
     getFlashCards,
     createFlashCard,
+    editFlashCard,
     handleGrade,
     setFlashCards,
     decks,
@@ -110,6 +117,7 @@ export interface useFlashCardType {
   deleteDeck: (deck: DeckModel) => void;
   getFlashCards: () => void;
   createFlashCard: (newCard: FlashCardModel) => void;
+  editFlashCard: (flashCard: FlashCardModel) => void;
   handleGrade: (grade: Grade) => void;
   setFlashCards: (flashCards: FlashCardModel[]) => void;
   decks: DeckModel[];

@@ -4,7 +4,7 @@ import { FlashCardModel, Grade } from '../models/flashCards.model';
 export interface FlashCardRepository {
   createFlashCard(flashCard: FlashCardModel): DeckModel[];
   deleteFlashCard(flashCard: FlashCardModel): DeckModel[];
-  editFlashCard(flashCard: FlashCardModel): void;
+  editFlashCard(flashCard: FlashCardModel): DeckModel[];
   getFlashCards(): FlashCardModel[];
   updateFlashCardRevision(flashCard: FlashCardModel, grade: Grade): void;
   getDecks(): DeckModel[];

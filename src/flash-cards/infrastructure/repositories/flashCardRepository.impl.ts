@@ -11,8 +11,8 @@ export class FlashCardRepositoryImpl implements FlashCardRepository {
   deleteFlashCard(flashCard: FlashCardModel): DeckModel[] {
     return this.flashCardDataSource.deleteFlashCard(flashCard);
   }
-  editFlashCard(flashCard: FlashCardModel): void {
-    this.flashCardDataSource.editFlashCard(flashCard);
+  editFlashCard(flashCard: FlashCardModel): DeckModel[] {
+    return this.flashCardDataSource.editFlashCard(flashCard);
   }
   getFlashCards(): FlashCardModel[] {
     return this.flashCardDataSource.getFlashCards();

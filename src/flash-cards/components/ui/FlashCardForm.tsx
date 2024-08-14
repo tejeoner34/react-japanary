@@ -37,12 +37,10 @@ export default function FlashCardForm({
   onSubmit,
 }: FlashCardFormProps) {
   const [form, setForm] = useState({
-    front: '',
-    back: '',
+    front: flashCardToEdit?.front || '',
+    back: flashCardToEdit?.back || '',
     belongsToDeck: flashCardToEdit?.deckId ?? availableDecks[0].id,
   });
-
-  const isValidForm = form.front.trim() !== '';
 
   const handleInputChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = ev.target;
@@ -60,6 +58,8 @@ export default function FlashCardForm({
       front: form.front,
       back: form.back,
       deckId: form.belongsToDeck || availableDecks[0].id,
+      id: flashCardToEdit?.id,
+      nextReview: flashCardToEdit?.nextReview,
     });
     console.log('newcard', newFlashCardData);
     onSubmit(newFlashCardData);
@@ -67,6 +67,8 @@ export default function FlashCardForm({
   };
 
   const titleText = mode === 'create' ? 'New Card' : 'Edit Card';
+
+  const isValidForm = form.front.trim() !== '' || form.back.trim() !== '';
 
   return (
     <Dialog

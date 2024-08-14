@@ -29,6 +29,8 @@ interface NewFlashCardProps {
   front: string;
   back: string;
   deckId: string;
+  id?: string;
+  nextReview?: Date;
 }
 
 export class FlashCard implements FlashCardModel {
@@ -40,14 +42,14 @@ export class FlashCard implements FlashCardModel {
   easeFactor: number;
   nextReview: Date;
   deckId: string;
-  constructor({ back, deckId, front }: NewFlashCardProps) {
-    this.id = createUniqueId();
+  constructor({ back, deckId, front, id, nextReview }: NewFlashCardProps) {
+    this.id = id || createUniqueId();
     this.back = back;
     this.deckId = deckId;
     this.easeFactor = 2.5;
     this.front = front;
     this.interval = 0;
-    this.nextReview = new Date();
+    this.nextReview = nextReview || new Date();
     this.repetitions = 0;
   }
 }

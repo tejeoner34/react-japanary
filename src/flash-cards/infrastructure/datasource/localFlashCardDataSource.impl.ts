@@ -1,7 +1,7 @@
 import { FlashCardDataSource } from '@/flash-cards/domain/datasource/flashCardDataSource';
 import { FlashCardModel, Grade } from '@/flash-cards/domain/models/flashCards.model';
 import { SpaceRepetition } from '../helpers/spaceRepetition';
-import { DeckModel } from '@/flash-cards/domain/models/deck.model';
+import { Deck, DeckModel } from '@/flash-cards/domain/models/deck.model';
 
 export class LocalFlashCardDataSourceImpl implements FlashCardDataSource {
   createFlashCard(flashCard: FlashCardModel): DeckModel[] {
@@ -22,8 +22,20 @@ export class LocalFlashCardDataSourceImpl implements FlashCardDataSource {
     return decks;
   }
 
-  editFlashCard(flashCard: FlashCardModel): void {
-    throw new Error('Method not implemented.');
+  editFlashCard(flashCard: FlashCardModel): DeckModel[] {
+    const decks = this.getDecks();
+    const deck = decks.find((deck) => deck.id === flashCard.deckId);
+    if (!deck) {
+      throw new Error('Deck not found');
+    }
+    const { allCards, pedingStudyCards } = deck.cards;
+    const allCardsItem = allCards.findIndex((card) => card.id === flashCard.id);
+    const pendingCardsItem = pedingStudyCards.findIndex((card) => card.id === flashCard.id);
+    allCards[allCardsItem] = flashCard;
+    pedingStudyCards[pendingCardsItem] = flashCard;
+
+    localStorage.setItem('decks', JSON.stringify(decks));
+    return decks;
   }
 
   updateFlashCardRevision(flashCard: FlashCardModel, grade: Grade): void {
@@ -42,6 +54,12 @@ export class LocalFlashCardDataSourceImpl implements FlashCardDataSource {
 
   getDecks(): DeckModel[] {
     const storedDecks: DeckModel[] = LocalFlashCardDataSourceImpl._getLocalStorageData('decks');
+    //Local implementation, in non local implementation it should get the default deck from backend
+    if (!storedDecks.length) {
+      const defaultDeck = Deck.createDefaultDeck();
+      this.createDeck(defaultDeck);
+      return [defaultDeck];
+    }
     return storedDecks;
   }
 

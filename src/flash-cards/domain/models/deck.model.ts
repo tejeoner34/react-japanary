@@ -32,4 +32,11 @@ export class Deck implements DeckModel {
     };
     this.description = description || '';
   }
+
+  static createDefaultDeck(): DeckModel {
+    return new Deck({
+      name: 'Default',
+      description: 'This is a default deck, you can modify or create new ones',
+    });
+  }
 }

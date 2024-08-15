@@ -1,4 +1,5 @@
 import { createUniqueId } from '@/common/utils';
+import { SpaceRepetition } from '@/flash-cards/infrastructure/helpers/spaceRepetition';
 
 export interface FlashCardModel {
   id: string;
@@ -9,6 +10,7 @@ export interface FlashCardModel {
   easeFactor: number;
   nextReview: Date;
   deckId: string;
+  updateWithGrade: (grade: Grade) => void;
 }
 
 export interface FlashCardsData {
@@ -51,5 +53,19 @@ export class FlashCard implements FlashCardModel {
     this.interval = 0;
     this.nextReview = nextReview || new Date();
     this.repetitions = 0;
+  }
+
+  updateWithGrade(grade: Grade): void {
+    console.log(this);
+    const updatedCard = SpaceRepetition.updateSpaceRepetitionData(this, grade);
+    this.interval = updatedCard.interval;
+    this.repetitions = updatedCard.repetitions;
+    this.easeFactor = updatedCard.easeFactor;
+    this.nextReview = updatedCard.nextReview;
+    console.log(this);
+  }
+
+  static updateWithGrade(card: FlashCardModel, grade: Grade): FlashCardModel {
+    return SpaceRepetition.updateSpaceRepetitionData(card, grade);
   }
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useFlashCardsContext } from '../hooks/useFlashCardsContext';
 import CustomText from '@/common/components/ui/CustomText';
 import { Button } from '@/common/components/ui';
@@ -8,12 +8,21 @@ import { DeckForm } from '../components/ui/DeckForm';
 import DeckItem from '../components/ui/DeckItem';
 import FlashCardForm from '../components/ui/FlashCardForm';
 import { Spinner } from '@/common/components/ui/Spinner';
+import { DeckModel } from '../domain/models/deck.model';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function DecksPage() {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [isDeckFormVisible, setIsDeckFormVisible] = useState(false);
   const [isFlashCardFormVisible, setIsFlashCardFormVisible] = useState(false);
-  const { isLoading, decks, createDeck, editDeck, deleteDeck, createFlashCard } =
+  const { isLoading, decks, getDecks, createDeck, editDeck, deleteDeck, createFlashCard } =
     useFlashCardsContext();
+
+  const handleNavigation = (deck: DeckModel) => {
+    if (deck.cards.pendingStudyAmount === 0) return;
+    navigate(`/decks/study/${deck.id}`);
+  };
   const dropdownMenuItems = [
     {
       name: 'Create new deck',
@@ -27,6 +36,13 @@ export default function DecksPage() {
     },
   ];
 
+  useEffect(() => {
+    console.log(location);
+    if (location.pathname === '/decks') {
+      getDecks();
+    }
+  }, [location, getDecks]);
+
   if (isLoading) {
     return <Spinner size="large" />;
   }
@@ -36,7 +52,13 @@ export default function DecksPage() {
 
       <div className="flex flex-col gap-3 w-full">
         {decks.map((deck) => (
-          <DeckItem deck={deck} key={deck.id} onDelete={deleteDeck} onEdit={editDeck} />
+          <DeckItem
+            deck={deck}
+            key={deck.id}
+            onClick={handleNavigation}
+            onDelete={deleteDeck}
+            onEdit={editDeck}
+          />
         ))}
       </div>
 

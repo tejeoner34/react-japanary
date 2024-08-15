@@ -1,9 +1,10 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useFlashCardsContext } from '@/flash-cards/hooks/useFlashCardsContext';
 import { Button } from '@/common/components/ui';
 import CustomText from '@/common/components/ui/CustomText';
-import { FlashCardModel, Grade } from '@/flash-cards/domain/models/flashCards.model';
-import { useState } from 'react';
+import { FlashCard, FlashCardModel, Grade } from '@/flash-cards/domain/models/flashCards.model';
 import FlashCardForm from './FlashCardForm';
-import { useFlashCardsContext } from '@/flash-cards/hooks/useFlashCardsContext';
 
 const DIFFICULTY_LEVEL_BUTTONS = [
   {
@@ -25,22 +26,48 @@ const DIFFICULTY_LEVEL_BUTTONS = [
 ];
 
 interface StudyFlashCardProps {
-  flashCard: FlashCardModel;
-  totalStudyAmount: number;
+  cardsToStudy: FlashCardModel[];
 }
-export default function StudyFlashCard({ flashCard, totalStudyAmount }: StudyFlashCardProps) {
-  const { decks, editFlashCard } = useFlashCardsContext();
+export default function StudyFlashCard({ cardsToStudy }: StudyFlashCardProps) {
+  const navigate = useNavigate();
+  const [currentFlashCard, setCurrentFlashCard] = useState(cardsToStudy[0]);
+
+  const { decks, editFlashCard, updateFlashCardRevision } = useFlashCardsContext();
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [isAnswerVisible, setIsAnswerVisible] = useState(false);
   const onShowResult = () => {
     setIsAnswerVisible(true);
   };
 
+  const handleDifficultySelection = (grade: Grade) => {
+    const updatedCard = FlashCard.updateWithGrade(currentFlashCard, grade);
+    updateFlashCardRevision(updatedCard);
+    cardsToStudy.shift();
+    if (grade === Grade.Again) {
+      cardsToStudy.push(updatedCard);
+    }
+    if (!cardsToStudy.length) {
+      navigate('/decks');
+      return;
+    }
+    setCurrentFlashCard(cardsToStudy[0]);
+    resetComponentState();
+  };
+
+  const resetComponentState = () => {
+    setIsFormVisible(false);
+    setIsAnswerVisible(false);
+  };
+
   const _difficultyButtonTpl = () => {
     return (
       isAnswerVisible &&
       DIFFICULTY_LEVEL_BUTTONS.map((button) => (
-        <Button key={button.value} variant="secondaryShadow" onClick={onShowResult}>
+        <Button
+          key={button.value}
+          variant="secondaryShadow"
+          onClick={() => handleDifficultySelection(button.value)}
+        >
           {button.name}
         </Button>
       ))
@@ -56,6 +83,7 @@ export default function StudyFlashCard({ flashCard, totalStudyAmount }: StudyFla
       )
     );
   };
+
   return (
     <div className="flex flex-col items-center w-full h-full">
       <div className="flex justify-between items-center w-full">
@@ -64,11 +92,11 @@ export default function StudyFlashCard({ flashCard, totalStudyAmount }: StudyFla
             Edit
           </Button>
         </div>
-        <div>{totalStudyAmount}</div>
+        <div>{cardsToStudy.length}</div>
       </div>
 
       <div className="mt-5">
-        <CustomText text={isAnswerVisible ? flashCard.back : flashCard.front} />
+        <CustomText text={isAnswerVisible ? currentFlashCard.back : currentFlashCard.front} />
       </div>
 
       <div className="fixed bottom-5 w-full flex justify-evenly items-center">
@@ -79,7 +107,7 @@ export default function StudyFlashCard({ flashCard, totalStudyAmount }: StudyFla
         availableDecks={decks}
         isVisible={isFormVisible}
         mode="edit"
-        flashCardToEdit={flashCard}
+        flashCardToEdit={currentFlashCard}
         onCloseVisibility={() => setIsFormVisible(false)}
         onSubmit={editFlashCard}
       />

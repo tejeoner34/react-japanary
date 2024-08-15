@@ -61,39 +61,15 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
     setIsLoading(false);
   };
 
-  const updateFlashCardRevision = (grade: Grade) => {
-    if (currentCard) {
-      repository.updateFlashCardRevision(currentCard, grade);
+  const updateFlashCardRevision = (flashCard: FlashCardModel) => {
+    if (flashCard) {
+      repository.updateFlashCardRevision(flashCard);
     }
   };
-
-  const handleGrade = (grade: Grade) => {
-    if (!currentCard) return;
-    // TODO : esto está mal. La idea es que el propio método repository.updateFlashCardRevision actualice el local o lo que toque
-    const updatedCard = updateFlashCardRevision(grade);
-    // const updatedFlashcards = flashCards.map((card) =>
-    //   card.id === updatedCard.id ? updatedCard : card
-    // );
-
-    // setFlashCards(updatedFlashcards);
-    // localStorage.setItem('flashcards', JSON.stringify(updatedFlashcards));
-
-    // const nextCard = updatedFlashcards.find((card) => new Date(card.nextReview) <= new Date());
-    // setCurrentCard(nextCard || null);
-  };
-
-  // useEffect(() => {
-  //   getFlashCards();
-  // }, []);
 
   useEffect(() => {
     getDecks();
   }, [getDecks]);
-
-  // useEffect(() => {
-  //   const nextCard = flashCards.find((card) => new Date(card.nextReview) <= new Date());
-  //   setCurrentCard(nextCard || null);
-  // }, [flashCards]);
 
   return {
     createDeck,
@@ -102,8 +78,10 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
     getFlashCards,
     createFlashCard,
     editFlashCard,
-    handleGrade,
     setFlashCards,
+    setCurrentCard,
+    updateFlashCardRevision,
+    getDecks,
     decks,
     flashCards,
     currentCard,
@@ -118,8 +96,10 @@ export interface useFlashCardType {
   getFlashCards: () => void;
   createFlashCard: (newCard: FlashCardModel) => void;
   editFlashCard: (flashCard: FlashCardModel) => void;
-  handleGrade: (grade: Grade) => void;
   setFlashCards: (flashCards: FlashCardModel[]) => void;
+  setCurrentCard: (flashCard: FlashCardModel) => void;
+  updateFlashCardRevision: (flashCard: FlashCardModel) => void;
+  getDecks: () => void;
   decks: DeckModel[];
   flashCards: FlashCardModel[];
   currentCard: FlashCardModel | null;

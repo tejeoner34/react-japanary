@@ -4,23 +4,16 @@ import { DeckModel } from '@/flash-cards/domain/models/deck.model';
 import { EllipsisVertical, Pencil, X } from 'lucide-react';
 import { DeckForm } from './DeckForm';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 interface DeckItemProps {
   deck: DeckModel;
+  onClick: (deck: DeckModel) => void;
   onDelete: (deck: DeckModel) => void;
   onEdit: (deck: DeckModel) => void;
 }
 
-export default function DeckItem({ deck, onDelete, onEdit }: DeckItemProps) {
-  const navigate = useNavigate();
+export default function DeckItem({ deck, onClick, onDelete, onEdit }: DeckItemProps) {
   const [isDeckFormVisible, setIsDeckFormVisible] = useState(false);
-
-  const handleNavigation = () => {
-    //temporal solution. We prevent navigation deck has no cards
-    if (deck.cards.totalAmount === 0) return;
-    navigate(`/decks/study/${deck.id}`);
-  };
 
   const dropdownMenuItems = [
     {
@@ -39,7 +32,7 @@ export default function DeckItem({ deck, onDelete, onEdit }: DeckItemProps) {
       className="flex justify-between items-center gap-1 bg-backgroundTertiary p-4 rounded-md"
       role="button"
       tabIndex={0}
-      onClick={handleNavigation}
+      onClick={() => onClick(deck)}
     >
       <div className="text-start">
         <CustomText tag="h4" text={deck.name} />
@@ -47,7 +40,10 @@ export default function DeckItem({ deck, onDelete, onEdit }: DeckItemProps) {
       </div>
       <div className="flex gap-3">
         <div>
-          <CustomText styles="text-nowrap" text={`Total: ${String(deck.cards.allCards.length)}`} />
+          <CustomText
+            styles="text-nowrap"
+            text={`Study: ${String(deck.cards.pendingStudyAmount)}`}
+          />
         </div>
         <CustomDropdownMenu items={dropdownMenuItems}>
           <EllipsisVertical role="button" tabIndex={0} />

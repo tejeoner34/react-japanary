@@ -7,14 +7,10 @@ export default function StudyPage() {
   const { deckId } = useParams();
   const { decks } = useFlashCardsContext();
   const deck = useMemo(() => decks.find((deck) => deck.id === deckId), [deckId, decks]);
-
   if (!deck) return <div>Deck not found</div>;
   return (
     <>
-      <StudyFlashCard
-        flashCard={deck.cards.pedingStudyCards[0]}
-        totalStudyAmount={deck.cards.pendingStudyAmount}
-      />
+      <StudyFlashCard cardsToStudy={deck.cards.pedingStudyCards} />
     </>
   );
 }

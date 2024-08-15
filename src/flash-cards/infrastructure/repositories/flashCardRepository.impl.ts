@@ -1,6 +1,6 @@
 import { FlashCardDataSource } from '@/flash-cards/domain/datasource/flashCardDataSource';
 import { DeckModel } from '@/flash-cards/domain/models/deck.model';
-import { FlashCardModel, Grade } from '@/flash-cards/domain/models/flashCards.model';
+import { FlashCardModel } from '@/flash-cards/domain/models/flashCards.model';
 import { FlashCardRepository } from '@/flash-cards/domain/repositories/flashCardRepository';
 
 export class FlashCardRepositoryImpl implements FlashCardRepository {
@@ -17,8 +17,8 @@ export class FlashCardRepositoryImpl implements FlashCardRepository {
   getFlashCards(): FlashCardModel[] {
     return this.flashCardDataSource.getFlashCards();
   }
-  updateFlashCardRevision(flashCard: FlashCardModel, grade: Grade): void {
-    this.flashCardDataSource.updateFlashCardRevision(flashCard, grade);
+  updateFlashCardRevision(flashCard: FlashCardModel): void {
+    this.flashCardDataSource.updateFlashCardRevision(flashCard);
   }
 
   getDecks(): DeckModel[] {

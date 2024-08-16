@@ -85,8 +85,12 @@ export class Deck implements DeckModel {
   }
 
   getPendingStudyCards(): FlashCardModel[] {
-    const now = new Date();
-    return this.cards.allCards.filter((card) => new Date(card.nextReview) <= now);
+    const now = new Date().setHours(0, 0, 0, 0);
+
+    return this.cards.allCards.filter((card) => {
+      const cardReviewDate = new Date(card.nextReview).setHours(0, 0, 0, 0);
+      return cardReviewDate <= now;
+    });
   }
 
   setPendingStudyCards() {

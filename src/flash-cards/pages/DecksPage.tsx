@@ -25,19 +25,18 @@ export default function DecksPage() {
   };
   const dropdownMenuItems = [
     {
-      name: 'Create new deck',
-      icon: <Folders className="mr-2 h-4 w-4" />,
-      action: () => setIsDeckFormVisible(true),
-    },
-    {
       name: 'Create new flash card',
       icon: <CreditCard className="mr-2 h-4 w-4" />,
       action: () => setIsFlashCardFormVisible(true),
     },
+    {
+      name: 'Create new deck',
+      icon: <Folders className="mr-2 h-4 w-4" />,
+      action: () => setIsDeckFormVisible(true),
+    },
   ];
 
   useEffect(() => {
-    console.log(location);
     if (location.pathname === '/decks') {
       getDecks();
     }
@@ -50,7 +49,7 @@ export default function DecksPage() {
     <>
       <CustomText tag="h1" text="Your decks" />
 
-      <div className="flex flex-col gap-3 w-full">
+      <div className="flex flex-col gap-3 w-full max-w-3xl">
         {decks.map((deck) => (
           <DeckItem
             deck={deck}

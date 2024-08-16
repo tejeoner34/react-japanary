@@ -36,10 +36,11 @@ export default function FlashCardForm({
   onCloseVisibility,
   onSubmit,
 }: FlashCardFormProps) {
+  const defaultDeck = flashCardToEdit?.deckId ?? availableDecks[0].id;
   const [form, setForm] = useState({
     front: flashCardToEdit?.front || '',
     back: flashCardToEdit?.back || '',
-    belongsToDeck: flashCardToEdit?.deckId ?? availableDecks[0].id,
+    belongsToDeck: defaultDeck,
   });
 
   const handleInputChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
@@ -88,11 +89,7 @@ export default function FlashCardForm({
               <Label htmlFor="deck" className="text-right">
                 Deck
               </Label>
-              <Select
-                name="deck"
-                defaultValue={availableDecks[0].id}
-                onValueChange={handleSelectChange}
-              >
+              <Select name="deck" defaultValue={defaultDeck} onValueChange={handleSelectChange}>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Select Deck" />
                 </SelectTrigger>
@@ -133,7 +130,7 @@ export default function FlashCardForm({
           </div>
           <DialogFooter>
             <Button type="submit" disabled={!isValidForm}>
-              Create Deck
+              {mode === 'create' ? 'Create' : 'Save'}
             </Button>
           </DialogFooter>
         </form>

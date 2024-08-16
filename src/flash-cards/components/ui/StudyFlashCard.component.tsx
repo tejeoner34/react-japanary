@@ -96,7 +96,10 @@ export default function StudyFlashCard({ cardsToStudy }: StudyFlashCardProps) {
       </div>
 
       <div className="mt-5">
-        <CustomText text={isAnswerVisible ? currentFlashCard.back : currentFlashCard.front} />
+        <CustomText
+          styles="text-3xl"
+          text={isAnswerVisible ? currentFlashCard.back : currentFlashCard.front}
+        />
       </div>
 
       <div className="fixed bottom-5 w-full flex justify-evenly items-center">

@@ -10,7 +10,7 @@ export default function DictionaryScreen() {
   };
   return (
     <>
-      <div className="z-100 fixed bottom-0 p-5 bg-backgroundSecondary max-w-md w-full md:relative md:p-0">
+      <div className="z-100 fixed bottom-0 right-0 left-0 p-5 bg-backgroundSecondary max-w-md w-full md:relative md:p-0">
         <Form onSubmit={handleSearch} />
       </div>
       <div className="flex flex-col gap-3">

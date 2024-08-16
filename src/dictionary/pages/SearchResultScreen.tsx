@@ -25,7 +25,7 @@ const SearchResultsScreen = () => {
 
   return (
     <>
-      <div className="z-100 fixed bottom-0 p-5 bg-backgroundSecondary max-w-md w-full md:relative md:p-0">
+      <div className="z-50 fixed bottom-0 p-5 bg-backgroundSecondary max-w-md w-full md:relative md:p-0">
         <Form onSubmit={searchWord} value={query} />
       </div>
 

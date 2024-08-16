@@ -14,7 +14,11 @@ import StudyPage from './flash-cards/pages/StudyPage';
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />,
+    element: (
+      <FlashCardsContextProvider>
+        <App />
+      </FlashCardsContextProvider>
+    ),
     children: [
       {
         path: '/',
@@ -40,11 +44,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/',
-        element: (
-          <FlashCardsContextProvider>
-            <FlashCardsModuleLayout />
-          </FlashCardsContextProvider>
-        ),
+        element: <FlashCardsModuleLayout />,
         children: [
           {
             path: '/decks',

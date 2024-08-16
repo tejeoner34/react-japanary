@@ -62,8 +62,23 @@ export default function FlashCardForm({
       id: flashCardToEdit?.id,
       nextReview: flashCardToEdit?.nextReview,
     });
-    console.log('newcard', newFlashCardData);
     onSubmit(newFlashCardData);
+    handleCloseVisibility();
+  };
+
+  const resetForm = () => {
+    setForm({
+      front: flashCardToEdit?.front || '',
+      back: flashCardToEdit?.back || '',
+      belongsToDeck: defaultDeck,
+    });
+  };
+
+  const handleCloseVisibility = () => {
+    if (mode === 'create') {
+      resetForm();
+      return;
+    }
     onCloseVisibility();
   };
 
@@ -111,7 +126,7 @@ export default function FlashCardForm({
               </Label>
               <Input
                 className="col-span-3"
-                defaultValue={flashCardToEdit?.front}
+                value={form.front}
                 name="front"
                 onChange={handleInputChange}
               />
@@ -122,7 +137,7 @@ export default function FlashCardForm({
               </Label>
               <Input
                 className="col-span-3"
-                defaultValue={flashCardToEdit?.back}
+                value={form.back}
                 name="back"
                 onChange={handleInputChange}
               />

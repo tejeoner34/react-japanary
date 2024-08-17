@@ -5,35 +5,35 @@ import { FlashCardRepository } from '@/flash-cards/domain/repositories/flashCard
 
 export class FlashCardRepositoryImpl implements FlashCardRepository {
   constructor(private flashCardDataSource: FlashCardDataSource) {}
-  createFlashCard(flashCard: FlashCardModel): DeckModel[] {
+  createFlashCard(flashCard: FlashCardModel): Promise<DeckModel[]> {
     return this.flashCardDataSource.createFlashCard(flashCard);
   }
-  deleteFlashCard(flashCard: FlashCardModel): DeckModel[] {
+  deleteFlashCard(flashCard: FlashCardModel): Promise<DeckModel[]> {
     return this.flashCardDataSource.deleteFlashCard(flashCard);
   }
-  editFlashCard(flashCard: FlashCardModel): DeckModel[] {
+  editFlashCard(flashCard: FlashCardModel): Promise<DeckModel[]> {
     return this.flashCardDataSource.editFlashCard(flashCard);
   }
-  getFlashCards(): FlashCardModel[] {
+  getFlashCards(): Promise<FlashCardModel[]> {
     return this.flashCardDataSource.getFlashCards();
   }
   updateFlashCardRevision(flashCard: FlashCardModel): void {
     this.flashCardDataSource.updateFlashCardRevision(flashCard);
   }
 
-  getDecks(): DeckModel[] {
+  getDecks(): Promise<DeckModel[]> {
     return this.flashCardDataSource.getDecks();
   }
 
-  createDeck(deck: DeckModel): DeckModel[] {
+  createDeck(deck: DeckModel): Promise<DeckModel[]> {
     return this.flashCardDataSource.createDeck(deck);
   }
 
-  editDeck(deck: DeckModel): DeckModel[] {
+  editDeck(deck: DeckModel): Promise<DeckModel[]> {
     return this.flashCardDataSource.editDeck(deck);
   }
 
-  deleteDeck(deck: DeckModel): DeckModel[] {
+  deleteDeck(deck: DeckModel): Promise<DeckModel[]> {
     return this.flashCardDataSource.deleteDeck(deck);
   }
 }

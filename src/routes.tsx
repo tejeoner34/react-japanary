@@ -1,4 +1,5 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import App from './App';
 import DictionaryScreen from './dictionary/pages/Dictionary';
 // import LoginScreen from './auth/pages/LoginScreen';
@@ -11,13 +12,17 @@ import FlashCardsModuleLayout from './flash-cards/layout/FlashCardsModuleLayout'
 import { FlashCardsContextProvider } from './flash-cards/context/flashCardsContext';
 import StudyPage from './flash-cards/pages/StudyPage';
 
+const queryClient = new QueryClient();
+
 const router = createBrowserRouter([
   {
     path: '/',
     element: (
-      <FlashCardsContextProvider>
-        <App />
-      </FlashCardsContextProvider>
+      <QueryClientProvider client={queryClient}>
+        <FlashCardsContextProvider>
+          <App />
+        </FlashCardsContextProvider>
+      </QueryClientProvider>
     ),
     children: [
       {

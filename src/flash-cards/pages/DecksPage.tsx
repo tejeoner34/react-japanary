@@ -16,7 +16,7 @@ export default function DecksPage() {
   const navigate = useNavigate();
   const [isDeckFormVisible, setIsDeckFormVisible] = useState(false);
   const [isFlashCardFormVisible, setIsFlashCardFormVisible] = useState(false);
-  const { isLoading, decks, getDecks, createDeck, editDeck, deleteDeck, createFlashCard } =
+  const { isLoading, decks, createDeck, editDeck, deleteDeck, createFlashCard, refetchDecks } =
     useFlashCardsContext();
 
   const handleNavigation = (deck: DeckModel) => {
@@ -38,10 +38,9 @@ export default function DecksPage() {
 
   useEffect(() => {
     if (location.pathname === '/decks') {
-      getDecks();
+      refetchDecks();
     }
-  }, [location, getDecks]);
-
+  }, [location.pathname, refetchDecks]);
   if (isLoading) {
     return <Spinner size="large" />;
   }

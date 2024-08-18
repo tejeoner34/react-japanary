@@ -1,4 +1,4 @@
-import { SearchResult } from '@/models/dictionary/searchResult';
+import { SearchResult } from '../models/searchResult';
 import SearchResultItem from './SearchResultItem';
 import { Skeleton } from '@/common/components/ui/skeleton';
 

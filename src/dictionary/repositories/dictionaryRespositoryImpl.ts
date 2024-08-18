@@ -1,6 +1,6 @@
-import { ExampleSentence, SearchResult } from '@/models/dictionary/searchResult';
+import { ExampleSentence, SearchResult } from '@/dictionary/models/searchResult';
 import { DictionaryRepository } from './dictionaryRepository';
-import { DictionaryDataSource } from '@/infrastructure/datas-sources/dictionary/dictionaryDataSource';
+import { DictionaryDataSource } from '@/dictionary/infrastructure/datas-sources/dictionaryDataSource';
 
 export class DictionaryRepositoryImpl implements DictionaryRepository {
   private dataSource: DictionaryDataSource;

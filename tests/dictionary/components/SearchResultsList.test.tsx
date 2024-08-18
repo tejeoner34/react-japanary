@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import SearchResultsList from '@/dictionary/components/SearchResultsList';
 import { WORD_QUERY_MOCK } from '@/dictionary/mocks/dictionary.mocks';
-import { SearchResult } from '@/models/dictionary/searchResult';
+import { SearchResult } from '@/dictionary/models/searchResult';
 
 vi.mock('@/dictionary/components/SearchResultItem', () => ({
   default: ({ searchItem }: { searchItem: SearchResult }) => (

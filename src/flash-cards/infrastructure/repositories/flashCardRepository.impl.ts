@@ -1,35 +1,39 @@
 import { FlashCardDataSource } from '@/flash-cards/domain/datasource/flashCardDataSource';
-import { Deck } from '@/flash-cards/domain/models/deck.model';
-import { FlashCard, Grade } from '@/flash-cards/domain/models/flashCards.model';
+import { DeckModel } from '@/flash-cards/domain/models/deck.model';
+import { FlashCardModel } from '@/flash-cards/domain/models/flashCards.model';
 import { FlashCardRepository } from '@/flash-cards/domain/repositories/flashCardRepository';
 
 export class FlashCardRepositoryImpl implements FlashCardRepository {
   constructor(private flashCardDataSource: FlashCardDataSource) {}
-  createFlashCard(flashCard: FlashCard): void {
-    this.flashCardDataSource.createFlashCard(flashCard);
+  createFlashCard(flashCard: FlashCardModel): Promise<DeckModel[]> {
+    return this.flashCardDataSource.createFlashCard(flashCard);
   }
-  deleteFlashCard(flashCard: FlashCard): void {
-    this.flashCardDataSource.deleteFlashCard(flashCard);
+  deleteFlashCard(flashCard: FlashCardModel): Promise<DeckModel[]> {
+    return this.flashCardDataSource.deleteFlashCard(flashCard);
   }
-  editFlashCard(flashCard: FlashCard): void {
-    this.flashCardDataSource.editFlashCard(flashCard);
+  editFlashCard(flashCard: FlashCardModel): Promise<DeckModel[]> {
+    return this.flashCardDataSource.editFlashCard(flashCard);
   }
-  getFlashCards(): FlashCard[] {
+  getFlashCards(): Promise<FlashCardModel[]> {
     return this.flashCardDataSource.getFlashCards();
   }
-  updateFlashCardRevision(flashCard: FlashCard, grade: Grade): void {
-    this.flashCardDataSource.updateFlashCardRevision(flashCard, grade);
+  updateFlashCardRevision(flashCard: FlashCardModel): void {
+    this.flashCardDataSource.updateFlashCardRevision(flashCard);
   }
 
-  createDeck(deck: Deck): Deck[] {
+  getDecks(): Promise<DeckModel[]> {
+    return this.flashCardDataSource.getDecks();
+  }
+
+  createDeck(deck: DeckModel): Promise<DeckModel[]> {
     return this.flashCardDataSource.createDeck(deck);
   }
 
-  editDeck(deck: Deck): Deck[] {
+  editDeck(deck: DeckModel): Promise<DeckModel[]> {
     return this.flashCardDataSource.editDeck(deck);
   }
 
-  deleteDeck(deck: Deck): Deck[] {
+  deleteDeck(deck: DeckModel): Promise<DeckModel[]> {
     return this.flashCardDataSource.deleteDeck(deck);
   }
 }

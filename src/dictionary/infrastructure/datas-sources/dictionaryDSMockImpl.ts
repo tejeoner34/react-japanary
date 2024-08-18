@@ -1,4 +1,4 @@
-import { ExampleSentence, SearchResult } from '@/models/dictionary/searchResult';
+import { ExampleSentence, SearchResult } from '@/dictionary/models/searchResult';
 import { DictionaryDataSource } from './dictionaryDataSource';
 import { SAMPLE_SENTENCES_MOCK, WORD_QUERY_MOCK } from '@/dictionary/mocks/dictionary.mocks';
 

@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { ExampleSentence, SearchResult } from '@/models/dictionary/searchResult';
 import { DictionaryDataSource } from './dictionaryDataSource';
+import { ExampleSentence, SearchResult } from '@/dictionary/models/searchResult';
 
 const BASE_URL = 'http://localhost:3000/dictionary';
 

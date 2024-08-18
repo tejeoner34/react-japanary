@@ -1,13 +1,14 @@
-import { Deck } from '../models/deck.model';
-import { FlashCard, Grade } from '../models/flashCards.model';
+import { DeckModel } from '../models/deck.model';
+import { FlashCardModel } from '../models/flashCards.model';
 
 export interface FlashCardDataSource {
-  createFlashCard(flashCard: FlashCard): void;
-  deleteFlashCard(flashCard: FlashCard): void;
-  editFlashCard(flashCard: FlashCard): void;
-  getFlashCards(): FlashCard[];
-  updateFlashCardRevision(flashCard: FlashCard, grade: Grade): void;
-  createDeck(deck: Deck): Deck[];
-  editDeck(deck: Deck): Deck[];
-  deleteDeck(deck: Deck): Deck[];
+  createFlashCard(flashCard: FlashCardModel): Promise<DeckModel[]>;
+  deleteFlashCard(flashCard: FlashCardModel): Promise<DeckModel[]>;
+  editFlashCard(flashCard: FlashCardModel): Promise<DeckModel[]>;
+  getFlashCards(): Promise<FlashCardModel[]>;
+  updateFlashCardRevision(flashCard: FlashCardModel): void;
+  getDecks(): Promise<DeckModel[]>;
+  createDeck(deck: DeckModel): Promise<DeckModel[]>;
+  editDeck(deck: DeckModel): Promise<DeckModel[]>;
+  deleteDeck(deck: DeckModel): Promise<DeckModel[]>;
 }

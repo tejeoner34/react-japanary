@@ -15,6 +15,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  Textarea,
 } from '@/common/components/ui';
 import { DeckModel } from '@/flash-cards/domain/models/deck.model';
 import { FlashCard, FlashCardModel } from '@/flash-cards/domain/models/flashCards.model';
@@ -43,7 +44,7 @@ export default function FlashCardForm({
     belongsToDeck: defaultDeck,
   });
 
-  const handleInputChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (ev: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = ev.target;
     setForm({ ...form, [name]: value });
   };
@@ -135,7 +136,7 @@ export default function FlashCardForm({
               <Label htmlFor="back" className="text-right">
                 Back
               </Label>
-              <Input
+              <Textarea
                 className="col-span-3"
                 value={form.back}
                 name="back"

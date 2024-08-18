@@ -4,11 +4,13 @@ import { LocalFlashCardDataSourceImpl } from '../infrastructure/datasource/local
 import { initializeRepository } from '../infrastructure/repositories/flashCardRepository.impl';
 import { DeckModel } from '../domain/models/deck.model';
 import { FlashCardRepository } from '../domain/repositories/flashCardRepository';
+import { useToast } from '@/common/components/ui';
 
 const defaultRepository = initializeRepository(new LocalFlashCardDataSourceImpl());
 
 export function useFlashCard(repository: FlashCardRepository = defaultRepository) {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   const {
     data: decks = [],
@@ -44,6 +46,7 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
     mutationFn: (newCard: FlashCardModel) => repository.createFlashCard(newCard),
     onSuccess: (updatedDecks) => {
       queryClient.setQueryData<DeckModel[]>(['decks'], () => updatedDecks);
+      toast({ title: 'The card was succesfully created!', variant: 'success' });
     },
   });
 

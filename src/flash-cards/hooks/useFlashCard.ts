@@ -1,56 +1,88 @@
-import { useEffect, useState } from 'react';
-import { FlashCard, Grade } from '../domain/models/flashCards.model';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { FlashCardModel } from '../domain/models/flashCards.model';
 import { LocalFlashCardDataSourceImpl } from '../infrastructure/datasource/localFlashCardDataSource.impl';
 import { initializeRepository } from '../infrastructure/repositories/flashCardRepository.impl';
+import { DeckModel } from '../domain/models/deck.model';
+import { FlashCardRepository } from '../domain/repositories/flashCardRepository';
+import { useToast } from '@/common/components/ui';
 
-const repository = initializeRepository(new LocalFlashCardDataSourceImpl());
+const defaultRepository = initializeRepository(new LocalFlashCardDataSourceImpl());
 
-export function useFlashCard() {
-  const [flashCards, setFlashCards] = useState<FlashCard[]>([]);
-  const [currentCard, setCurrentCard] = useState<FlashCard | null>(null);
+export function useFlashCard(repository: FlashCardRepository = defaultRepository) {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
 
-  useEffect(() => {
-    const storedCards = localStorage.getItem('flashcards');
-    if (storedCards) {
-      setFlashCards(JSON.parse(storedCards));
-    }
-  }, []);
+  const {
+    data: decks = [],
+    isFetching: isLoadingDecks,
+    refetch: refetchDecks,
+  } = useQuery({
+    queryKey: ['decks'],
+    queryFn: () => repository.getDecks(),
+  });
 
-  useEffect(() => {
-    const nextCard = flashCards.find((card) => new Date(card.nextReview) <= new Date());
-    setCurrentCard(nextCard || null);
-  }, [flashCards]);
+  const createDeck = useMutation({
+    mutationFn: (newDeck: DeckModel) => repository.createDeck(newDeck),
+    onSuccess: (updatedDecks) => {
+      queryClient.setQueryData<DeckModel[]>(['decks'], () => updatedDecks);
+    },
+  });
 
-  const getFlashCards = () => {
-    return repository.getFlashCards();
-  };
+  const editDeck = useMutation({
+    mutationFn: (deck: DeckModel) => repository.editDeck(deck),
+    onSuccess: (updatedDecks) => {
+      queryClient.setQueryData<DeckModel[]>(['decks'], () => updatedDecks);
+    },
+  });
 
-  const updateFlashCardRevision = (grade: Grade) => {
-    if (currentCard) {
-      repository.updateFlashCardRevision(currentCard, grade);
-    }
-  };
+  const deleteDeck = useMutation({
+    mutationFn: (deck: DeckModel) => repository.deleteDeck(deck),
+    onSuccess: (updatedDecks) => {
+      queryClient.setQueryData<DeckModel[]>(['decks'], () => updatedDecks);
+    },
+  });
 
-  const handleGrade = (grade: Grade) => {
-    if (!currentCard) return;
-    // TODO : esto está mal. La idea es que el propio método repository.updateFlashCardRevision actualice el local o lo que toque
-    const updatedCard = updateFlashCardRevision(grade);
-    // const updatedFlashcards = flashCards.map((card) =>
-    //   card.id === updatedCard.id ? updatedCard : card
-    // );
+  const createFlashCard = useMutation({
+    mutationFn: (newCard: FlashCardModel) => repository.createFlashCard(newCard),
+    onSuccess: (updatedDecks) => {
+      queryClient.setQueryData<DeckModel[]>(['decks'], () => updatedDecks);
+      toast({ title: 'The card was succesfully created!', variant: 'success' });
+    },
+  });
 
-    // setFlashCards(updatedFlashcards);
-    // localStorage.setItem('flashcards', JSON.stringify(updatedFlashcards));
+  const editFlashCard = useMutation({
+    mutationFn: (flashCard: FlashCardModel) => repository.editFlashCard(flashCard),
+    onSuccess: (updatedDecks) => {
+      queryClient.setQueryData<DeckModel[]>(['decks'], () => updatedDecks);
+    },
+  });
 
-    // const nextCard = updatedFlashcards.find((card) => new Date(card.nextReview) <= new Date());
-    // setCurrentCard(nextCard || null);
+  const updateFlashCardRevision = (flashCard: FlashCardModel) => {
+    repository.updateFlashCardRevision(flashCard);
   };
 
   return {
-    getFlashCards,
-    handleGrade,
-    setFlashCards,
-    flashCards,
-    currentCard,
+    createDeck: createDeck.mutate,
+    editDeck: editDeck.mutate,
+    deleteDeck: deleteDeck.mutate,
+    createFlashCard: createFlashCard.mutate,
+    editFlashCard: editFlashCard.mutate,
+    updateFlashCardRevision,
+    refetchDecks,
+    decks,
+    isLoading: isLoadingDecks,
   };
+}
+
+export interface useFlashCardType {
+  createDeck: (newDeck: DeckModel) => void;
+  editDeck: (deck: DeckModel) => void;
+  deleteDeck: (deck: DeckModel) => void;
+  createFlashCard: (newCard: FlashCardModel) => void;
+  editFlashCard: (flashCard: FlashCardModel) => void;
+  updateFlashCardRevision: (flashCard: FlashCardModel) => void;
+  refetchDecks: () => void;
+  decks: DeckModel[];
+  flashCards: FlashCardModel[];
+  isLoading: boolean;
 }

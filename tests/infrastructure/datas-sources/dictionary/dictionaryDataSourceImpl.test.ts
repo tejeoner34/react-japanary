@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { DictionaryDataSourceImpl } from '../../../../src/infrastructure/datas-sources/dictionary/dictionaryDataSourceImpl';
-import { DictionaryDataSource } from '@/infrastructure/datas-sources/dictionary/dictionaryDataSource';
+import { SAMPLE_SENTENCES_MOCK, WORD_QUERY_MOCK } from '@/dictionary/mocks/dictionary.mocks';
+import { DictionaryDataSourceImpl } from '@/dictionary/infrastructure/datas-sources/dictionaryDataSourceImpl';
+import { DictionaryDataSource } from '@/dictionary/infrastructure/datas-sources/dictionaryDataSource';
 
 describe('DictionaryDataSourceImpl', () => {
   let dataSource: DictionaryDataSource;
@@ -13,16 +14,13 @@ describe('DictionaryDataSourceImpl', () => {
     expect(dataSource).toBeInstanceOf(DictionaryDataSourceImpl);
   });
 
-  //   it('should implement DictionaryDataSource interface', () => {
-  //     expect(dataSource).toHaveProperty('searchWord');
-  //     expect(dataSource).toHaveProperty('searchSampleSentences');
-  //   });
+  it('should call the correct API endpoint', async () => {
+    const response = await dataSource.searchWord('test');
+    expect(response).toStrictEqual(WORD_QUERY_MOCK);
+  });
 
-  //   it('should have searchWord method', () => {
-  //     expect(typeof dataSource.searchWord).toBe('function');
-  //   });
-
-  //   it('should have searchSampleSentences method', () => {
-  //     expect(typeof dataSource.searchSampleSentences).toBe('function');
-  //   });
+  it('should call the correct API endpoint', async () => {
+    const response = await dataSource.searchSampleSenteces('test');
+    expect(response).toStrictEqual(SAMPLE_SENTENCES_MOCK);
+  });
 });

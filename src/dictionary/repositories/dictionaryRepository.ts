@@ -1,4 +1,4 @@
-import { ExampleSentence, SearchResult } from '@/models/dictionary/searchResult';
+import { ExampleSentence, SearchResult } from '@/dictionary/models/searchResult';
 
 export interface DictionaryRepository {
   searchWord(word: string): Promise<SearchResult[]>;

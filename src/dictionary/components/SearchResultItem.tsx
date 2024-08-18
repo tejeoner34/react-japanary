@@ -1,6 +1,15 @@
-import { SearchResult } from '@/models/dictionary/searchResult';
 import WordMeaningItem from './WordMeaningItem';
 import { Badge } from '../../common/components/ui/badge';
+import { SearchResult } from '../models/searchResult';
+import { Button } from '@/common/components/ui';
+import FlashCardForm from '@/flash-cards/components/ui/FlashCardForm';
+import { useCreateCardFromDictionary } from '../hooks/useCreateCardFromDictionary';
+
+const createFlashCardTpl = (onClick: () => void) => (
+  <Button variant="primary" size="sm" onClick={onClick}>
+    Create Card
+  </Button>
+);
 
 type SearchResultItemProps = {
   searchItem: SearchResult;
@@ -8,6 +17,9 @@ type SearchResultItemProps = {
 export default function SearchResultItem({
   searchItem: { slug, japaneseReadings, isCommon, jlptLevels, senses },
 }: SearchResultItemProps) {
+  const { isFormVisible, openForm, handleCreateFlashCard, decks, newCardData, closeForm } =
+    useCreateCardFromDictionary({ slug, japaneseReadings, isCommon, jlptLevels, senses });
+
   return (
     <div className="mb-5 p-4 border-b-2">
       <div className="flex-col gap-10 sm:flex sm:flex-row">
@@ -29,7 +41,18 @@ export default function SearchResultItem({
         <div>
           <WordMeaningItem senses={senses} />
         </div>
+        {createFlashCardTpl(openForm)}
       </div>
+
+      {isFormVisible && (
+        <FlashCardForm
+          isVisible={isFormVisible}
+          onSubmit={handleCreateFlashCard}
+          availableDecks={decks}
+          onCloseVisibility={closeForm}
+          flashCardToEdit={newCardData}
+        />
+      )}
     </div>
   );
 }

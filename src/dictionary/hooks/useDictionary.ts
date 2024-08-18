@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { DictionaryDataSourceImpl } from '@/infrastructure/datas-sources/dictionary/dictionaryDataSourceImpl';
-import { ExampleSentence, SearchResult } from '@/models/dictionary/searchResult';
-import { initializeRepository } from '@/repositories/dictionary/dictionaryRespositoryImpl';
-import { DictionaryRepository } from '@/repositories/dictionary/dictionaryRepository';
+import { DictionaryDataSourceImpl } from '../infrastructure/datas-sources/dictionaryDataSourceImpl';
+import { ExampleSentence, SearchResult } from '../models/searchResult';
+import { DictionaryRepository } from '../repositories/dictionaryRepository';
+import { initializeRepository } from '../repositories/dictionaryRespositoryImpl';
 const defaultRepository = initializeRepository(new DictionaryDataSourceImpl());
 
 export const useDictionary = (repository: DictionaryRepository = defaultRepository) => {
@@ -18,18 +18,32 @@ export const useDictionary = (repository: DictionaryRepository = defaultReposito
     setIsSampleSenteceLoading(false);
   };
 
-  const searchWord = async (word: string) => {
+  const searchMeaning = async (word: string) => {
     setIsSearchWordLoading(true);
     const response = await repository.searchWord(word);
     setSearchedWordResult(response);
     setIsSearchWordLoading(false);
   };
+
+  const searchWord = (word: string) => {
+    if (!word) return;
+    searchMeaning(word);
+    searchSampleSenteces(word);
+  };
+
   return {
     searchWord,
-    searchSampleSenteces,
     searchedWordResult,
     sampleSentences,
     isSearchWordLoading,
     isSampleSentenceLoading,
   };
 };
+
+export interface UseDictionaryType {
+  searchWord: (word: string) => void;
+  searchedWordResult: SearchResult[];
+  sampleSentences: ExampleSentence[];
+  isSearchWordLoading: boolean;
+  isSampleSentenceLoading: boolean;
+}

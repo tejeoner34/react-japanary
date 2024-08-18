@@ -1,34 +1,16 @@
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import Header from './common/components/ui/Header';
-import DictionaryScreen from './dictionary/pages/Dictionary';
-import LoginScreen from './auth/pages/LoginScreen';
-import RegisterScreen from './auth/pages/RegisterScreen';
-
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <DictionaryScreen />,
-  },
-  // {
-  //   path: '/',
-  //   element: <LoginScreen />,
-  // },
-  // {
-  //   path: '/register',
-  //   element: <RegisterScreen />,
-  // },
-  // {
-  //   path: '*',
-  //   element: <div>Not found</div>,
-  // },
-]);
+import { Toaster } from './common/components/ui';
 
 function App() {
   return (
-    <>
+    <div className="flex flex-col">
       <Header />
-      <RouterProvider router={router} />
-    </>
+      <div className="flex-1">
+        <Outlet />
+        <Toaster />
+      </div>
+    </div>
   );
 }
 

@@ -1,6 +1,6 @@
-import { Deck } from '../domain/models/deck.model';
+import { DeckModel } from '../domain/models/deck.model';
 
-export const initialDecks: Deck[] = [
+export const initialDecks: DeckModel[] = [
   {
     id: '1',
     name: 'Saludos',

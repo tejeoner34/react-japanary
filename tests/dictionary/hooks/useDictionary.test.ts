@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useDictionary } from '../../../src/dictionary/hooks/useDictionary';
-import { DictionaryRepositoryImpl } from '@/repositories/dictionary/dictionaryRespositoryImpl';
-import { DictionaryDSMockImpl } from '@/infrastructure/datas-sources/dictionary/dictionaryDSMockImpl';
+import { DictionaryDSMockImpl } from '@/dictionary/infrastructure/datas-sources/dictionaryDSMockImpl';
+import { DictionaryRepositoryImpl } from '@/dictionary/repositories/dictionaryRespositoryImpl';
 const testRepository = new DictionaryRepositoryImpl(new DictionaryDSMockImpl());
 
 describe('useDictionary', () => {
@@ -27,7 +27,7 @@ describe('useDictionary', () => {
     const { result } = renderHook(() => useDictionary(testRepository));
 
     expect(result.current.sampleSentences).toEqual([]);
-    await act(() => result.current.searchSampleSenteces('test'));
+    await act(() => result.current.searchWord('test'));
     expect(result.current.sampleSentences).not.toBe([]);
   });
 });

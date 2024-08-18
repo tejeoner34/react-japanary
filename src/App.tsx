@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import Header from './common/components/ui/Header';
+import { Toaster } from './common/components/ui';
 
 function App() {
   return (
@@ -7,6 +8,7 @@ function App() {
       <Header />
       <div className="flex-1">
         <Outlet />
+        <Toaster />
       </div>
     </div>
   );

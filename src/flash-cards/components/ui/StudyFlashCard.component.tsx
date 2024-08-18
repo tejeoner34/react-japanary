@@ -97,7 +97,7 @@ export default function StudyFlashCard({ cardsToStudy }: StudyFlashCardProps) {
 
       <div className="mt-5">
         <CustomText
-          styles="text-3xl"
+          styles="text-xl whitespace-pre-wrap"
           text={isAnswerVisible ? currentFlashCard.back : currentFlashCard.front}
         />
       </div>

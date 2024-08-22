@@ -1,4 +1,5 @@
 import { DeckForm } from '@/flash-cards/components/ui/DeckForm';
+import { Deck } from '@/flash-cards/domain/models/deck.model';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
 
@@ -28,7 +29,19 @@ describe('DeckForm', () => {
         onCloseVisibility={mockOnCloseVisibility}
         onSubmit={mockOnSubmit}
         mode="edit"
-        deck={{ id: '1', name: 'Test Deck', description: 'Test Description', cards: [] }}
+        deck={
+          new Deck({
+            id: '1',
+            name: 'Test Deck',
+            description: 'Test Description',
+            cards: {
+              allCards: [],
+              pedingStudyCards: [],
+              pendingStudyAmount: 0,
+              totalAmount: 0,
+            },
+          })
+        }
       />
     );
     expect(screen.getByText('Edit deck')).toBeInTheDocument();
@@ -103,7 +116,12 @@ describe('DeckForm', () => {
       id: '1',
       name: 'Existing Deck',
       description: 'Existing Description',
-      cards: [],
+      cards: {
+        allCards: [],
+        pedingStudyCards: [],
+        pendingStudyAmount: 0,
+        totalAmount: 0,
+      },
     };
     render(
       <DeckForm
@@ -111,7 +129,7 @@ describe('DeckForm', () => {
         onCloseVisibility={mockOnCloseVisibility}
         onSubmit={mockOnSubmit}
         mode="edit"
-        deck={existingDeck}
+        deck={new Deck(existingDeck)}
       />
     );
     expect(screen.getByLabelText('Name')).toHaveValue('Existing Deck');

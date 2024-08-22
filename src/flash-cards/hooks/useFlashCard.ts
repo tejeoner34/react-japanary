@@ -57,6 +57,13 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
     },
   });
 
+  const deleteFlashCard = useMutation({
+    mutationFn: (flashCard: FlashCardModel) => repository.deleteFlashCard(flashCard),
+    onSuccess: (updatedDecks) => {
+      queryClient.setQueryData<DeckModel[]>(['decks'], () => updatedDecks);
+    },
+  });
+
   const updateFlashCardRevision = (flashCard: FlashCardModel) => {
     repository.updateFlashCardRevision(flashCard);
   };
@@ -67,6 +74,7 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
     deleteDeck: deleteDeck.mutate,
     createFlashCard: createFlashCard.mutate,
     editFlashCard: editFlashCard.mutate,
+    deleteFlashCard: deleteFlashCard.mutate,
     updateFlashCardRevision,
     refetchDecks,
     decks,
@@ -81,8 +89,8 @@ export interface useFlashCardType {
   createFlashCard: (newCard: FlashCardModel) => void;
   editFlashCard: (flashCard: FlashCardModel) => void;
   updateFlashCardRevision: (flashCard: FlashCardModel) => void;
+  deleteFlashCard: (flashCard: FlashCardModel) => void;
   refetchDecks: () => void;
   decks: DeckModel[];
-  flashCards: FlashCardModel[];
   isLoading: boolean;
 }

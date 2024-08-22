@@ -11,6 +11,7 @@ export default defineConfig({
     setupFiles: 'tests/config/setup.ts',
   },
   plugins: [react()],
+  base: 'japanary',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

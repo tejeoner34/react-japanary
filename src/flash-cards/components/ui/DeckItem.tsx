@@ -15,6 +15,10 @@ interface DeckItemProps {
 export default function DeckItem({ deck, onClick, onDelete, onEdit }: DeckItemProps) {
   const [isDeckFormVisible, setIsDeckFormVisible] = useState(false);
 
+  const handleOnKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Enter') onClick(deck);
+  };
+
   const dropdownMenuItems = [
     {
       name: 'Edit deck',
@@ -33,6 +37,7 @@ export default function DeckItem({ deck, onClick, onDelete, onEdit }: DeckItemPr
       role="button"
       tabIndex={0}
       onClick={() => onClick(deck)}
+      onKeyDown={handleOnKeyDown}
     >
       <div className="text-start">
         <CustomText tag="h4" text={deck.name} />

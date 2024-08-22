@@ -32,7 +32,7 @@ export default function StudyFlashCard({ cardsToStudy }: StudyFlashCardProps) {
   const navigate = useNavigate();
   const [currentFlashCard, setCurrentFlashCard] = useState(cardsToStudy[0]);
 
-  const { decks, editFlashCard, updateFlashCardRevision } = useFlashCardsContext();
+  const { decks, editFlashCard, updateFlashCardRevision, deleteFlashCard } = useFlashCardsContext();
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [isAnswerVisible, setIsAnswerVisible] = useState(false);
   const onShowResult = () => {
@@ -57,6 +57,16 @@ export default function StudyFlashCard({ cardsToStudy }: StudyFlashCardProps) {
   const resetComponentState = () => {
     setIsFormVisible(false);
     setIsAnswerVisible(false);
+  };
+
+  const handleDeleteFlashcard = () => {
+    deleteFlashCard(currentFlashCard);
+    cardsToStudy.shift();
+    if (!cardsToStudy.length) {
+      navigate('/decks');
+      return;
+    }
+    setCurrentFlashCard(cardsToStudy[0]);
   };
 
   const _difficultyButtonTpl = () => {
@@ -87,9 +97,12 @@ export default function StudyFlashCard({ cardsToStudy }: StudyFlashCardProps) {
   return (
     <div className="flex flex-col items-center w-full h-full">
       <div className="flex justify-between items-center w-full">
-        <div>
+        <div className="flex gap-3">
           <Button variant="secondaryShadow" onClick={() => setIsFormVisible(true)}>
             Edit
+          </Button>
+          <Button variant="secondaryShadow" onClick={handleDeleteFlashcard}>
+            Delete
           </Button>
         </div>
         <div>{cardsToStudy.length}</div>

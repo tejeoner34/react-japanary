@@ -31,13 +31,13 @@ export class LocalFlashCardDataSourceImpl implements FlashCardDataSource {
 
   async updateFlashCardRevision(updatedFlashCard: FlashCardModel): Promise<void> {
     // Tenemos que actualizar el local storage
-    const decks: DeckModel[] = LocalFlashCardDataSourceImpl._getLocalStorageData('decks').map(
-      (deck: DeckModel) => {
+    const decks: DeckModel[] =
+      LocalFlashCardDataSourceImpl._getLocalStorageData('decks') ??
+      [].map((deck: DeckModel) => {
         const deckInstance = new Deck(deck);
         deckInstance.setPendingStudyCards();
         return deckInstance;
-      }
-    );
+      });
     const deck = decks.find((deck) => deck.id === updatedFlashCard.deckId);
     if (!deck) {
       throw new Error('Deck not found');
@@ -52,17 +52,20 @@ export class LocalFlashCardDataSourceImpl implements FlashCardDataSource {
   }
 
   async deleteFlashCard(flashCard: FlashCardModel): Promise<DeckModel[]> {
-    throw new Error('Method not implemented.');
+    const { deck, decks } = await this._getFlashCardDeckAndDecks(flashCard);
+    deck.deleteFlashCard(flashCard);
+    localStorage.setItem('decks', JSON.stringify(decks));
+    return decks;
   }
 
   async getDecks(): Promise<DeckModel[]> {
-    const storedDecks: DeckModel[] = LocalFlashCardDataSourceImpl._getLocalStorageData('decks').map(
-      (deck: DeckModel) => {
+    const storedDecks: DeckModel[] =
+      LocalFlashCardDataSourceImpl._getLocalStorageData('decks') ??
+      [].map((deck: DeckModel) => {
         const deckInstance = new Deck(deck);
         deckInstance.setPendingStudyCards();
         return deckInstance;
-      }
-    );
+      });
     //Local implementation, in non local implementation it should get the default deck from backend
     if (!storedDecks.length) {
       const defaultDeck = Deck.createDefaultDeck();
@@ -74,7 +77,8 @@ export class LocalFlashCardDataSourceImpl implements FlashCardDataSource {
   }
 
   async createDeck(deck: DeckModel): Promise<DeckModel[]> {
-    const storedDecks: DeckModel[] = LocalFlashCardDataSourceImpl._getLocalStorageData('decks');
+    const storedDecks: DeckModel[] =
+      LocalFlashCardDataSourceImpl._getLocalStorageData('decks') ?? [];
     storedDecks.push(deck);
     localStorage.setItem('decks', JSON.stringify(storedDecks));
     console.log(storedDecks);
@@ -93,14 +97,29 @@ export class LocalFlashCardDataSourceImpl implements FlashCardDataSource {
   }
 
   async deleteDeck(deck: DeckModel): Promise<DeckModel[]> {
-    const storedDecks: DeckModel[] = LocalFlashCardDataSourceImpl._getLocalStorageData('decks');
+    const storedDecks: DeckModel[] =
+      LocalFlashCardDataSourceImpl._getLocalStorageData('decks') ?? [];
     const filteredDecks = storedDecks.filter((storedDeck) => storedDeck.id !== deck.id);
     localStorage.setItem('decks', JSON.stringify(filteredDecks));
     return filteredDecks;
   }
 
-  static _getLocalStorageData(key: string): any {
+  static _getLocalStorageData<T>(key: string): T | null {
     const rawData = localStorage.getItem(key);
-    return rawData ? JSON.parse(rawData) : [];
+    return rawData ? (JSON.parse(rawData) as T) : null;
+  }
+
+  async _getFlashCardDeckAndDecks(
+    flashCard: FlashCardModel
+  ): Promise<{ deck: DeckModel; decks: DeckModel[] }> {
+    const decks = await this.getDecks();
+    const deck = decks.find((deck) => deck.id === flashCard.deckId);
+    if (!deck) {
+      throw new Error('Deck not found');
+    }
+    return {
+      deck,
+      decks,
+    };
   }
 }

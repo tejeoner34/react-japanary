@@ -10,6 +10,7 @@ export interface DeckModel {
   updateFlashCard(flashCard: FlashCardModel): void;
   editDeck(editedDeck: DeckModel): void;
   setPendingStudyCards(): void;
+  deleteFlashCard(flashCard: FlashCardModel): void;
 }
 
 interface NewDeckConfig {
@@ -59,6 +60,14 @@ export class Deck implements DeckModel {
 
     if (allCardsIndex !== -1) this.cards.allCards[allCardsIndex] = flashCard;
     if (pendingCardsIndex !== -1) this.cards.pedingStudyCards[pendingCardsIndex] = flashCard;
+  }
+
+  deleteFlashCard(flashCard: FlashCardModel) {
+    const { id } = flashCard;
+    this.cards.allCards = this.cards.allCards.filter((card) => card.id !== id);
+    this.cards.pedingStudyCards = this.cards.allCards.filter((card) => card.id !== id);
+    this.cards.pendingStudyAmount--;
+    this.cards.totalAmount--;
   }
 
   editDeck(deck: DeckModel): void {

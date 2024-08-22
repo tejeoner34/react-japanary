@@ -52,7 +52,10 @@ export class LocalFlashCardDataSourceImpl implements FlashCardDataSource {
   }
 
   async deleteFlashCard(flashCard: FlashCardModel): Promise<DeckModel[]> {
-    throw new Error('Method not implemented.');
+    const { deck, decks } = await this._getFlashCardDeckAndDecks(flashCard);
+    deck.deleteFlashCard(flashCard);
+    localStorage.setItem('decks', JSON.stringify(decks));
+    return decks;
   }
 
   async getDecks(): Promise<DeckModel[]> {
@@ -102,5 +105,19 @@ export class LocalFlashCardDataSourceImpl implements FlashCardDataSource {
   static _getLocalStorageData(key: string): any {
     const rawData = localStorage.getItem(key);
     return rawData ? JSON.parse(rawData) : [];
+  }
+
+  async _getFlashCardDeckAndDecks(
+    flashCard: FlashCardModel
+  ): Promise<{ deck: DeckModel; decks: DeckModel[] }> {
+    const decks = await this.getDecks();
+    const deck = decks.find((deck) => deck.id === flashCard.deckId);
+    if (!deck) {
+      throw new Error('Deck not found');
+    }
+    return {
+      deck,
+      decks,
+    };
   }
 }

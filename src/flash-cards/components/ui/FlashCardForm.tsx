@@ -69,9 +69,9 @@ export default function FlashCardForm({
 
   const resetForm = () => {
     setForm({
+      ...form,
       front: flashCardToEdit?.front || '',
       back: flashCardToEdit?.back || '',
-      belongsToDeck: defaultDeck,
     });
   };
 

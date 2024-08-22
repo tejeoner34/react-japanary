@@ -1,6 +1,8 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 export default function Header() {
+  const location = useLocation();
+
   return (
     <div className="bg-backgroundTertiary min-h-20 flex items-center justify-between p-5">
       <nav>
@@ -8,7 +10,11 @@ export default function Header() {
           <li>
             <Link
               to="/decks"
-              className="cursor-pointer opacity-70 hover:opacity-100 p-3 hover:bg-backgroundTertiaryHover rounded"
+              className={`cursor-pointer opacity-70 hover:opacity-100 p-3 hover:bg-backgroundTertiaryHover rounded ${
+                location.pathname === '/decks'
+                  ? 'bg-backgroundTertiaryHover rounded opacity-100 p-3'
+                  : ''
+              }`}
             >
               Decks
             </Link>
@@ -16,7 +22,11 @@ export default function Header() {
           <li>
             <Link
               to="/"
-              className="cursor-pointer opacity-70 hover:opacity-100 p-3 hover:bg-backgroundTertiaryHover rounded"
+              className={`cursor-pointer opacity-70 hover:opacity-100 p-3 hover:bg-backgroundTertiaryHover rounded ${
+                location.pathname === '/dictionary'
+                  ? 'bg-backgroundTertiaryHover rounded opacity-100 p-3'
+                  : ''
+              }`}
             >
               Dictionary
             </Link>

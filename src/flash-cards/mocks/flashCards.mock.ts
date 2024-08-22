@@ -1,68 +1,54 @@
-import { DeckModel } from '../domain/models/deck.model';
+import { Deck, DeckModel } from '../domain/models/deck.model';
+import { FlashCard } from '../domain/models/flashCards.model';
 
 export const initialDecks: DeckModel[] = [
-  {
+  new Deck({
     id: '1',
     name: 'Saludos',
     description: 'Tarjetas de saludo en japonés',
     cards: {
       allCards: [
-        {
+        new FlashCard({
           id: '1',
           front: 'こんにちは',
           back: 'Hola',
-          interval: 1,
-          repetitions: 0,
-          easeFactor: 2.5,
           nextReview: new Date(),
           deckId: 'asdsa',
-          updateWithGrade: () => {},
-        },
-        {
-          id: '2',
-          front: 'ありがとう',
-          back: 'Gracias',
-          deckId: 'asda',
-          interval: 1,
-          repetitions: 0,
-          easeFactor: 2.5,
-          nextReview: new Date(),
-          updateWithGrade: () => {},
-        },
-        // Más tarjetas aquí
-      ],
-      pedingStudyCards: [
-        {
+        }),
+        new FlashCard({
           id: '1',
           front: 'こんにちは',
           back: 'Hola',
-          deckId: 'asda',
-          interval: 1,
-          repetitions: 0,
-          easeFactor: 2.5,
           nextReview: new Date(),
-          updateWithGrade: () => {},
-        },
-        {
-          id: '2',
-          front: 'ありがとう',
-          back: 'Gracias',
-          interval: 1,
-          repetitions: 0,
-          easeFactor: 2.5,
+          deckId: 'asdsa',
+        }),
+        new FlashCard({
+          id: '1',
+          front: 'こんにちは',
+          back: 'Hola',
           nextReview: new Date(),
-          deckId: 'asda',
-          updateWithGrade: () => {},
-        },
+          deckId: 'asdsa',
+        }),
+      ],
+      pedingStudyCards: [
+        new FlashCard({
+          id: '1',
+          front: 'こんにちは',
+          back: 'Hola',
+          nextReview: new Date(),
+          deckId: 'asdsa',
+        }),
+        new FlashCard({
+          id: '1',
+          front: 'こんにちは',
+          back: 'Hola',
+          nextReview: new Date(),
+          deckId: 'asdsa',
+        }),
       ],
       pendingStudyAmount: 2,
       totalAmount: 2,
     },
-    addFlashCard: () => {},
-    deleteFlashCard: () => {},
-    editDeck: () => {},
-    setPendingStudyCards: () => {},
-    updateFlashCard: () => {},
-  },
+  }),
   // Más decks aquí
 ];

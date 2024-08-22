@@ -92,6 +92,5 @@ export interface useFlashCardType {
   deleteFlashCard: (flashCard: FlashCardModel) => void;
   refetchDecks: () => void;
   decks: DeckModel[];
-  flashCards: FlashCardModel[];
   isLoading: boolean;
 }

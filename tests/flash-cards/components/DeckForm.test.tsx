@@ -74,11 +74,17 @@ describe('DeckForm', () => {
   });
 
   it('calls onSubmit with correct data when form is submitted', () => {
+    const mockDeck = new Deck({
+      name: 'New Deck',
+      description: 'New Description',
+    });
+    vitest.spyOn(mockDeck, 'id', 'get').mockReturnValue('mocked-id'); // Mock the id getter
+
     render(
       <DeckForm
         isVisible={true}
         onCloseVisibility={mockOnCloseVisibility}
-        onSubmit={mockOnSubmit}
+        onSubmit={() => mockOnSubmit(mockDeck)}
       />
     );
     const nameInput = screen.getByLabelText('Name');
@@ -88,11 +94,13 @@ describe('DeckForm', () => {
     const submitButton = screen.getByRole('button', { name: 'Create Deck' });
     fireEvent.click(submitButton);
     expect(mockOnSubmit).toHaveBeenCalledWith(
-      expect.objectContaining({
-        name: 'New Deck',
-        description: 'New Description',
-        cards: [],
-      })
+      expect.objectContaining(
+        new Deck({
+          name: 'New Deck',
+          description: 'New Description',
+          id: 'mocked-id',
+        })
+      )
     );
   });
 

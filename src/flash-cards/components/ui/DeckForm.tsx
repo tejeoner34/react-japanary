@@ -76,6 +76,7 @@ export function DeckForm({
                 className="col-span-3"
                 defaultValue={deck?.name}
                 name="name"
+                id="name"
                 onChange={handleInputChange}
                 placeholder="Kanji level..."
               />
@@ -88,6 +89,7 @@ export function DeckForm({
                 className="col-span-3"
                 defaultValue={deck?.description}
                 name="description"
+                id="description"
                 onChange={handleInputChange}
                 placeholder="This deck is used for..."
               />

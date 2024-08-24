@@ -60,7 +60,7 @@ export default function DecksPage() {
         ))}
       </div>
 
-      <div className="flex justify-end z-100 fixed bottom-0 p-6 w-full">
+      <div className="flex justify-end z-100 fixed bottom-0 p-9 w-full">
         <CustomDropdownMenu items={dropdownMenuItems}>
           <Button className="h-16 w-16" variant="secondaryShadow">
             <Plus className="h-5 w-5" />

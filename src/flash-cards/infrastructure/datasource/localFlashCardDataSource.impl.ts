@@ -30,14 +30,12 @@ export class LocalFlashCardDataSourceImpl implements FlashCardDataSource {
   }
 
   async updateFlashCardRevision(updatedFlashCard: FlashCardModel): Promise<void> {
-    // Tenemos que actualizar el local storage
-    const decks: DeckModel[] =
-      LocalFlashCardDataSourceImpl._getLocalStorageData('decks') ??
-      [].map((deck: DeckModel) => {
-        const deckInstance = new Deck(deck);
-        deckInstance.setPendingStudyCards();
-        return deckInstance;
-      });
+    const rawDecks = LocalFlashCardDataSourceImpl._getLocalStorageData<DeckModel[]>('decks') ?? [];
+    const decks: DeckModel[] = rawDecks.map((deck: DeckModel) => {
+      const deckInstance = new Deck(deck);
+      deckInstance.setPendingStudyCards();
+      return deckInstance;
+    });
     const deck = decks.find((deck) => deck.id === updatedFlashCard.deckId);
     if (!deck) {
       throw new Error('Deck not found');
@@ -59,13 +57,12 @@ export class LocalFlashCardDataSourceImpl implements FlashCardDataSource {
   }
 
   async getDecks(): Promise<DeckModel[]> {
-    const storedDecks: DeckModel[] =
-      LocalFlashCardDataSourceImpl._getLocalStorageData('decks') ??
-      [].map((deck: DeckModel) => {
-        const deckInstance = new Deck(deck);
-        deckInstance.setPendingStudyCards();
-        return deckInstance;
-      });
+    const rawDecks = LocalFlashCardDataSourceImpl._getLocalStorageData<DeckModel[]>('decks') ?? [];
+    const storedDecks: DeckModel[] = rawDecks.map((deck: DeckModel) => {
+      const deckInstance = new Deck(deck);
+      deckInstance.setPendingStudyCards();
+      return deckInstance;
+    });
     //Local implementation, in non local implementation it should get the default deck from backend
     if (!storedDecks.length) {
       const defaultDeck = Deck.createDefaultDeck();

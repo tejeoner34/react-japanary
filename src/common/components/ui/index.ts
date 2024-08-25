@@ -8,7 +8,7 @@ export * from './errors';
 export * from './Header';
 export * from './input';
 export * from './Label';
-export * from './Select';
+export * from './select';
 export * from './skeleton';
 export * from './Spinner';
 export * from './Textarea';

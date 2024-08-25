@@ -12,16 +12,16 @@ const DIFFICULTY_LEVEL_BUTTONS = [
     value: Grade.Again,
   },
   {
-    name: 'Easy',
-    value: Grade.Easy,
+    name: 'Hard',
+    value: Grade.Hard,
   },
   {
     name: 'Medium',
     value: Grade.Medium,
   },
   {
-    name: 'Hard',
-    value: Grade.Hard,
+    name: 'Easy',
+    value: Grade.Easy,
   },
 ];
 

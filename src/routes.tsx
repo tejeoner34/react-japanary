@@ -1,15 +1,17 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import App from './App';
-import DictionaryScreen from './dictionary/pages/Dictionary';
-// import LoginScreen from './auth/pages/LoginScreen';
-// import RegisterScreen from './auth/pages/RegisterScreen';
-import DecksPage from './flash-cards/pages/DecksPage';
 import DictionaryContextProvider from './dictionary/context/dictionaryContext';
-import SearchResultsScreen from './dictionary/pages/SearchResultScreen';
-import DictionaryModuleLayout from './dictionary/layout/DictionaryModuleLayout';
-import FlashCardsModuleLayout from './flash-cards/layout/FlashCardsModuleLayout';
+import { AuthContextProvider } from './auth/context/authContext';
 import { FlashCardsContextProvider } from './flash-cards/context/flashCardsContext';
+import AuthModuleLayout from './auth/layout/AuthModuleLayout';
+import FlashCardsModuleLayout from './flash-cards/layout/FlashCardsModuleLayout';
+import DictionaryModuleLayout from './dictionary/layout/DictionaryModuleLayout';
+import DecksPage from './flash-cards/pages/DecksPage';
+import DictionaryScreen from './dictionary/pages/Dictionary';
+import LoginScreen from './auth/pages/LoginScreen';
+import RegisterScreen from './auth/pages/RegisterScreen';
+import SearchResultsScreen from './dictionary/pages/SearchResultScreen';
 import StudyPage from './flash-cards/pages/StudyPage';
 
 const queryClient = new QueryClient();
@@ -59,6 +61,24 @@ const router = createBrowserRouter(
             {
               path: '/decks/study/:deckId',
               element: <StudyPage />,
+            },
+          ],
+        },
+        {
+          path: '/auth',
+          element: (
+            <AuthContextProvider>
+              <AuthModuleLayout />
+            </AuthContextProvider>
+          ),
+          children: [
+            {
+              path: '/auth/login',
+              element: <LoginScreen />,
+            },
+            {
+              path: '/auth/register',
+              element: <RegisterScreen />,
             },
           ],
         },

@@ -8,7 +8,11 @@ type FormFields = {
   password: string;
 };
 
-export default function LoginForm() {
+interface LoginFormProps {
+  onFormSubmit: (data: FormFields) => void;
+}
+
+export default function LoginForm({ onFormSubmit }: LoginFormProps) {
   const {
     register,
     handleSubmit,
@@ -18,12 +22,12 @@ export default function LoginForm() {
 
   const onSubmit: SubmitHandler<FormFields> = (data) => {
     // Podemos tener un try catch y en el caso de tener un error del back indicarlo a traves del método setError
-    console.log(data);
+    onFormSubmit(data);
   };
 
   return (
     <form
-      className="flex flex-col justify-center gap-2 p-5 max-w-md m-auto"
+      className="flex flex-col justify-center gap-3 p-5 max-w-md m-auto"
       onSubmit={handleSubmit(onSubmit)}
     >
       <Input {...register('email', EMAIL_REQUIREMENT_OPTIONS)} type="text" placeholder="email..." />

@@ -6,38 +6,28 @@ interface AuthProviderProps {
 }
 
 export interface AuthContextType {
-  authToken: string;
   userData: any;
   isUserLogged: boolean;
   checkIsAuthenticated: () => void;
-  deleteAuthToken: () => void;
-  isAuthenticated: boolean;
-  storeAuthToken: (token: string) => void;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthContextProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [authToken, setAuthToken] = useState('');
-  const [isUserLogged, setIsUserLogged] = useState(false);
+  const [isUserLogged, setIsUserLogged] = useState(localStorage.getItem('user') !== null);
   const [userData, setUserData] = useState({});
-
-  const storeAuthToken = (token: string) => {
-    setAuthToken(token);
-  };
-
-  const deleteAuthToken = () => {
-    setAuthToken('');
-  };
 
   function checkIsAuthenticated() {
     return onAuthStateChanged(auth, (user) => {
+      console.log('is auth', user);
       if (user) {
         setIsUserLogged(true);
         setUserData(user);
+        localStorage.setItem('user', JSON.stringify(user));
       } else {
         setIsUserLogged(false);
         setUserData({});
+        localStorage.removeItem('user');
       }
     });
   }
@@ -47,12 +37,8 @@ export const AuthContextProvider: React.FC<AuthProviderProps> = ({ children }) =
   }, []);
 
   const contextValue = {
-    deleteAuthToken,
-    authToken,
     userData,
     isUserLogged,
-    isAuthenticated: !!authToken,
-    storeAuthToken,
     checkIsAuthenticated,
   };
 

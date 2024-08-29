@@ -13,6 +13,7 @@ import LoginScreen from './auth/pages/LoginScreen';
 import RegisterScreen from './auth/pages/RegisterScreen';
 import SearchResultsScreen from './dictionary/pages/SearchResultScreen';
 import StudyPage from './flash-cards/pages/StudyPage';
+import ProtectedRoute from './auth/components/ProtectedRoute';
 
 const queryClient = new QueryClient();
 
@@ -22,9 +23,11 @@ const router = createBrowserRouter(
       path: '/',
       element: (
         <QueryClientProvider client={queryClient}>
-          <FlashCardsContextProvider>
-            <App />
-          </FlashCardsContextProvider>
+          <AuthContextProvider>
+            <FlashCardsContextProvider>
+              <App />
+            </FlashCardsContextProvider>
+          </AuthContextProvider>
         </QueryClientProvider>
       ),
       children: [
@@ -56,21 +59,19 @@ const router = createBrowserRouter(
           children: [
             {
               path: '/decks',
-              element: <DecksPage />,
+              element: <ProtectedRoute />,
+              children: [{ path: '', element: <DecksPage /> }],
             },
             {
               path: '/decks/study/:deckId',
-              element: <StudyPage />,
+              element: <ProtectedRoute />,
+              children: [{ path: '', element: <StudyPage /> }],
             },
           ],
         },
         {
           path: '/auth',
-          element: (
-            <AuthContextProvider>
-              <AuthModuleLayout />
-            </AuthContextProvider>
-          ),
+          element: <AuthModuleLayout />,
           children: [
             {
               path: '/auth/login',

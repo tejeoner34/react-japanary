@@ -78,7 +78,6 @@ export class LocalFlashCardDataSourceImpl implements FlashCardDataSource {
       LocalFlashCardDataSourceImpl._getLocalStorageData('decks') ?? [];
     storedDecks.push(deck);
     localStorage.setItem('decks', JSON.stringify(storedDecks));
-    console.log(storedDecks);
     return storedDecks;
   }
 

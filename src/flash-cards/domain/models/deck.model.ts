@@ -6,6 +6,7 @@ export interface DeckModel {
   name: string;
   description?: string;
   cards: FlashCardsData;
+  addId: (id: string) => void;
   addFlashCard(flashCard: FlashCardModel): void;
   updateFlashCard(flashCard: FlashCardModel): void;
   editDeck(editedDeck: DeckModel): void;
@@ -43,6 +44,10 @@ export class Deck implements DeckModel {
       name: 'Default',
       description: 'This is a default deck, you can modify or create new ones',
     });
+  }
+
+  addId(id: string) {
+    this.id = id;
   }
 
   addFlashCard(flashCard: FlashCardModel): void {

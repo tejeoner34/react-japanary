@@ -5,8 +5,9 @@ import { initializeRepository } from '../infrastructure/repositories/flashCardRe
 import { DeckModel } from '../domain/models/deck.model';
 import { FlashCardRepository } from '../domain/repositories/flashCardRepository';
 import { useToast } from '@/common/components/ui';
+import { FirebaseFlashCardDataSourceImpl } from '../infrastructure/datasource/firebaseFlashCardDataSource.impl';
 
-const defaultRepository = initializeRepository(new LocalFlashCardDataSourceImpl());
+const defaultRepository = initializeRepository(new FirebaseFlashCardDataSourceImpl());
 
 export function useFlashCard(repository: FlashCardRepository = defaultRepository) {
   const queryClient = useQueryClient();

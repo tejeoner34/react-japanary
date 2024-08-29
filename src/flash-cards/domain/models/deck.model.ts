@@ -1,8 +1,14 @@
-import { createUniqueId } from '@/common/utils';
 import { FlashCardModel, FlashCardsData, Grade } from './flashCards.model';
 
+interface NewDeckConfig {
+  name: string;
+  description?: string;
+  cards?: FlashCardsData;
+  id?: string | null;
+}
+
 export interface DeckModel {
-  id: string;
+  id?: string | null;
   name: string;
   description?: string;
   cards: FlashCardsData;
@@ -14,21 +20,14 @@ export interface DeckModel {
   deleteFlashCard(flashCard: FlashCardModel): void;
 }
 
-interface NewDeckConfig {
-  name: string;
-  description?: string;
-  cards?: FlashCardsData;
-  id?: string;
-}
-
 export class Deck implements DeckModel {
-  id: string;
+  id: string | null;
   name: string;
   description: string;
   cards: FlashCardsData;
 
   constructor({ name, description, cards, id }: NewDeckConfig) {
-    this.id = id || createUniqueId();
+    this.id = id || null;
     this.name = name;
     this.cards = cards || {
       allCards: [],
@@ -70,7 +69,7 @@ export class Deck implements DeckModel {
   deleteFlashCard(flashCard: FlashCardModel) {
     const { id } = flashCard;
     this.cards.allCards = this.cards.allCards.filter((card) => card.id !== id);
-    this.cards.pedingStudyCards = this.cards.allCards.filter((card) => card.id !== id);
+    this.cards.pedingStudyCards = this.cards.pedingStudyCards.filter((card) => card.id !== id);
     this.cards.pendingStudyAmount--;
     this.cards.totalAmount--;
   }
@@ -89,7 +88,7 @@ export class Deck implements DeckModel {
 
     card.updateWithGrade(grade);
 
-    // tenemos que actualizar el mazo de pending (eliminar o mantener)
+    // Actualizar el mazo de pending (eliminar o mantener)
     // if (card.nextReview > new Date()) {
     //   this.cards.pendingStudyCards = this.cards.pendingStudyCards.filter((c) => c.id !== cardId);
     //   this.cards.pendingStudyAmount--;

@@ -44,7 +44,7 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
   });
 
   const createFlashCard = useMutation({
-    mutationFn: (newCard: FlashCardModel) => repository.createFlashCard(newCard),
+    mutationFn: (newCard: FlashCardModel) => repository.createFlashCard(newCard, decks),
     onSuccess: (updatedDecks) => {
       queryClient.setQueryData<DeckModel[]>(['decks'], () => updatedDecks);
       toast({ title: 'The card was succesfully created!', variant: 'success' });

@@ -1,7 +1,8 @@
+import { createUniqueId } from '@/common/utils';
 import { SpaceRepetition } from '@/flash-cards/infrastructure/helpers/spaceRepetition';
 
 export interface FlashCardModel {
-  id?: string;
+  id: string;
   front: string;
   back: string;
   interval: number;
@@ -35,7 +36,7 @@ interface NewFlashCardProps {
 }
 
 export class FlashCard implements FlashCardModel {
-  id?: string;
+  id: string;
   front: string;
   back: string;
   interval: number;
@@ -43,9 +44,8 @@ export class FlashCard implements FlashCardModel {
   easeFactor: number;
   nextReview: Date;
   deckId: string;
-
   constructor({ back, deckId, front, id, nextReview }: NewFlashCardProps) {
-    this.id = id;
+    this.id = id || createUniqueId();
     this.back = back;
     this.deckId = deckId;
     this.easeFactor = 2.5;

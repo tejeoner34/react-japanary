@@ -2,7 +2,7 @@ import { DeckModel } from '../models/deck.model';
 import { FlashCardModel } from '../models/flashCards.model';
 
 export interface FlashCardDataSource {
-  createFlashCard(flashCard: FlashCardModel): Promise<DeckModel[]>;
+  createFlashCard(flashCard: FlashCardModel, decks: DeckModel[]): Promise<DeckModel[]>;
   deleteFlashCard(flashCard: FlashCardModel): Promise<DeckModel[]>;
   editFlashCard(flashCard: FlashCardModel): Promise<DeckModel[]>;
   getFlashCards(): Promise<FlashCardModel[]>;

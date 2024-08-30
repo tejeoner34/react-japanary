@@ -17,8 +17,7 @@ import { LocalFlashCardDataSourceImpl } from './localFlashCardDataSource.impl';
 const localImplementation = new LocalFlashCardDataSourceImpl();
 
 export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
-  async createFlashCard(flashCard: FlashCardModel): Promise<DeckModel[]> {
-    const localDecks = this._createDeckInstance(await localImplementation.getDecks());
+  async createFlashCard(flashCard: FlashCardModel, localDecks: DeckModel[]): Promise<DeckModel[]> {
     const deck = localDecks.find((deck) => deck.id === flashCard.deckId);
     if (!deck) {
       throw new Error('Deck not found');
@@ -26,9 +25,40 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
 
     try {
       deck.addFlashCard(flashCard);
-      // Update the deck data in Firestore
-      const deckRef = doc(this._getDecksCollection(), deck.id);
-      await updateDoc(deckRef, { ...deck });
+      const deckData = {
+        id: deck.id,
+        name: deck.name,
+        description: deck.description,
+        cards: {
+          allCards: deck.cards.allCards.map((card) => ({
+            id: card.id || null,
+            front: card.front,
+            back: card.back,
+            interval: card.interval,
+            repetitions: card.repetitions,
+            easeFactor: card.easeFactor,
+            nextReview:
+              card.nextReview instanceof Date ? card.nextReview.toISOString() : card.nextReview,
+            deckId: card.deckId,
+          })),
+          pedingStudyCards: deck.cards.pedingStudyCards.map((card) => ({
+            id: card.id || null,
+            front: card.front,
+            back: card.back,
+            interval: card.interval,
+            repetitions: card.repetitions,
+            easeFactor: card.easeFactor,
+            nextReview:
+              card.nextReview instanceof Date ? card.nextReview.toISOString() : card.nextReview,
+            deckId: card.deckId,
+          })),
+          pendingStudyAmount: deck.cards.pendingStudyAmount,
+          totalAmount: deck.cards.totalAmount,
+        },
+      };
+      console.log(deckData);
+      const deckRef = doc(this._getDecksCollection(), deck.id!);
+      await updateDoc(deckRef, deckData);
       return localDecks;
     } catch (error) {
       console.error('Error creating flashcard:', error);
@@ -134,6 +164,7 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
         id: deckId,
       };
     });
+    console.log('raw', rawDecks);
     return rawDecks;
   }
 

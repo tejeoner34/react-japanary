@@ -51,8 +51,20 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
     }
   }
 
-  editFlashCard(flashCard: FlashCardModel): Promise<DeckModel[]> {
-    throw new Error('Method not implemented.');
+  async editFlashCard(flashCard: FlashCardModel, localDecks: DeckModel[]): Promise<DeckModel[]> {
+    const deck = localDecks.find((deck) => deck.id === flashCard.deckId);
+    if (!deck) {
+      throw new Error('Deck not found');
+    }
+    try {
+      deck.updateFlashCard(flashCard);
+      const deckModelFirebase = this._createDeckModel(deck);
+      const deckRef = doc(this._getDecksCollection(), deck.id!);
+      await updateDoc(deckRef, deckModelFirebase);
+      return localDecks;
+    } catch (error) {
+      throw new Error('Something went wrong while deleting the flashcard');
+    }
   }
   getFlashCards(): Promise<FlashCardModel[]> {
     throw new Error('Method not implemented.');

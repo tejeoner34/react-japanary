@@ -52,7 +52,7 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
   });
 
   const editFlashCard = useMutation({
-    mutationFn: (flashCard: FlashCardModel) => repository.editFlashCard(flashCard),
+    mutationFn: (flashCard: FlashCardModel) => repository.editFlashCard(flashCard, decks),
     onSuccess: (updatedDecks) => {
       queryClient.setQueryData<DeckModel[]>(['decks'], () => updatedDecks);
     },

@@ -3,7 +3,7 @@ import { FlashCardModel } from '../models/flashCards.model';
 
 export interface FlashCardRepository {
   createFlashCard(flashCard: FlashCardModel, decks: DeckModel[]): Promise<DeckModel[]>;
-  deleteFlashCard(flashCard: FlashCardModel): Promise<DeckModel[]>;
+  deleteFlashCard(flashCard: FlashCardModel, decks: DeckModel[]): Promise<DeckModel[]>;
   editFlashCard(flashCard: FlashCardModel): Promise<DeckModel[]>;
   getFlashCards(): Promise<FlashCardModel[]>;
   updateFlashCardRevision(flashCard: FlashCardModel): void;

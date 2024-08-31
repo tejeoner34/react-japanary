@@ -25,40 +25,9 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
 
     try {
       deck.addFlashCard(flashCard);
-      const deckData = {
-        id: deck.id,
-        name: deck.name,
-        description: deck.description,
-        cards: {
-          allCards: deck.cards.allCards.map((card) => ({
-            id: card.id || null,
-            front: card.front,
-            back: card.back,
-            interval: card.interval,
-            repetitions: card.repetitions,
-            easeFactor: card.easeFactor,
-            nextReview:
-              card.nextReview instanceof Date ? card.nextReview.toISOString() : card.nextReview,
-            deckId: card.deckId,
-          })),
-          pedingStudyCards: deck.cards.pedingStudyCards.map((card) => ({
-            id: card.id || null,
-            front: card.front,
-            back: card.back,
-            interval: card.interval,
-            repetitions: card.repetitions,
-            easeFactor: card.easeFactor,
-            nextReview:
-              card.nextReview instanceof Date ? card.nextReview.toISOString() : card.nextReview,
-            deckId: card.deckId,
-          })),
-          pendingStudyAmount: deck.cards.pendingStudyAmount,
-          totalAmount: deck.cards.totalAmount,
-        },
-      };
-      console.log(deckData);
+      const deckModelFirebase = this._createDeckModel(deck);
       const deckRef = doc(this._getDecksCollection(), deck.id!);
-      await updateDoc(deckRef, deckData);
+      await updateDoc(deckRef, deckModelFirebase);
       return localDecks;
     } catch (error) {
       console.error('Error creating flashcard:', error);
@@ -66,9 +35,22 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
     }
   }
 
-  deleteFlashCard(flashCard: FlashCardModel): Promise<DeckModel[]> {
-    throw new Error('Method not implemented.');
+  async deleteFlashCard(flashCard: FlashCardModel, localDecks: DeckModel[]): Promise<DeckModel[]> {
+    const deck = localDecks.find((deck) => deck.id === flashCard.deckId);
+    if (!deck) {
+      throw new Error('Deck not found');
+    }
+    try {
+      deck.deleteFlashCard(flashCard);
+      const deckModelFirebase = this._createDeckModel(deck);
+      const deckRef = doc(this._getDecksCollection(), deck.id!);
+      await updateDoc(deckRef, deckModelFirebase);
+      return localDecks;
+    } catch (error) {
+      throw new Error('Something went wrong while deleting the flashcard');
+    }
   }
+
   editFlashCard(flashCard: FlashCardModel): Promise<DeckModel[]> {
     throw new Error('Method not implemented.');
   }
@@ -185,5 +167,40 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
       deckInstance.setPendingStudyCards();
       return deckInstance;
     });
+  }
+
+  _createDeckModel(deck: DeckModel) {
+    const deckModel = {
+      id: deck.id,
+      name: deck.name,
+      description: deck.description,
+      cards: {
+        allCards: deck.cards.allCards.map((card) => ({
+          id: card.id || null,
+          front: card.front,
+          back: card.back,
+          interval: card.interval,
+          repetitions: card.repetitions,
+          easeFactor: card.easeFactor,
+          nextReview:
+            card.nextReview instanceof Date ? card.nextReview.toISOString() : card.nextReview,
+          deckId: card.deckId,
+        })),
+        pedingStudyCards: deck.cards.pedingStudyCards.map((card) => ({
+          id: card.id || null,
+          front: card.front,
+          back: card.back,
+          interval: card.interval,
+          repetitions: card.repetitions,
+          easeFactor: card.easeFactor,
+          nextReview:
+            card.nextReview instanceof Date ? card.nextReview.toISOString() : card.nextReview,
+          deckId: card.deckId,
+        })),
+        pendingStudyAmount: deck.cards.pendingStudyAmount,
+        totalAmount: deck.cards.totalAmount,
+      },
+    };
+    return deckModel;
   }
 }

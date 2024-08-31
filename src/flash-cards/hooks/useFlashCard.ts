@@ -59,7 +59,7 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
   });
 
   const deleteFlashCard = useMutation({
-    mutationFn: (flashCard: FlashCardModel) => repository.deleteFlashCard(flashCard),
+    mutationFn: (flashCard: FlashCardModel) => repository.deleteFlashCard(flashCard, decks),
     onSuccess: (updatedDecks) => {
       queryClient.setQueryData<DeckModel[]>(['decks'], () => updatedDecks);
     },

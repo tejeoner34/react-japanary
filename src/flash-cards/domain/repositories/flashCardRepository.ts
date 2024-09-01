@@ -2,11 +2,11 @@ import { DeckModel } from '../models/deck.model';
 import { FlashCardModel } from '../models/flashCards.model';
 
 export interface FlashCardRepository {
-  createFlashCard(flashCard: FlashCardModel): Promise<DeckModel[]>;
-  deleteFlashCard(flashCard: FlashCardModel): Promise<DeckModel[]>;
-  editFlashCard(flashCard: FlashCardModel): Promise<DeckModel[]>;
+  createFlashCard(flashCard: FlashCardModel, decks: DeckModel[]): Promise<DeckModel[]>;
+  deleteFlashCard(flashCard: FlashCardModel, decks: DeckModel[]): Promise<DeckModel[]>;
+  editFlashCard(flashCard: FlashCardModel, decks: DeckModel[]): Promise<DeckModel[]>;
   getFlashCards(): Promise<FlashCardModel[]>;
-  updateFlashCardRevision(flashCard: FlashCardModel): void;
+  updateFlashCardRevision(flashCard: FlashCardModel, decks: DeckModel[]): void;
   getDecks(): Promise<DeckModel[]>;
   createDeck(deck: DeckModel): Promise<DeckModel[]>;
   editDeck(deck: DeckModel): Promise<DeckModel[]>;

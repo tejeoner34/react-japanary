@@ -1,6 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { FlashCardModel } from '../domain/models/flashCards.model';
-import { LocalFlashCardDataSourceImpl } from '../infrastructure/datasource/localFlashCardDataSource.impl';
 import { initializeRepository } from '../infrastructure/repositories/flashCardRepository.impl';
 import { DeckModel } from '../domain/models/deck.model';
 import { FlashCardRepository } from '../domain/repositories/flashCardRepository';
@@ -66,7 +65,7 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
   });
 
   const updateFlashCardRevision = (flashCard: FlashCardModel) => {
-    repository.updateFlashCardRevision(flashCard);
+    repository.updateFlashCardRevision(flashCard, decks);
   };
 
   return {

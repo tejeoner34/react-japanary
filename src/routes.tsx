@@ -1,5 +1,5 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { queryClient, QueryClientProvider } from './common/config/react-query';
 import App from './App';
 import DictionaryContextProvider from './dictionary/context/dictionaryContext';
 import { AuthContextProvider } from './auth/context/authContext';
@@ -14,8 +14,6 @@ import RegisterScreen from './auth/pages/RegisterScreen';
 import SearchResultsScreen from './dictionary/pages/SearchResultScreen';
 import StudyPage from './flash-cards/pages/StudyPage';
 import ProtectedRoute from './auth/components/ProtectedRoute';
-
-const queryClient = new QueryClient();
 
 const router = createBrowserRouter(
   [

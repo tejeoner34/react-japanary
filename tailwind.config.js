@@ -57,6 +57,7 @@ module.exports = {
 
         ctaPrimary: 'hsl(var(--cta-primary))',
         ctaSecondary: 'hsl(var(--cta-secondary))',
+        linkPrimary: 'hsl(var(--link-primary))',
       },
       zIndex: {
         60: '60',

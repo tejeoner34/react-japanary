@@ -1,12 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { FlashCardModel } from '../domain/models/flashCards.model';
-import { LocalFlashCardDataSourceImpl } from '../infrastructure/datasource/localFlashCardDataSource.impl';
 import { initializeRepository } from '../infrastructure/repositories/flashCardRepository.impl';
 import { DeckModel } from '../domain/models/deck.model';
 import { FlashCardRepository } from '../domain/repositories/flashCardRepository';
 import { useToast } from '@/common/components/ui';
+import { FirebaseFlashCardDataSourceImpl } from '../infrastructure/datasource/firebaseFlashCardDataSource.impl';
 
-const defaultRepository = initializeRepository(new LocalFlashCardDataSourceImpl());
+const defaultRepository = initializeRepository(new FirebaseFlashCardDataSourceImpl());
 
 export function useFlashCard(repository: FlashCardRepository = defaultRepository) {
   const queryClient = useQueryClient();
@@ -43,7 +43,7 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
   });
 
   const createFlashCard = useMutation({
-    mutationFn: (newCard: FlashCardModel) => repository.createFlashCard(newCard),
+    mutationFn: (newCard: FlashCardModel) => repository.createFlashCard(newCard, decks),
     onSuccess: (updatedDecks) => {
       queryClient.setQueryData<DeckModel[]>(['decks'], () => updatedDecks);
       toast({ title: 'The card was succesfully created!', variant: 'success' });
@@ -51,21 +51,21 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
   });
 
   const editFlashCard = useMutation({
-    mutationFn: (flashCard: FlashCardModel) => repository.editFlashCard(flashCard),
+    mutationFn: (flashCard: FlashCardModel) => repository.editFlashCard(flashCard, decks),
     onSuccess: (updatedDecks) => {
       queryClient.setQueryData<DeckModel[]>(['decks'], () => updatedDecks);
     },
   });
 
   const deleteFlashCard = useMutation({
-    mutationFn: (flashCard: FlashCardModel) => repository.deleteFlashCard(flashCard),
+    mutationFn: (flashCard: FlashCardModel) => repository.deleteFlashCard(flashCard, decks),
     onSuccess: (updatedDecks) => {
       queryClient.setQueryData<DeckModel[]>(['decks'], () => updatedDecks);
     },
   });
 
   const updateFlashCardRevision = (flashCard: FlashCardModel) => {
-    repository.updateFlashCardRevision(flashCard);
+    repository.updateFlashCardRevision(flashCard, decks);
   };
 
   return {

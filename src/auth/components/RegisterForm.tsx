@@ -12,7 +12,7 @@ interface LoginFormProps {
   onFormSubmit: (data: FormFields) => void;
 }
 
-export default function LoginForm({ onFormSubmit }: LoginFormProps) {
+export default function RegisterForm({ onFormSubmit }: LoginFormProps) {
   const {
     register,
     handleSubmit,
@@ -21,7 +21,6 @@ export default function LoginForm({ onFormSubmit }: LoginFormProps) {
   } = useForm<FormFields>();
 
   const onSubmit: SubmitHandler<FormFields> = (data) => {
-    // Podemos tener un try catch y en el caso de tener un error del back indicarlo a traves del método setError
     onFormSubmit(data);
   };
 
@@ -40,7 +39,7 @@ export default function LoginForm({ onFormSubmit }: LoginFormProps) {
       {errors.password?.message && <ErrorMessage message={errors.password.message} />}
 
       <Button disabled={isSubmitting} type="submit" variant="default">
-        Login
+        Register
       </Button>
     </form>
   );

@@ -4,7 +4,7 @@ import { Toaster } from './common/components/ui';
 
 function App() {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col h-screen">
       <Header />
       <div className="flex-1">
         <Outlet />

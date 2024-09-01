@@ -17,8 +17,8 @@ export class FlashCardRepositoryImpl implements FlashCardRepository {
   getFlashCards(): Promise<FlashCardModel[]> {
     return this.flashCardDataSource.getFlashCards();
   }
-  updateFlashCardRevision(flashCard: FlashCardModel): void {
-    this.flashCardDataSource.updateFlashCardRevision(flashCard);
+  updateFlashCardRevision(flashCard: FlashCardModel, decks: DeckModel[]): void {
+    this.flashCardDataSource.updateFlashCardRevision(flashCard, decks);
   }
 
   getDecks(): Promise<DeckModel[]> {

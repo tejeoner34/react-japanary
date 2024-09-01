@@ -14,6 +14,7 @@ import RegisterScreen from './auth/pages/RegisterScreen';
 import SearchResultsScreen from './dictionary/pages/SearchResultScreen';
 import StudyPage from './flash-cards/pages/StudyPage';
 import ProtectedRoute from './auth/components/ProtectedRoute';
+import IsLoggedGuard from './auth/components/IsLoggedGuard';
 
 const router = createBrowserRouter(
   [
@@ -73,11 +74,13 @@ const router = createBrowserRouter(
           children: [
             {
               path: '/auth/login',
-              element: <LoginScreen />,
+              element: <IsLoggedGuard redirectTo="/" />,
+              children: [{ path: '', element: <LoginScreen /> }],
             },
             {
               path: '/auth/register',
-              element: <RegisterScreen />,
+              element: <IsLoggedGuard redirectTo="/" />,
+              children: [{ path: '', element: <RegisterScreen /> }],
             },
           ],
         },

@@ -14,58 +14,55 @@ import StudyPage from './flash-cards/pages/StudyPage';
 
 const queryClient = new QueryClient();
 
-const router = createBrowserRouter(
-  [
-    {
-      path: '/',
-      element: (
-        <QueryClientProvider client={queryClient}>
-          <FlashCardsContextProvider>
-            <App />
-          </FlashCardsContextProvider>
-        </QueryClientProvider>
-      ),
-      children: [
-        {
-          path: '/',
-          element: (
-            <DictionaryContextProvider>
-              <DictionaryModuleLayout />
-            </DictionaryContextProvider>
-          ),
-          children: [
-            {
-              path: '/',
-              element: <Navigate to="/dictionary" />,
-            },
-            {
-              path: '/dictionary',
-              element: <DictionaryScreen />,
-            },
-            {
-              path: 'dictionary/search/:query',
-              element: <SearchResultsScreen />,
-            },
-          ],
-        },
-        {
-          path: '/',
-          element: <FlashCardsModuleLayout />,
-          children: [
-            {
-              path: '/decks',
-              element: <DecksPage />,
-            },
-            {
-              path: '/decks/study/:deckId',
-              element: <StudyPage />,
-            },
-          ],
-        },
-      ],
-    },
-  ],
-  { basename: import.meta.env.DEV ? '/' : '/react-japanary/' }
-);
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: (
+      <QueryClientProvider client={queryClient}>
+        <FlashCardsContextProvider>
+          <App />
+        </FlashCardsContextProvider>
+      </QueryClientProvider>
+    ),
+    children: [
+      {
+        path: '/',
+        element: (
+          <DictionaryContextProvider>
+            <DictionaryModuleLayout />
+          </DictionaryContextProvider>
+        ),
+        children: [
+          {
+            path: '/',
+            element: <Navigate to="/dictionary" />,
+          },
+          {
+            path: '/dictionary',
+            element: <DictionaryScreen />,
+          },
+          {
+            path: 'dictionary/search/:query',
+            element: <SearchResultsScreen />,
+          },
+        ],
+      },
+      {
+        path: '/',
+        element: <FlashCardsModuleLayout />,
+        children: [
+          {
+            path: '/decks',
+            element: <DecksPage />,
+          },
+          {
+            path: '/decks/study/:deckId',
+            element: <StudyPage />,
+          },
+        ],
+      },
+    ],
+  },
+]);
 
 export default router;

@@ -16,78 +16,75 @@ import StudyPage from './flash-cards/pages/StudyPage';
 import ProtectedRoute from './auth/components/ProtectedRoute';
 import IsLoggedGuard from './auth/components/IsLoggedGuard';
 
-const router = createBrowserRouter(
-  [
-    {
-      path: '/',
-      element: (
-        <QueryClientProvider client={queryClient}>
-          <AuthContextProvider>
-            <FlashCardsContextProvider>
-              <App />
-            </FlashCardsContextProvider>
-          </AuthContextProvider>
-        </QueryClientProvider>
-      ),
-      children: [
-        {
-          path: '/',
-          element: (
-            <DictionaryContextProvider>
-              <DictionaryModuleLayout />
-            </DictionaryContextProvider>
-          ),
-          children: [
-            {
-              path: '/',
-              element: <Navigate to="/dictionary" />,
-            },
-            {
-              path: '/dictionary',
-              element: <DictionaryScreen />,
-            },
-            {
-              path: 'dictionary/search/:query',
-              element: <SearchResultsScreen />,
-            },
-          ],
-        },
-        {
-          path: '/',
-          element: <FlashCardsModuleLayout />,
-          children: [
-            {
-              path: '/decks',
-              element: <ProtectedRoute />,
-              children: [{ path: '', element: <DecksPage /> }],
-            },
-            {
-              path: '/decks/study/:deckId',
-              element: <ProtectedRoute />,
-              children: [{ path: '', element: <StudyPage /> }],
-            },
-          ],
-        },
-        {
-          path: '/auth',
-          element: <AuthModuleLayout />,
-          children: [
-            {
-              path: '/auth/login',
-              element: <IsLoggedGuard redirectTo="/" />,
-              children: [{ path: '', element: <LoginScreen /> }],
-            },
-            {
-              path: '/auth/register',
-              element: <IsLoggedGuard redirectTo="/" />,
-              children: [{ path: '', element: <RegisterScreen /> }],
-            },
-          ],
-        },
-      ],
-    },
-  ],
-  { basename: import.meta.env.DEV ? '/' : '/react-japanary/' }
-);
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: (
+      <QueryClientProvider client={queryClient}>
+        <AuthContextProvider>
+          <FlashCardsContextProvider>
+            <App />
+          </FlashCardsContextProvider>
+        </AuthContextProvider>
+      </QueryClientProvider>
+    ),
+    children: [
+      {
+        path: '/',
+        element: (
+          <DictionaryContextProvider>
+            <DictionaryModuleLayout />
+          </DictionaryContextProvider>
+        ),
+        children: [
+          {
+            path: '/',
+            element: <Navigate to="/dictionary" />,
+          },
+          {
+            path: '/dictionary',
+            element: <DictionaryScreen />,
+          },
+          {
+            path: 'dictionary/search/:query',
+            element: <SearchResultsScreen />,
+          },
+        ],
+      },
+      {
+        path: '/',
+        element: <FlashCardsModuleLayout />,
+        children: [
+          {
+            path: '/decks',
+            element: <ProtectedRoute />,
+            children: [{ path: '', element: <DecksPage /> }],
+          },
+          {
+            path: '/decks/study/:deckId',
+            element: <ProtectedRoute />,
+            children: [{ path: '', element: <StudyPage /> }],
+          },
+        ],
+      },
+      {
+        path: '/auth',
+        element: <AuthModuleLayout />,
+        children: [
+          {
+            path: '/auth/login',
+            element: <IsLoggedGuard redirectTo="/" />,
+            children: [{ path: '', element: <LoginScreen /> }],
+          },
+          {
+            path: '/auth/register',
+            element: <IsLoggedGuard redirectTo="/" />,
+            children: [{ path: '', element: <RegisterScreen /> }],
+          },
+        ],
+      },
+    ],
+  },
+]);
 
 export default router;

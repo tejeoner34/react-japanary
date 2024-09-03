@@ -23,7 +23,7 @@ export function useCreateCardFromDictionary(wordData: SearchResult) {
     const newCard = new FlashCard({
       front: wordData.slug,
       back: template,
-      deckId: decks[0].id,
+      deckId: decks[0].id!,
     });
     setNewCardData(newCard);
     setIsFormVisible(true);

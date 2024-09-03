@@ -5,7 +5,6 @@ const BASE_URL: string = import.meta.env.VITE_DICTIONARY_BASE_URL + 'dictionary'
 
 export const dictionaryHanlders = [
   http.get(BASE_URL, () => {
-    console.log('ASDADSADSADSADSADSADASDAS');
     return HttpResponse.json(WORD_QUERY_MOCK);
   }),
   http.get(`${BASE_URL}/sample-sentence`, () => {

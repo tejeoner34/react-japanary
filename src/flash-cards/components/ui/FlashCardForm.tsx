@@ -37,7 +37,7 @@ export default function FlashCardForm({
   onCloseVisibility,
   onSubmit,
 }: FlashCardFormProps) {
-  const defaultDeck = flashCardToEdit?.deckId ?? availableDecks[0].id;
+  const defaultDeck = flashCardToEdit?.deckId || availableDecks[0].id || '';
   const [form, setForm] = useState({
     front: flashCardToEdit?.front || '',
     back: flashCardToEdit?.back || '',
@@ -59,7 +59,7 @@ export default function FlashCardForm({
     const newFlashCardData = new FlashCard({
       front: form.front,
       back: form.back,
-      deckId: form.belongsToDeck || availableDecks[0].id,
+      deckId: form.belongsToDeck || availableDecks[0].id || '',
       id: flashCardToEdit?.id,
       nextReview: flashCardToEdit?.nextReview,
     });
@@ -112,7 +112,11 @@ export default function FlashCardForm({
                 <SelectContent>
                   <SelectGroup>
                     {availableDecks.map((deck) => (
-                      <SelectItem key={deck.id} value={deck.id} className="flex items-center gap-2">
+                      <SelectItem
+                        key={deck.id}
+                        value={deck.id || ''}
+                        className="flex items-center gap-2"
+                      >
                         <span>{deck.name}</span>
                       </SelectItem>
                     ))}

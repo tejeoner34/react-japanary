@@ -1,7 +1,23 @@
+import { useAuth } from '@/auth/hooks/useAuth';
 import { Link, useLocation } from 'react-router-dom';
 
 export default function Header() {
+  const { isUserLogged, signOutUser } = useAuth();
   const location = useLocation();
+
+  const _logOutTpl = () => {
+    return (
+      isUserLogged && (
+        <nav>
+          <ul className="flex gap-3 text-primaryText">
+            <li onClick={() => signOutUser()}>
+              <a className="cursor-pointer opacity-70 hover:opacity-100">Log out</a>
+            </li>
+          </ul>
+        </nav>
+      )
+    );
+  };
 
   return (
     <div className="bg-backgroundTertiary min-h-20 flex items-center justify-between p-5">
@@ -33,14 +49,8 @@ export default function Header() {
           </li>
         </ul>
       </nav>
-      {/* this must render only when user is logged */}
-      {/* <nav>
-        <ul className="flex gap-3 text-primaryText">
-          <li>
-            <a className="cursor-pointer opacity-70 hover:opacity-100">Log out</a>
-          </li>
-        </ul>
-      </nav> */}
+
+      {_logOutTpl()}
     </div>
   );
 }

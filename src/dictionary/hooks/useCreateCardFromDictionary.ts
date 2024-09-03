@@ -14,16 +14,15 @@ export function useCreateCardFromDictionary(wordData: SearchResult) {
   const openForm = () => {
     const meaningsArray = wordData.senses.map((sense) => sense.englishDefinitions.join(', '));
     const meaningsArrayToString = meaningsArray.join(', ');
-    let template = `Meaning: \n\n${meaningsArrayToString}`;
+    let template = `Reading: \n\n${wordData.japaneseReadings[0].reading}\n\nMeaning: \n\n${meaningsArrayToString}`;
     if (sampleSentences.length) {
       const { english, japanese } = formatSampleSentenceToString(sampleSentences[0]);
       template = template.concat(`\n\nSentences: \n\n${japanese}\n\n${english}`);
     }
-    console.log(template);
     const newCard = new FlashCard({
       front: wordData.slug,
       back: template,
-      deckId: decks[0].id,
+      deckId: decks[0].id!,
     });
     setNewCardData(newCard);
     setIsFormVisible(true);

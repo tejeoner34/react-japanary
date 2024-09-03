@@ -19,7 +19,6 @@ export const AuthContextProvider: React.FC<AuthProviderProps> = ({ children }) =
 
   function checkIsAuthenticated() {
     return onAuthStateChanged(auth, (user) => {
-      console.log('is auth', user);
       if (user) {
         setIsUserLogged(true);
         setUserData(user);

@@ -35,8 +35,8 @@ export function useAuth() {
 
   const signOutUser = useMutation({
     mutationFn: () => firebaseService.signOut(),
-    onSuccess: (response) => {
-      console.log(response);
+    onSuccess: () => {
+      console.log('logged out');
     },
     onError: (error) => {
       console.error(error);

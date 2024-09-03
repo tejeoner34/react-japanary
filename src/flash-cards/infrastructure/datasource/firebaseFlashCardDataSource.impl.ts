@@ -95,8 +95,6 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
         const updatedLocalDecks = await this.createDeck(defaultDeck);
         return updatedLocalDecks;
       }
-
-      console.log('storeddecks', decks);
       return decks;
     } catch (error) {
       throw new Error('An error occurred while retrieving decks.');
@@ -111,7 +109,6 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
       const updatedLocalDecks = this._createDeckInstance(
         await localImplementation.createDeck(deck)
       );
-      console.log(updatedLocalDecks);
       return updatedLocalDecks;
     } catch (error) {
       throw new Error('Error creating deck');
@@ -131,7 +128,6 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
       );
       return updateLocalDecks;
     } catch (error) {
-      console.log('errrorororroo');
       throw new Error('Something went wrong while editing the deck');
     }
   }
@@ -144,7 +140,6 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
       const updatedLocalDecks = this._createDeckInstance(
         await localImplementation.deleteDeck(deck)
       );
-      console.log(updatedLocalDecks);
       return updatedLocalDecks;
     } catch (error) {
       throw new Error('Something went wrong while deleting the deck');
@@ -171,7 +166,6 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
         id: deckId,
       };
     });
-    console.log('raw', rawDecks);
     return rawDecks;
   }
 

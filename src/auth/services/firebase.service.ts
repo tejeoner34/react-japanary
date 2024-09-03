@@ -6,7 +6,6 @@ import {
 
 class FirebaseService {
   async createUser(email: string, password: string) {
-    console.log('ejecuta createUser');
     return createUserWithEmailAndPassword(auth, email, password);
   }
 

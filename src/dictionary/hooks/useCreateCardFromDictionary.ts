@@ -19,7 +19,6 @@ export function useCreateCardFromDictionary(wordData: SearchResult) {
       const { english, japanese } = formatSampleSentenceToString(sampleSentences[0]);
       template = template.concat(`\n\nSentences: \n\n${japanese}\n\n${english}`);
     }
-    console.log(template);
     const newCard = new FlashCard({
       front: wordData.slug,
       back: template,

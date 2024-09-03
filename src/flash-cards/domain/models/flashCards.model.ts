@@ -56,13 +56,11 @@ export class FlashCard implements FlashCardModel {
   }
 
   updateWithGrade(grade: Grade): void {
-    console.log(this);
     const updatedCard = SpaceRepetition.updateSpaceRepetitionData(this, grade);
     this.interval = updatedCard.interval;
     this.repetitions = updatedCard.repetitions;
     this.easeFactor = updatedCard.easeFactor;
     this.nextReview = updatedCard.nextReview;
-    console.log(this);
   }
 
   static updateWithGrade(card: FlashCardModel, grade: Grade): FlashCardModel {

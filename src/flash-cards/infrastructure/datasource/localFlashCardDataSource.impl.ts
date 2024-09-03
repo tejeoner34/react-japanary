@@ -69,7 +69,6 @@ export class LocalFlashCardDataSourceImpl implements FlashCardDataSource {
       await this.createDeck(defaultDeck);
       return [defaultDeck];
     }
-    console.log(storedDecks);
     return storedDecks;
   }
 

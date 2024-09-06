@@ -38,10 +38,10 @@ export default function SampleSentenceSection({ exampleSentences, isLoading }: P
               <div key={index} className="pb-2 border-b border-gray-300">
                 <div>
                   {sentece.japanese.map(({ furigana, word }, index) => (
-                    <ruby key={index}>
+                    <div key={index}>
                       {word}
                       {furigana && <rt className="text-xs">{furigana}</rt>}
-                    </ruby>
+                    </div>
                   ))}
                 </div>
                 <div>

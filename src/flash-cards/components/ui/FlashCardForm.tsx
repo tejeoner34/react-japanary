@@ -37,7 +37,7 @@ export default function FlashCardForm({
   onCloseVisibility,
   onSubmit,
 }: FlashCardFormProps) {
-  const defaultDeck = flashCardToEdit?.deckId || availableDecks[0].id || '';
+  const defaultDeck = flashCardToEdit?.deckId || availableDecks[0]?.id || '';
   const [form, setForm] = useState({
     front: flashCardToEdit?.front || '',
     back: flashCardToEdit?.back || '',

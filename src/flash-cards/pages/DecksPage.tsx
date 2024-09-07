@@ -68,17 +68,21 @@ export default function DecksPage() {
         </CustomDropdownMenu>
       </div>
 
-      <DeckForm
-        isVisible={isDeckFormVisible}
-        onCloseVisibility={() => setIsDeckFormVisible(false)}
-        onSubmit={createDeck}
-      />
-      <FlashCardForm
-        availableDecks={decks}
-        isVisible={isFlashCardFormVisible}
-        onCloseVisibility={() => setIsFlashCardFormVisible(false)}
-        onSubmit={createFlashCard}
-      />
+      {!isLoading && decks.length && (
+        <>
+          <DeckForm
+            isVisible={isDeckFormVisible}
+            onCloseVisibility={() => setIsDeckFormVisible(false)}
+            onSubmit={createDeck}
+          />
+          <FlashCardForm
+            availableDecks={decks}
+            isVisible={isFlashCardFormVisible}
+            onCloseVisibility={() => setIsFlashCardFormVisible(false)}
+            onSubmit={createFlashCard}
+          />
+        </>
+      )}
     </>
   );
 }

@@ -1,34 +1,39 @@
-import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { DictionaryDataSourceImpl } from '../infrastructure/datas-sources/dictionaryDataSourceImpl';
 import { ExampleSentence, SearchResult } from '../models/searchResult';
 import { DictionaryRepository } from '../repositories/dictionaryRepository';
 import { initializeRepository } from '../repositories/dictionaryRespositoryImpl';
+import { useState } from 'react';
+
 const defaultRepository = initializeRepository(new DictionaryDataSourceImpl());
 
 export const useDictionary = (repository: DictionaryRepository = defaultRepository) => {
-  const [isSearchWordLoading, setIsSearchWordLoading] = useState(false);
-  const [isSampleSentenceLoading, setIsSampleSenteceLoading] = useState(false);
-  const [searchedWordResult, setSearchedWordResult] = useState<SearchResult[]>([]);
-  const [sampleSentences, setsampleSentences] = useState<ExampleSentence[]>([]);
+  const [word, setWord] = useState('');
+  const {
+    data: searchedWordResult = [],
+    isLoading: isSearchWordLoading,
+    isError: isSearchedWordResultError,
+  } = useQuery({
+    queryKey: ['searchedWordResult', word],
+    queryFn: () => repository.searchWord(word),
+    enabled: !!word,
+    staleTime: 0,
+  });
 
-  const searchSampleSenteces = async (word: string) => {
-    setIsSampleSenteceLoading(true);
-    const response = await repository.searchSampleSenteces(word);
-    setsampleSentences(response);
-    setIsSampleSenteceLoading(false);
-  };
-
-  const searchMeaning = async (word: string) => {
-    setIsSearchWordLoading(true);
-    const response = await repository.searchWord(word);
-    setSearchedWordResult(response);
-    setIsSearchWordLoading(false);
-  };
+  const {
+    data: sampleSentences = [],
+    isLoading: isSampleSentenceLoading,
+    isError: isSampleSentencesError,
+  } = useQuery({
+    queryKey: ['sampleSentences', word],
+    queryFn: () => repository.searchSampleSenteces(word),
+    enabled: !!word,
+    staleTime: 0,
+  });
 
   const searchWord = (word: string) => {
     if (!word) return;
-    searchMeaning(word);
-    searchSampleSenteces(word);
+    setWord(word);
   };
 
   return {
@@ -37,6 +42,8 @@ export const useDictionary = (repository: DictionaryRepository = defaultReposito
     sampleSentences,
     isSearchWordLoading,
     isSampleSentenceLoading,
+    isSearchedWordResultError,
+    isSampleSentencesError,
   };
 };
 
@@ -44,6 +51,8 @@ export interface UseDictionaryType {
   searchWord: (word: string) => void;
   searchedWordResult: SearchResult[];
   sampleSentences: ExampleSentence[];
-  isSearchWordLoading: boolean;
   isSampleSentenceLoading: boolean;
+  isSearchWordLoading: boolean;
+  isSearchedWordResultError: boolean;
+  isSampleSentencesError: boolean;
 }

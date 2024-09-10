@@ -1,8 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { renderHook, act } from '@testing-library/react';
+import { act } from '@testing-library/react';
 import { useDictionary } from '../../../src/dictionary/hooks/useDictionary';
 import { DictionaryDSMockImpl } from '@/dictionary/infrastructure/datas-sources/dictionaryDSMockImpl';
 import { DictionaryRepositoryImpl } from '@/dictionary/repositories/dictionaryRespositoryImpl';
+import { renderHook } from '../../config/test-utils';
 const testRepository = new DictionaryRepositoryImpl(new DictionaryDSMockImpl());
 
 describe('useDictionary', () => {

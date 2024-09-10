@@ -108,11 +108,11 @@ export default function StudyFlashCard({ cardsToStudy }: StudyFlashCardProps) {
         <div>{cardsToStudy.length}</div>
       </div>
 
-      <div className="mt-5">
-        <CustomText
-          styles="text-xl whitespace-pre-wrap"
-          text={isAnswerVisible ? currentFlashCard.back : currentFlashCard.front}
-        />
+      <div className="mt-8 flex flex-col items-center gap-5 divide-y-2">
+        <CustomText styles="text-xl whitespace-pre-wrap" text={currentFlashCard.front} />
+        {isAnswerVisible && (
+          <CustomText styles="text-xl whitespace-pre-wrap pt-8" text={currentFlashCard.back} />
+        )}
       </div>
 
       <div className="fixed bottom-5 w-full flex justify-evenly items-center">

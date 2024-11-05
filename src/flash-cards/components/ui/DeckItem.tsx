@@ -1,9 +1,10 @@
+import { useState } from 'react';
 import CustomDropdownMenu from '@/common/components/ui/CustomDropdownMenu';
 import CustomText from '@/common/components/ui/CustomText';
 import { DeckModel } from '@/flash-cards/domain/models/deck.model';
 import { EllipsisVertical, Pencil, X } from 'lucide-react';
 import { DeckForm } from './DeckForm';
-import { useState } from 'react';
+import ConfirmationDialog from '@/common/components/ui/ConfirmationDialog';
 
 interface DeckItemProps {
   deck: DeckModel;
@@ -14,9 +15,14 @@ interface DeckItemProps {
 
 export default function DeckItem({ deck, onClick, onDelete, onEdit }: DeckItemProps) {
   const [isDeckFormVisible, setIsDeckFormVisible] = useState(false);
+  const [isDeleteDeckDialogVisible, setisDeleteDeckDialogVisible] = useState(false);
 
   const handleOnKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Enter') onClick(deck);
+  };
+
+  const handleDeleteDeck = () => {
+    setisDeleteDeckDialogVisible(true);
   };
 
   const dropdownMenuItems = [
@@ -28,7 +34,7 @@ export default function DeckItem({ deck, onClick, onDelete, onEdit }: DeckItemPr
     {
       name: 'Delete deck',
       icon: <X className="mr-2 h-4 w-4" />,
-      action: () => onDelete(deck),
+      action: () => handleDeleteDeck(),
     },
   ];
   return (
@@ -60,6 +66,12 @@ export default function DeckItem({ deck, onClick, onDelete, onEdit }: DeckItemPr
         deck={deck}
         onCloseVisibility={() => setIsDeckFormVisible(false)}
         onSubmit={onEdit}
+      />
+      <ConfirmationDialog
+        titleText="Confirm Delete Deck"
+        isVisible={isDeleteDeckDialogVisible}
+        onCloseVisibility={() => setisDeleteDeckDialogVisible(false)}
+        onSubmit={() => onDelete(deck)}
       />
     </div>
   );

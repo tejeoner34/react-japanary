@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Button,
   Input,
@@ -86,6 +86,14 @@ export default function FlashCardForm({
   const titleText = mode === 'create' ? 'New Card' : 'Edit Card';
 
   const isValidForm = form.front.trim() !== '' || form.back.trim() !== '';
+
+  useEffect(() => {
+    setForm({
+      ...form,
+      front: flashCardToEdit?.front || '',
+      back: flashCardToEdit?.back || '',
+    });
+  }, [flashCardToEdit]);
 
   return (
     <Dialog

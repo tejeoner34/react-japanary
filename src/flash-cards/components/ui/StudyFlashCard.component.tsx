@@ -5,6 +5,7 @@ import { Button } from '@/common/components/ui';
 import CustomText from '@/common/components/ui/CustomText';
 import { FlashCard, FlashCardModel, Grade } from '@/flash-cards/domain/models/flashCards.model';
 import FlashCardForm from './FlashCardForm';
+import ConfirmationDialog from '@/common/components/ui/ConfirmationDialog';
 
 const DIFFICULTY_LEVEL_BUTTONS = [
   {
@@ -32,9 +33,11 @@ export default function StudyFlashCard({ cardsToStudy }: StudyFlashCardProps) {
   const navigate = useNavigate();
   const [currentFlashCard, setCurrentFlashCard] = useState(cardsToStudy[0]);
 
-  const { decks, editFlashCard, updateFlashCardRevision, deleteFlashCard } = useFlashCardsContext();
+  const { decks, editFlashCard, updateFlashCardRevision, deleteFlashCard, sincronizeDeck } =
+    useFlashCardsContext();
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [isAnswerVisible, setIsAnswerVisible] = useState(false);
+  const [isDeleteFlashcardDialogVisible, setIsDeleteFlashcardDialogVisible] = useState(false);
   const onShowResult = () => {
     setIsAnswerVisible(true);
   };
@@ -47,6 +50,7 @@ export default function StudyFlashCard({ cardsToStudy }: StudyFlashCardProps) {
       cardsToStudy.push(updatedCard);
     }
     if (!cardsToStudy.length) {
+      sincronizeDeck(decks.find((deck) => deck.id === currentFlashCard.deckId)!);
       navigate('/decks');
       return;
     }
@@ -101,7 +105,7 @@ export default function StudyFlashCard({ cardsToStudy }: StudyFlashCardProps) {
           <Button variant="secondaryShadow" onClick={() => setIsFormVisible(true)}>
             Edit
           </Button>
-          <Button variant="secondaryShadow" onClick={handleDeleteFlashcard}>
+          <Button variant="secondaryShadow" onClick={() => setIsDeleteFlashcardDialogVisible(true)}>
             Delete
           </Button>
         </div>
@@ -114,7 +118,16 @@ export default function StudyFlashCard({ cardsToStudy }: StudyFlashCardProps) {
           <CustomText styles="text-xl whitespace-pre-wrap pt-8" text={currentFlashCard.back} />
         )}
       </div>
-
+      <div className="fixed bottom-20 w-full flex justify-evenly items-center">
+        <Button
+          variant="secondaryShadow"
+          onClick={() => {
+            sincronizeDeck(decks.find((deck) => deck.id === currentFlashCard.deckId)!);
+          }}
+        >
+          Update deck
+        </Button>
+      </div>
       <div className="fixed bottom-5 w-full flex justify-evenly items-center">
         {_difficultyButtonTpl()}
         {_showResultButtonTpl()}
@@ -126,6 +139,12 @@ export default function StudyFlashCard({ cardsToStudy }: StudyFlashCardProps) {
         flashCardToEdit={currentFlashCard}
         onCloseVisibility={() => setIsFormVisible(false)}
         onSubmit={editFlashCard}
+      />
+      <ConfirmationDialog
+        isVisible={isDeleteFlashcardDialogVisible}
+        onCloseVisibility={() => setIsDeleteFlashcardDialogVisible(false)}
+        onSubmit={handleDeleteFlashcard}
+        titleText="Confirm delete"
       />
     </div>
   );

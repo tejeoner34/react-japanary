@@ -76,12 +76,40 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
       throw new Error('Deck not found');
     }
     try {
-      deck.updateFlashCard(updatedFlashCard);
+      const cardsToUpdateRaw = localStorage.getItem('cardsToUpdate');
+      const cardsToUpdate = cardsToUpdateRaw
+        ? JSON.parse(cardsToUpdateRaw)
+        : {
+            deckId: deck.id,
+            cards: [],
+          };
+      if (deck.id === cardsToUpdate.deckId) {
+        cardsToUpdate.cards.push(updatedFlashCard);
+        localStorage.setItem('cardsToUpdate', JSON.stringify(cardsToUpdate));
+      }
+    } catch (error) {
+      throw new Error('Something went wrong while deleting the flashcard');
+    }
+  }
+
+  async sincronizeDeck(deck: DeckModel) {
+    try {
+      const cardsToUpdateRaw = localStorage.getItem('cardsToUpdate');
+      const cardsToUpdate = cardsToUpdateRaw ? JSON.parse(cardsToUpdateRaw) : null;
+
+      if (deck.id != cardsToUpdate.deckId || !cardsToUpdate) return;
+
+      cardsToUpdate.cards.forEach((card: FlashCardModel) => {
+        deck.updateFlashCard(card);
+      });
+
       const deckModelFirebase = this._createDeckModel(deck);
       const deckRef = doc(this._getDecksCollection(), deck.id!);
       await updateDoc(deckRef, deckModelFirebase);
+      localStorage.removeItem('cardsToUpdate');
     } catch (error) {
-      throw new Error('Something went wrong while deleting the flashcard');
+      console.error('Error sincronizing decks:', error);
+      throw new Error('An error occurred while sincronizing decks.');
     }
   }
 

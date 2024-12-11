@@ -6,7 +6,6 @@ export class SpaceRepetition {
   static updateSpaceRepetitionData(flashCard: FlashCardModel, grade: Grade): FlashCardModel {
     let { interval, repetitions, easeFactor, nextReview } = flashCard;
 
-    // Update logic based on the grade provided
     switch (grade) {
       case Grade.Again:
         repetitions = 0;
@@ -29,9 +28,12 @@ export class SpaceRepetition {
         break;
     }
     nextReview = new Date();
+    console.log('interval', interval);
+
     if (interval > 0) {
       nextReview.setDate(nextReview.getDate() + interval);
     }
+    console.log('next review', nextReview);
 
     // Return the updated flashCard with new SRS data
     return { ...flashCard, interval, repetitions, easeFactor, nextReview };

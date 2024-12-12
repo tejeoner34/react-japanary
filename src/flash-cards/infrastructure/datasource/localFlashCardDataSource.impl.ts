@@ -3,6 +3,10 @@ import { FlashCardModel } from '@/flash-cards/domain/models/flashCards.model';
 import { Deck, DeckModel } from '@/flash-cards/domain/models/deck.model';
 
 export class LocalFlashCardDataSourceImpl implements FlashCardDataSource {
+  sincronizeDeck(deck: DeckModel): void {
+    console.log(deck);
+    throw new Error('Method not implemented.');
+  }
   async createFlashCard(flashCard: FlashCardModel): Promise<DeckModel[]> {
     // Consider if we do really need to fetch stored decks or we can use local decks and then save changes
     const decks = await this.getDecks();

@@ -117,6 +117,7 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
     try {
       const decks: DeckModel[] = this._createDeckInstance(await this._getDecksRawDecks());
       localStorage.setItem('decks', JSON.stringify(decks));
+      localStorage.removeItem('cardsToUpdate');
 
       if (!decks.length) {
         const defaultDeck = Deck.createDefaultDeck();

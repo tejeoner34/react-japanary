@@ -92,7 +92,7 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
     }
   }
 
-  async sincronizeDeck(deck: DeckModel) {
+  async sincronizeDeck(deck: DeckModel): Promise<void> {
     try {
       const cardsToUpdateRaw = localStorage.getItem('cardsToUpdate');
       const cardsToUpdate = cardsToUpdateRaw ? JSON.parse(cardsToUpdateRaw) : null;

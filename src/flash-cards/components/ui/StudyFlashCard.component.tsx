@@ -6,6 +6,7 @@ import CustomText from '@/common/components/ui/CustomText';
 import { FlashCard, FlashCardModel, Grade } from '@/flash-cards/domain/models/flashCards.model';
 import FlashCardForm from './FlashCardForm';
 import ConfirmationDialog from '@/common/components/ui/ConfirmationDialog';
+import { Spinner } from '@/common/components/ui';
 
 const DIFFICULTY_LEVEL_BUTTONS = [
   {
@@ -33,8 +34,14 @@ export default function StudyFlashCard({ cardsToStudy }: StudyFlashCardProps) {
   const navigate = useNavigate();
   const [currentFlashCard, setCurrentFlashCard] = useState(cardsToStudy[0]);
 
-  const { decks, editFlashCard, updateFlashCardRevision, deleteFlashCard, sincronizeDeck } =
-    useFlashCardsContext();
+  const {
+    decks,
+    editFlashCard,
+    updateFlashCardRevision,
+    deleteFlashCard,
+    sincronizeDeck,
+    isEditDeckLoading,
+  } = useFlashCardsContext();
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [isAnswerVisible, setIsAnswerVisible] = useState(false);
   const [isDeleteFlashcardDialogVisible, setIsDeleteFlashcardDialogVisible] = useState(false);
@@ -97,6 +104,8 @@ export default function StudyFlashCard({ cardsToStudy }: StudyFlashCardProps) {
       )
     );
   };
+
+  if (isEditDeckLoading) return <Spinner />;
 
   return (
     <div className="flex flex-col items-center w-full h-full">

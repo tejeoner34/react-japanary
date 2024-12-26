@@ -68,9 +68,9 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
     repository.updateFlashCardRevision(flashCard, decks);
   };
 
-  const sincronizeDeck = (deck: DeckModel) => {
-    repository.sincronizeDeck(deck);
-  };
+  const sincronizeDeck = useMutation({
+    mutationFn: (deck: DeckModel) => repository.sincronizeDeck(deck),
+  });
 
   return {
     createDeck: createDeck.mutate,
@@ -80,10 +80,11 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
     editFlashCard: editFlashCard.mutate,
     deleteFlashCard: deleteFlashCard.mutate,
     updateFlashCardRevision,
-    sincronizeDeck,
+    sincronizeDeck: sincronizeDeck.mutate,
     refetchDecks,
     decks,
     isLoading: isLoadingDecks,
+    isEditDeckLoading: sincronizeDeck.isPending,
   };
 }
 
@@ -99,4 +100,5 @@ export interface useFlashCardType {
   refetchDecks: () => void;
   decks: DeckModel[];
   isLoading: boolean;
+  isEditDeckLoading: boolean;
 }

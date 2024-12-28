@@ -38,28 +38,38 @@ export default function DeckItem({ deck, onClick, onDelete, onEdit }: DeckItemPr
     },
   ];
   return (
-    <div
-      className="flex justify-between items-center gap-1 bg-backgroundTertiary p-4 rounded-md"
-      role="button"
-      tabIndex={0}
-      onClick={() => onClick(deck)}
-      onKeyDown={handleOnKeyDown}
-    >
-      <div className="text-start">
-        <CustomText tag="h4" text={deck.name} />
-        <CustomText styles="opacity-80" text={deck.description} />
-      </div>
-      <div className="flex gap-3">
-        <div>
-          <CustomText
-            styles="text-nowrap"
-            text={`Study: ${String(deck.cards.pendingStudyAmount)}`}
-          />
+    <>
+      <div
+        className="flex justify-between items-center gap-1 bg-backgroundTertiary p-4 rounded-md"
+        role="button"
+        tabIndex={0}
+        onClick={() => onClick(deck)}
+        onKeyDown={handleOnKeyDown}
+      >
+        <div className="text-start">
+          <CustomText tag="h4" text={deck.name} />
+          <CustomText styles="opacity-80" text={deck.description} />
         </div>
-        <CustomDropdownMenu items={dropdownMenuItems}>
-          <EllipsisVertical role="button" tabIndex={0} />
-        </CustomDropdownMenu>
+        <div className="flex gap-3">
+          <div>
+            <CustomText
+              styles="text-nowrap"
+              text={`Study: ${String(deck.cards.pendingStudyAmount)}`}
+            />
+          </div>
+          <div onClick={(ev) => ev.stopPropagation()}>
+            <CustomDropdownMenu items={dropdownMenuItems}>
+              <EllipsisVertical role="button" tabIndex={0} />
+            </CustomDropdownMenu>
+          </div>
+        </div>
       </div>
+      <ConfirmationDialog
+        titleText="Confirm Delete Deck"
+        isVisible={isDeleteDeckDialogVisible}
+        onCloseVisibility={() => setisDeleteDeckDialogVisible(false)}
+        onSubmit={() => onDelete(deck)}
+      />
       <DeckForm
         isVisible={isDeckFormVisible}
         mode="edit"
@@ -67,12 +77,6 @@ export default function DeckItem({ deck, onClick, onDelete, onEdit }: DeckItemPr
         onCloseVisibility={() => setIsDeckFormVisible(false)}
         onSubmit={onEdit}
       />
-      <ConfirmationDialog
-        titleText="Confirm Delete Deck"
-        isVisible={isDeleteDeckDialogVisible}
-        onCloseVisibility={() => setisDeleteDeckDialogVisible(false)}
-        onSubmit={() => onDelete(deck)}
-      />
-    </div>
+    </>
   );
 }

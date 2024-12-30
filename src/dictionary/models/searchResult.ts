@@ -28,3 +28,5 @@ export interface ExampleSentence {
   english: string;
   japanese: JapaneseSentence[];
 }
+
+export type AiResponse = string;

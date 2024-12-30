@@ -1,6 +1,6 @@
 import axios, { CancelTokenSource } from 'axios';
 import { DictionaryDataSource } from './dictionaryDataSource';
-import { ExampleSentence, SearchResult } from '@/dictionary/models/searchResult';
+import { AiResponse, ExampleSentence, SearchResult } from '@/dictionary/models/searchResult';
 
 const BASE_URL: string = import.meta.env.VITE_DICTIONARY_BASE_URL + 'dictionary';
 
@@ -30,5 +30,14 @@ export class DictionaryDataSourceImpl implements DictionaryDataSource {
       cancelToken: this._wordCancelToken.token,
     });
     return response.data;
+  }
+
+  async searchAi(word: string): Promise<AiResponse> {
+    try {
+      const response = await axios.get<AiResponse>(`${BASE_URL}/search-ai?keyword=${word}`);
+      return response.data;
+    } catch (error) {
+      throw new Error('Something went wrong while searching the word');
+    }
   }
 }

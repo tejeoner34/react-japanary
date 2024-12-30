@@ -16,9 +16,11 @@ import {
   SelectTrigger,
   SelectValue,
   Textarea,
+  Spinner,
 } from '@/common/components/ui';
 import { DeckModel } from '@/flash-cards/domain/models/deck.model';
 import { FlashCard, FlashCardModel } from '@/flash-cards/domain/models/flashCards.model';
+import { useDictionaryContext } from '@/dictionary/hooks/useDictionaryContext';
 
 interface FlashCardFormProps {
   availableDecks: DeckModel[];
@@ -37,6 +39,7 @@ export default function FlashCardForm({
   onCloseVisibility,
   onSubmit,
 }: FlashCardFormProps) {
+  const { searchAi, aiResponse, resetAiResponse, isAiResponseLoading } = useDictionaryContext();
   const defaultDeck = flashCardToEdit?.deckId || availableDecks[0]?.id || '';
   const [form, setForm] = useState({
     front: flashCardToEdit?.front || '',
@@ -94,6 +97,19 @@ export default function FlashCardForm({
       back: flashCardToEdit?.back || '',
     });
   }, [flashCardToEdit]);
+
+  useEffect(() => {
+    setForm({
+      ...form,
+      back: flashCardToEdit?.back + aiResponse,
+    });
+  }, [aiResponse]);
+
+  useEffect(() => {
+    return () => {
+      resetAiResponse();
+    };
+  }, []);
 
   return (
     <Dialog
@@ -155,8 +171,22 @@ export default function FlashCardForm({
                 onChange={handleInputChange}
               />
             </div>
+            <div className="flex justify-center">
+              <Button
+                className="w-full"
+                type="button"
+                variant="secondaryShadow"
+                onClick={() => searchAi(form.front)}
+                disabled={aiResponse !== '' || isAiResponseLoading}
+              >
+                More info
+                <span className={`${isAiResponseLoading ? 'block' : 'hidden'} ml-3`}>
+                  <Spinner />
+                </span>
+              </Button>
+            </div>
           </div>
-          <DialogFooter>
+          <DialogFooter className="flex gap-3">
             <Button type="submit" disabled={!isValidForm}>
               {mode === 'create' ? 'Create' : 'Save'}
             </Button>

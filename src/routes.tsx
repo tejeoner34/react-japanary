@@ -22,20 +22,18 @@ const router = createBrowserRouter([
     element: (
       <QueryClientProvider client={queryClient}>
         <AuthContextProvider>
-          <FlashCardsContextProvider>
-            <App />
-          </FlashCardsContextProvider>
+          <DictionaryContextProvider>
+            <FlashCardsContextProvider>
+              <App />
+            </FlashCardsContextProvider>
+          </DictionaryContextProvider>
         </AuthContextProvider>
       </QueryClientProvider>
     ),
     children: [
       {
         path: '/',
-        element: (
-          <DictionaryContextProvider>
-            <DictionaryModuleLayout />
-          </DictionaryContextProvider>
-        ),
+        element: <DictionaryModuleLayout />,
         children: [
           {
             path: '/',

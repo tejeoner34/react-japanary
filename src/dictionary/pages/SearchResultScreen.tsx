@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDictionaryContext } from '../hooks/useDictionaryContext';
 import CustomText from '@/common/components/ui/CustomText';
 import SearchResultsList from '../components/SearchResultsList';
@@ -7,6 +7,8 @@ import SampleSentenceSection from '../components/SampleSentenceSection';
 import Form from '../components/Form';
 
 const SearchResultsScreen = () => {
+  const navigate = useNavigate();
+
   const {
     searchWord,
     sampleSentences,
@@ -17,6 +19,10 @@ const SearchResultsScreen = () => {
   const _showNoResultsTpl = !searchedWordResult.length && !isSearchWordLoading;
   const { query } = useParams();
 
+  const handleSearch = (word: string) => {
+    navigate(`/dictionary/search/${word}`);
+  };
+
   useEffect(() => {
     if (query) {
       searchWord(query);
@@ -26,7 +32,7 @@ const SearchResultsScreen = () => {
   return (
     <>
       <div className="z-50 fixed bottom-0 right-0 left-0 p-5 bg-backgroundSecondary max-w-md w-full md:relative md:p-0">
-        <Form onSubmit={searchWord} value={query} />
+        <Form onSubmit={handleSearch} value={query} />
       </div>
 
       <div className={`flex flex-col gap-3 ${!_showNoResultsTpl && 'hidden'}`}>

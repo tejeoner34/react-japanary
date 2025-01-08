@@ -11,7 +11,7 @@ export default function DictionaryScreen() {
   return (
     <>
       <div className="z-100 fixed bottom-0 right-0 left-0 p-5 bg-backgroundSecondary max-w-md w-full md:relative md:p-0">
-        <Form onSubmit={handleSearch} />
+        <Form onSubmit={handleSearch} hasDeleteAction />
       </div>
       <div className="flex flex-col gap-3">
         <CustomText tag="h1" styles="text-4xl font-bold text-center" text="Japanese Dictionary" />

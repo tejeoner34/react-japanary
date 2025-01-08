@@ -32,7 +32,7 @@ const SearchResultsScreen = () => {
   return (
     <>
       <div className="z-50 fixed bottom-0 right-0 left-0 p-5 bg-backgroundSecondary max-w-md w-full md:relative md:p-0">
-        <Form onSubmit={handleSearch} value={query} />
+        <Form onSubmit={handleSearch} value={query} hasDeleteAction />
       </div>
 
       <div className={`flex flex-col gap-3 ${!_showNoResultsTpl && 'hidden'}`}>

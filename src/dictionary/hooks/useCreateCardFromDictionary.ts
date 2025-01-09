@@ -6,7 +6,7 @@ import { useDictionaryContext } from './useDictionaryContext';
 import { formatSampleSentenceToString } from '../utils/strings';
 
 export function useCreateCardFromDictionary(wordData: SearchResult) {
-  const { decks, createFlashCard } = useFlashCardsContext();
+  const { decks, createFlashCard, getDefaultDeck } = useFlashCardsContext();
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [newCardData, setNewCardData] = useState({} as FlashCard);
   const { sampleSentences } = useDictionaryContext();
@@ -22,7 +22,7 @@ export function useCreateCardFromDictionary(wordData: SearchResult) {
     const newCard = new FlashCard({
       front: wordData.slug,
       back: template,
-      deckId: decks[0].id!,
+      deckId: getDefaultDeck()?.id || decks[0].id!,
     });
     setNewCardData(newCard);
     setIsFormVisible(true);

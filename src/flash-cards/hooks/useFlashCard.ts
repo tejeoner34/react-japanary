@@ -64,6 +64,13 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
     },
   });
 
+  const setDefaultDeck = useMutation({
+    mutationFn: (deckId: string) => repository.setDefaultDeck(deckId, decks),
+    onSuccess: (updatedDecks) => {
+      queryClient.setQueryData<DeckModel[]>(['decks'], () => updatedDecks);
+    },
+  });
+
   const updateFlashCardRevision = (flashCard: FlashCardModel) => {
     repository.updateFlashCardRevision(flashCard, decks);
   };
@@ -71,6 +78,8 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
   const sincronizeDeck = useMutation({
     mutationFn: (deck: DeckModel) => repository.sincronizeDeck(deck),
   });
+
+  const getDefaultDeck = () => decks.find((deck) => deck.isDefault);
 
   return {
     createDeck: createDeck.mutate,
@@ -82,6 +91,8 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
     updateFlashCardRevision,
     sincronizeDeck: sincronizeDeck.mutate,
     refetchDecks,
+    getDefaultDeck,
+    setDefaultDeck: setDefaultDeck.mutate,
     decks,
     isLoading: isLoadingDecks,
     isEditDeckLoading: sincronizeDeck.isPending,
@@ -98,6 +109,8 @@ export interface useFlashCardType {
   sincronizeDeck(deck: DeckModel): void;
   deleteFlashCard: (flashCard: FlashCardModel) => void;
   refetchDecks: () => void;
+  getDefaultDeck: () => DeckModel;
+  setDefaultDeck: (deckId: string) => void;
   decks: DeckModel[];
   isLoading: boolean;
   isEditDeckLoading: boolean;

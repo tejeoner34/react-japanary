@@ -12,4 +12,5 @@ export interface FlashCardRepository {
   createDeck(deck: DeckModel): Promise<DeckModel[]>;
   editDeck(deck: DeckModel): Promise<DeckModel[]>;
   deleteDeck(deck: DeckModel): Promise<DeckModel[]>;
+  setDefaultDeck(deckId: string, decks: DeckModel[]): Promise<DeckModel[]>;
 }

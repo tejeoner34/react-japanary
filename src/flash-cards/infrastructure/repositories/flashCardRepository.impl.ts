@@ -5,6 +5,9 @@ import { FlashCardRepository } from '@/flash-cards/domain/repositories/flashCard
 
 export class FlashCardRepositoryImpl implements FlashCardRepository {
   constructor(private flashCardDataSource: FlashCardDataSource) {}
+  async setDefaultDeck(deckId: string, decks: DeckModel[]): Promise<DeckModel[]> {
+    return this.flashCardDataSource.setDefaultDeck(deckId, decks);
+  }
   async sincronizeDeck(deck: DeckModel): Promise<void> {
     return this.flashCardDataSource.sincronizeDeck(deck);
   }

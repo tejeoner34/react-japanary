@@ -21,6 +21,8 @@ import {
 import { DeckModel } from '@/flash-cards/domain/models/deck.model';
 import { FlashCard, FlashCardModel } from '@/flash-cards/domain/models/flashCards.model';
 import { useDictionaryContext } from '@/dictionary/hooks/useDictionaryContext';
+import { useFlashCardsContext } from '@/flash-cards/hooks/useFlashCardsContext';
+import { Checkbox } from '@/common/components/ui/checkbox';
 
 interface FlashCardFormProps {
   availableDecks: DeckModel[];
@@ -40,11 +42,14 @@ export default function FlashCardForm({
   onSubmit,
 }: FlashCardFormProps) {
   const { searchAi, aiResponse, resetAiResponse, isAiResponseLoading } = useDictionaryContext();
-  const defaultDeck = flashCardToEdit?.deckId || availableDecks[0]?.id || '';
+  const { getDefaultDeck, setDefaultDeck, decks } = useFlashCardsContext();
+  const defaultDeck =
+    flashCardToEdit?.deckId || getDefaultDeck()?.id || availableDecks[0]?.id || '';
   const [form, setForm] = useState({
     front: flashCardToEdit?.front || '',
     back: flashCardToEdit?.back || '',
     belongsToDeck: defaultDeck,
+    isDefaultDeck: defaultDeck === getDefaultDeck()?.id,
   });
 
   const handleInputChange = (ev: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -53,7 +58,14 @@ export default function FlashCardForm({
   };
 
   const handleSelectChange = (deckId: string) => {
-    setForm({ ...form, belongsToDeck: deckId });
+    setForm({ ...form, belongsToDeck: deckId, isDefaultDeck: getDefaultDeck()?.id === deckId });
+  };
+
+  const handleCheckboxChange = (value: boolean) => {
+    setForm({ ...form, isDefaultDeck: value });
+    if (value) {
+      setDefaultDeck(form.belongsToDeck);
+    }
   };
 
   const handleSumbit = (ev: React.FormEvent) => {
@@ -147,6 +159,16 @@ export default function FlashCardForm({
                   </SelectGroup>
                 </SelectContent>
               </Select>
+            </div>
+
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Checkbox
+                className="justify-self-end"
+                id="default-deck"
+                checked={form.isDefaultDeck}
+                onCheckedChange={handleCheckboxChange}
+              />
+              <label htmlFor="default-deck">Is default deck</label>
             </div>
 
             <div className="grid grid-cols-4 items-center gap-4">

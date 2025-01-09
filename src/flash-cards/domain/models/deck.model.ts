@@ -5,6 +5,7 @@ interface NewDeckConfig {
   description?: string;
   cards?: FlashCardsData;
   id?: string | null;
+  isDefault?: boolean;
 }
 
 export interface DeckModel {
@@ -12,6 +13,7 @@ export interface DeckModel {
   name: string;
   description?: string;
   cards: FlashCardsData;
+  isDefault?: boolean;
   addId: (id: string) => void;
   addFlashCard(flashCard: FlashCardModel): void;
   updateFlashCard(flashCard: FlashCardModel): void;
@@ -25,8 +27,9 @@ export class Deck implements DeckModel {
   name: string;
   description: string;
   cards: FlashCardsData;
+  isDefault?: boolean;
 
-  constructor({ name, description, cards, id }: NewDeckConfig) {
+  constructor({ name, description, cards, id, isDefault = false }: NewDeckConfig) {
     this.id = id || null;
     this.name = name;
     this.cards = cards || {
@@ -36,6 +39,7 @@ export class Deck implements DeckModel {
       totalAmount: 0,
     };
     this.description = description || '';
+    this.isDefault = isDefault;
   }
 
   static createDefaultDeck(): DeckModel {

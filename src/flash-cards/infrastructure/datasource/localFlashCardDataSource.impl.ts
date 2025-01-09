@@ -3,6 +3,10 @@ import { FlashCardModel } from '@/flash-cards/domain/models/flashCards.model';
 import { Deck, DeckModel } from '@/flash-cards/domain/models/deck.model';
 
 export class LocalFlashCardDataSourceImpl implements FlashCardDataSource {
+  setDefaultDeck(deckId: string, decks: DeckModel[]): Promise<DeckModel[]> {
+    console.log(deckId, decks);
+    throw new Error('Method not implemented.');
+  }
   sincronizeDeck(deck: DeckModel): void {
     console.log(deck);
     throw new Error('Method not implemented.');

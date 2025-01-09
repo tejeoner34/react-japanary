@@ -175,6 +175,37 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
     }
   }
 
+  async setDefaultDeck(newDefaultDeckId: string, decks: DeckModel[]): Promise<DeckModel[]> {
+    try {
+      const currentDefaultDeck = decks.find((deck) => deck.isDefault);
+      const newDefaultDeck = decks.find((deck) => deck.id === newDefaultDeckId);
+
+      if (!newDefaultDeck) {
+        throw new Error('Deck not found');
+      }
+
+      if (currentDefaultDeck) {
+        currentDefaultDeck.isDefault = false;
+      }
+      newDefaultDeck.isDefault = true;
+
+      const updates = [];
+      if (currentDefaultDeck) {
+        const currentDefaultDeckRef = doc(this._getDecksCollection(), currentDefaultDeck.id!);
+        updates.push(updateDoc(currentDefaultDeckRef, { isDefault: false }));
+      }
+      const newDefaultDeckRef = doc(this._getDecksCollection(), newDefaultDeck.id!);
+      updates.push(updateDoc(newDefaultDeckRef, { isDefault: true }));
+
+      await Promise.all(updates);
+
+      return decks;
+    } catch (error) {
+      console.error('Error setting default deck:', error);
+      throw new Error('Something went wrong while setting the default deck');
+    }
+  }
+
   async _getDecksRawDecks(): Promise<DeckModel[]> {
     const currentUserId = auth.currentUser?.uid;
     if (!currentUserId) {
@@ -195,6 +226,7 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
         id: deckId,
       };
     });
+    console.log(rawDecks);
     return rawDecks;
   }
 

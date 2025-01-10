@@ -15,6 +15,7 @@ import SearchResultsScreen from './dictionary/pages/SearchResultScreen';
 import StudyPage from './flash-cards/pages/StudyPage';
 import ProtectedRoute from './auth/components/ProtectedRoute';
 import IsLoggedGuard from './auth/components/IsLoggedGuard';
+import SeeFlashcardsPage from './flash-cards/pages/SeeFlashcardsPage';
 
 const router = createBrowserRouter([
   {
@@ -62,6 +63,11 @@ const router = createBrowserRouter([
             path: '/decks/study/:deckId',
             element: <ProtectedRoute />,
             children: [{ path: '', element: <StudyPage /> }],
+          },
+          {
+            path: '/decks/cards/:deckId',
+            element: <ProtectedRoute />,
+            children: [{ path: '', element: <SeeFlashcardsPage /> }],
           },
         ],
       },

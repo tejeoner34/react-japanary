@@ -42,7 +42,7 @@ export default function FlashCardForm({
   onSubmit,
 }: FlashCardFormProps) {
   const { searchAi, aiResponse, resetAiResponse, isAiResponseLoading } = useDictionaryContext();
-  const { getDefaultDeck, setDefaultDeck, decks } = useFlashCardsContext();
+  const { getDefaultDeck, setDefaultDeck } = useFlashCardsContext();
   const defaultDeck =
     flashCardToEdit?.deckId || getDefaultDeck()?.id || availableDecks[0]?.id || '';
   const [form, setForm] = useState({

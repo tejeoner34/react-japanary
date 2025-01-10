@@ -5,6 +5,7 @@ import { DeckModel } from '@/flash-cards/domain/models/deck.model';
 import { EllipsisVertical, Pencil, X } from 'lucide-react';
 import { DeckForm } from './DeckForm';
 import ConfirmationDialog from '@/common/components/ui/ConfirmationDialog';
+import { useNavigate } from 'react-router-dom';
 
 interface DeckItemProps {
   deck: DeckModel;
@@ -14,6 +15,7 @@ interface DeckItemProps {
 }
 
 export default function DeckItem({ deck, onClick, onDelete, onEdit }: DeckItemProps) {
+  const navigate = useNavigate();
   const [isDeckFormVisible, setIsDeckFormVisible] = useState(false);
   const [isDeleteDeckDialogVisible, setisDeleteDeckDialogVisible] = useState(false);
 
@@ -35,6 +37,11 @@ export default function DeckItem({ deck, onClick, onDelete, onEdit }: DeckItemPr
       name: 'Delete deck',
       icon: <X className="mr-2 h-4 w-4" />,
       action: () => handleDeleteDeck(),
+    },
+    {
+      name: 'See flashcards',
+      icon: <X className="mr-2 h-4 w-4" />,
+      action: () => navigate(`/decks/cards/${deck.id}`),
     },
   ];
   return (

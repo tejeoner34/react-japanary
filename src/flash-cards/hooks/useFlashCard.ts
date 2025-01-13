@@ -79,7 +79,7 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
     mutationFn: (deck: DeckModel) => repository.sincronizeDeck(deck),
   });
 
-  const getDefaultDeck = () => decks.find((deck) => deck.isDefault);
+  const getDefaultDeck = () => decks.find((deck) => deck.isDefault) || decks[0];
 
   const getFlashCardsByDeckId = (deckId: string): FlashCardModel[] => {
     return decks.find((deck) => deck.id === deckId)?.cards.allCards || [];

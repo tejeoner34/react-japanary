@@ -24,7 +24,6 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
   } = useQuery({
     queryKey: ['decks'],
     queryFn: () => repository.getDecks(),
-    retry: 1,
     enabled: isUserLogged,
   });
 

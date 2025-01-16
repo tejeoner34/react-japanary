@@ -3,13 +3,22 @@ import { DictionaryDataSourceImpl } from '../infrastructure/datas-sources/dictio
 import { AiResponse, ExampleSentence, SearchResult } from '../models/searchResult';
 import { DictionaryRepository } from '../repositories/dictionaryRepository';
 import { initializeRepository } from '../repositories/dictionaryRespositoryImpl';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useToast } from '@/common/components/ui';
 
 const defaultRepository = initializeRepository(new DictionaryDataSourceImpl());
+const retry = 2;
+const errorToastVariant = 'destructive';
 
 export const useDictionary = (repository: DictionaryRepository = defaultRepository) => {
   const [word, setWord] = useState('');
   const [aiResponse, setAiResponse] = useState('');
+  const { toast } = useToast();
+  const config = {
+    enabled: !!word,
+    staleTime: 0,
+    retry,
+  };
 
   const {
     data: searchedWordResult = [],
@@ -18,8 +27,7 @@ export const useDictionary = (repository: DictionaryRepository = defaultReposito
   } = useQuery({
     queryKey: ['searchedWordResult', word],
     queryFn: () => repository.searchWord(word),
-    enabled: !!word,
-    staleTime: 0,
+    ...config,
   });
 
   const {
@@ -29,8 +37,7 @@ export const useDictionary = (repository: DictionaryRepository = defaultReposito
   } = useQuery({
     queryKey: ['sampleSentences', word],
     queryFn: () => repository.searchSampleSenteces(word),
-    enabled: !!word,
-    staleTime: 0,
+    ...config,
   });
 
   const {
@@ -52,6 +59,24 @@ export const useDictionary = (repository: DictionaryRepository = defaultReposito
   const resetAiResponse = () => {
     setAiResponse('');
   };
+
+  useEffect(() => {
+    if (isSearchedWordResultError) {
+      toast({
+        title: 'Error fetching search results',
+        variant: errorToastVariant,
+      });
+    }
+  }, [isSearchedWordResultError, toast]);
+
+  useEffect(() => {
+    if (isAiResponseError) {
+      toast({
+        title: 'Error fetching AI response',
+        variant: errorToastVariant,
+      });
+    }
+  }, [isAiResponseError, toast]);
 
   return {
     searchWord,

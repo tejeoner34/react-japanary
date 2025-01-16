@@ -5,10 +5,14 @@ import { DeckModel } from '../domain/models/deck.model';
 import { FlashCardRepository } from '../domain/repositories/flashCardRepository';
 import { useToast } from '@/common/components/ui';
 import { FirebaseFlashCardDataSourceImpl } from '../infrastructure/datasource/firebaseFlashCardDataSource.impl';
+import { useEffect } from 'react';
+import { useAuth } from '@/auth/hooks/useAuth';
 
 const defaultRepository = initializeRepository(new FirebaseFlashCardDataSourceImpl());
+const variant = 'destructive';
 
 export function useFlashCard(repository: FlashCardRepository = defaultRepository) {
+  const { isUserLogged } = useAuth();
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
@@ -16,15 +20,24 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
     data: decks = [],
     isFetching: isLoadingDecks,
     refetch: refetchDecks,
+    isError: isDecksError,
   } = useQuery({
     queryKey: ['decks'],
     queryFn: () => repository.getDecks(),
+    retry: 1,
+    enabled: isUserLogged,
   });
 
   const createDeck = useMutation({
     mutationFn: (newDeck: DeckModel) => repository.createDeck(newDeck),
     onSuccess: (updatedDecks) => {
       queryClient.setQueryData<DeckModel[]>(['decks'], () => updatedDecks);
+    },
+    onError: () => {
+      toast({
+        title: 'Error creating deck',
+        variant,
+      });
     },
   });
 
@@ -33,6 +46,12 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
     onSuccess: (updatedDecks) => {
       queryClient.setQueryData<DeckModel[]>(['decks'], () => updatedDecks);
     },
+    onError: () => {
+      toast({
+        title: 'Error editing deck',
+        variant,
+      });
+    },
   });
 
   const deleteDeck = useMutation({
@@ -40,13 +59,25 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
     onSuccess: (updatedDecks) => {
       queryClient.setQueryData<DeckModel[]>(['decks'], () => updatedDecks);
     },
+    onError: () => {
+      toast({
+        title: 'Error deleting deck',
+        variant,
+      });
+    },
   });
 
   const createFlashCard = useMutation({
     mutationFn: (newCard: FlashCardModel) => repository.createFlashCard(newCard, decks),
     onSuccess: (updatedDecks) => {
       queryClient.setQueryData<DeckModel[]>(['decks'], () => updatedDecks);
-      toast({ title: 'The card was succesfully created!', variant: 'success' });
+      toast({ title: 'The card was successfully created!', variant: 'success' });
+    },
+    onError: () => {
+      toast({
+        title: 'Error creating flash card',
+        variant,
+      });
     },
   });
 
@@ -55,12 +86,24 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
     onSuccess: (updatedDecks) => {
       queryClient.setQueryData<DeckModel[]>(['decks'], () => updatedDecks);
     },
+    onError: () => {
+      toast({
+        title: 'Error editing flash card',
+        variant,
+      });
+    },
   });
 
   const deleteFlashCard = useMutation({
     mutationFn: (flashCard: FlashCardModel) => repository.deleteFlashCard(flashCard, decks),
     onSuccess: (updatedDecks) => {
       queryClient.setQueryData<DeckModel[]>(['decks'], () => updatedDecks);
+    },
+    onError: () => {
+      toast({
+        title: 'Error deleting flash card',
+        variant,
+      });
     },
   });
 
@@ -69,14 +112,33 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
     onSuccess: (updatedDecks) => {
       queryClient.setQueryData<DeckModel[]>(['decks'], () => updatedDecks);
     },
+    onError: () => {
+      toast({
+        title: 'Error setting default deck',
+        variant,
+      });
+    },
   });
 
   const updateFlashCardRevision = (flashCard: FlashCardModel) => {
-    repository.updateFlashCardRevision(flashCard, decks);
+    try {
+      repository.updateFlashCardRevision(flashCard, decks);
+    } catch {
+      toast({
+        title: 'Error updating flash card revision',
+        variant,
+      });
+    }
   };
 
   const sincronizeDeck = useMutation({
     mutationFn: (deck: DeckModel) => repository.sincronizeDeck(deck),
+    onError: () => {
+      toast({
+        title: 'Error synchronizing deck',
+        variant,
+      });
+    },
   });
 
   const getDefaultDeck = () => decks.find((deck) => deck.isDefault) || decks[0];
@@ -84,6 +146,16 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
   const getFlashCardsByDeckId = (deckId: string): FlashCardModel[] => {
     return decks.find((deck) => deck.id === deckId)?.cards.allCards || [];
   };
+
+  useEffect(() => {
+    console.log(isDecksError, 'asdsad');
+    if (isDecksError) {
+      toast({
+        title: 'Error fetching decks',
+        variant,
+      });
+    }
+  }, [isDecksError, toast]);
 
   return {
     createDeck: createDeck.mutate,

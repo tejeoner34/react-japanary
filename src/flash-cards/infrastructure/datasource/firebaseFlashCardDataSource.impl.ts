@@ -211,23 +211,28 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
     if (!currentUserId) {
       throw new Error('User not logged in');
     }
-    const userRef = doc(db, 'users', currentUserId);
-    const decksCollectionRef = collection(userRef, 'decks');
-    const q = query(decksCollectionRef);
-    const querySnapshot = await getDocs(q);
-    const rawDecks: DeckModel[] = querySnapshot.docs.map((doc) => {
-      // Access the ID from the document object
-      const deckId = doc.id;
-      const deckData = doc.data() as DeckModel;
+    try {
+      const userRef = doc(db, 'users', currentUserId);
+      const decksCollectionRef = collection(userRef, 'decks');
+      const q = query(decksCollectionRef);
+      const querySnapshot = await getDocs(q);
+      const rawDecks: DeckModel[] = querySnapshot.docs.map((doc) => {
+        // Access the ID from the document object
+        const deckId = doc.id;
+        const deckData = doc.data() as DeckModel;
 
-      // Combine the ID and data into a single object
-      return {
-        ...deckData, // Spread operator to include existing deck data
-        id: deckId,
-      };
-    });
-    console.log(rawDecks);
-    return rawDecks;
+        // Combine the ID and data into a single object
+        return {
+          ...deckData, // Spread operator to include existing deck data
+          id: deckId,
+        };
+      });
+      console.log(rawDecks);
+      return rawDecks;
+    } catch (err) {
+      console.log(err);
+      throw new Error('Error retrieving decks');
+    }
   }
 
   _getDecksCollection() {

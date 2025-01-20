@@ -1,8 +1,12 @@
 import { FlashCardDataSource } from '@/flash-cards/domain/datasource/flashCardDataSource';
-import { FlashCardModel } from '@/flash-cards/domain/models/flashCards.model';
+import { FlashCardModel, Image } from '@/flash-cards/domain/models/flashCards.model';
 import { Deck, DeckModel } from '@/flash-cards/domain/models/deck.model';
 
 export class LocalFlashCardDataSourceImpl implements FlashCardDataSource {
+  uploadImages(images: File[]): Promise<Image[]> {
+    console.log(images);
+    throw new Error('Method not implemented.');
+  }
   setDefaultDeck(deckId: string, decks: DeckModel[]): Promise<DeckModel[]> {
     console.log(deckId, decks);
     throw new Error('Method not implemented.');

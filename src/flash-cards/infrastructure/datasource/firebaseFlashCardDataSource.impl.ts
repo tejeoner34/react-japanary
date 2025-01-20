@@ -1,3 +1,4 @@
+import axios from 'axios';
 import {
   auth,
   db,
@@ -11,8 +12,10 @@ import {
 } from '@/auth/config/firebase';
 import { FlashCardDataSource } from '@/flash-cards/domain/datasource/flashCardDataSource';
 import { Deck, DeckModel } from '@/flash-cards/domain/models/deck.model';
-import { FlashCardModel } from '@/flash-cards/domain/models/flashCards.model';
+import { FlashCardModel, Image } from '@/flash-cards/domain/models/flashCards.model';
 import { LocalFlashCardDataSourceImpl } from './localFlashCardDataSource.impl';
+
+const BASE_URL: string = import.meta.env.VITE_DICTIONARY_BASE_URL + 'flashcard';
 
 const localImplementation = new LocalFlashCardDataSourceImpl();
 
@@ -24,8 +27,10 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
     }
 
     try {
+      console.log('creating flashcard', deck);
       deck.addFlashCard(flashCard);
       const deckModelFirebase = this._createDeckModel(deck);
+      console.log('deckModelFirebase', deckModelFirebase);
       const deckRef = doc(this._getDecksCollection(), deck.id!);
       await updateDoc(deckRef, deckModelFirebase);
       return localDecks;
@@ -206,6 +211,26 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
     }
   }
 
+  async uploadImages(images: File[]): Promise<Image[]> {
+    try {
+      console.log('Uploading images...', images);
+      const formData = new FormData();
+      images.forEach((image) => {
+        formData.append(`images`, image);
+      });
+      const response = await axios.post(BASE_URL + '/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Error uploading images:', error);
+      throw new Error('Error uploading images');
+    }
+  }
+
   async _getDecksRawDecks(): Promise<DeckModel[]> {
     const currentUserId = auth.currentUser?.uid;
     if (!currentUserId) {
@@ -270,6 +295,11 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
           nextReview:
             card.nextReview instanceof Date ? card.nextReview.toISOString() : card.nextReview,
           deckId: card.deckId,
+          imagesUrl:
+            card.imagesUrl?.map((image) => ({
+              id: image.id,
+              url: image.url,
+            })) || [],
         })),
         pedingStudyCards: deck.cards.pedingStudyCards.map((card) => ({
           id: card.id || null,
@@ -281,6 +311,11 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
           nextReview:
             card.nextReview instanceof Date ? card.nextReview.toISOString() : card.nextReview,
           deckId: card.deckId,
+          imagesUrl:
+            card.imagesUrl?.map((image) => ({
+              id: image.id,
+              url: image.url,
+            })) || [],
         })),
         pendingStudyAmount: deck.cards.pendingStudyAmount,
         totalAmount: deck.cards.totalAmount,

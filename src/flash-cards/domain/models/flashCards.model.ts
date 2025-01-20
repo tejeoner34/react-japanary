@@ -10,6 +10,7 @@ export interface FlashCardModel {
   easeFactor: number;
   nextReview: Date;
   deckId: string;
+  imagesUrl: Image[];
   updateWithGrade: (grade: Grade) => void;
 }
 
@@ -33,6 +34,12 @@ interface NewFlashCardProps {
   deckId: string;
   id?: string;
   nextReview?: Date;
+  imagesUrl?: Image[];
+}
+
+export interface Image {
+  id: string;
+  url: string;
 }
 
 export class FlashCard implements FlashCardModel {
@@ -44,7 +51,9 @@ export class FlashCard implements FlashCardModel {
   easeFactor: number;
   nextReview: Date;
   deckId: string;
-  constructor({ back, deckId, front, id, nextReview }: NewFlashCardProps) {
+  imagesUrl: Image[];
+
+  constructor({ back, deckId, front, id, nextReview, imagesUrl }: NewFlashCardProps) {
     this.id = id || createUniqueId();
     this.back = back;
     this.deckId = deckId;
@@ -53,6 +62,7 @@ export class FlashCard implements FlashCardModel {
     this.interval = 0;
     this.nextReview = nextReview || new Date();
     this.repetitions = 0;
+    this.imagesUrl = imagesUrl || [];
   }
 
   updateWithGrade(grade: Grade): void {

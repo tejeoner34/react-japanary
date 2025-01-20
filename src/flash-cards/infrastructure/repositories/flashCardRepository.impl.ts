@@ -1,10 +1,13 @@
 import { FlashCardDataSource } from '@/flash-cards/domain/datasource/flashCardDataSource';
 import { DeckModel } from '@/flash-cards/domain/models/deck.model';
-import { FlashCardModel } from '@/flash-cards/domain/models/flashCards.model';
+import { FlashCardModel, Image } from '@/flash-cards/domain/models/flashCards.model';
 import { FlashCardRepository } from '@/flash-cards/domain/repositories/flashCardRepository';
 
 export class FlashCardRepositoryImpl implements FlashCardRepository {
   constructor(private flashCardDataSource: FlashCardDataSource) {}
+  async uploadImages(images: File[]): Promise<Image[]> {
+    return await this.flashCardDataSource.uploadImages(images);
+  }
   async setDefaultDeck(deckId: string, decks: DeckModel[]): Promise<DeckModel[]> {
     return this.flashCardDataSource.setDefaultDeck(deckId, decks);
   }

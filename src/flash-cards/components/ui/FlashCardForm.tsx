@@ -23,6 +23,7 @@ import { FlashCard, FlashCardModel } from '@/flash-cards/domain/models/flashCard
 import { useDictionaryContext } from '@/dictionary/hooks/useDictionaryContext';
 import { useFlashCardsContext } from '@/flash-cards/hooks/useFlashCardsContext';
 import { Checkbox } from '@/common/components/ui/checkbox';
+import CustomText from '@/common/components/ui/CustomText';
 
 interface FlashCardFormProps {
   availableDecks: DeckModel[];
@@ -42,7 +43,7 @@ export default function FlashCardForm({
   onSubmit,
 }: FlashCardFormProps) {
   const { searchAi, aiResponse, resetAiResponse, isAiResponseLoading } = useDictionaryContext();
-  const { getDefaultDeck, setDefaultDeck } = useFlashCardsContext();
+  const { getDefaultDeck, setDefaultDeck, uploadImages, uploadImagesUrl } = useFlashCardsContext();
   const defaultDeck =
     flashCardToEdit?.deckId || getDefaultDeck()?.id || availableDecks[0]?.id || '';
   const [form, setForm] = useState({
@@ -50,7 +51,9 @@ export default function FlashCardForm({
     back: flashCardToEdit?.back || '',
     belongsToDeck: defaultDeck,
     isDefaultDeck: defaultDeck === getDefaultDeck()?.id,
+    imagesUrl: flashCardToEdit?.imagesUrl || [],
   });
+  const [rawImages, setRawImages] = useState<File[]>([]);
 
   const handleInputChange = (ev: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = ev.target;
@@ -68,18 +71,42 @@ export default function FlashCardForm({
     }
   };
 
-  const handleSumbit = (ev: React.FormEvent) => {
+  const handlePreSubmitImg = (ev: React.FormEvent) => {
     ev.preventDefault();
+    if (!rawImages.length) {
+      handleSumbit();
+      return;
+    }
+
+    uploadImages(rawImages);
+  };
+
+  const handleSumbit = (formData = form) => {
     if (!isValidForm) return;
     const newFlashCardData = new FlashCard({
-      front: form.front,
-      back: form.back,
-      deckId: form.belongsToDeck || availableDecks[0].id || '',
+      front: formData.front,
+      back: formData.back,
+      deckId: formData.belongsToDeck || availableDecks[0].id || '',
       id: flashCardToEdit?.id,
       nextReview: flashCardToEdit?.nextReview,
+      imagesUrl: formData.imagesUrl,
     });
+    console.log(newFlashCardData, 'newFlashCardData');
     onSubmit(newFlashCardData);
     handleCloseVisibility();
+  };
+
+  const handlePaste = async (event: React.ClipboardEvent<HTMLTextAreaElement>) => {
+    const clipboardItems = event.clipboardData.items;
+    for (const item of clipboardItems) {
+      if (item.type.startsWith('image/')) {
+        event.preventDefault();
+        const file = item.getAsFile();
+        if (file) {
+          setRawImages([...rawImages, file]);
+        }
+      }
+    }
   };
 
   const resetForm = () => {
@@ -88,6 +115,7 @@ export default function FlashCardForm({
       front: flashCardToEdit?.front || '',
       back: flashCardToEdit?.back || '',
     });
+    setRawImages([]);
   };
 
   const handleCloseVisibility = () => {
@@ -123,6 +151,18 @@ export default function FlashCardForm({
     };
   }, []);
 
+  useEffect(() => {
+    if (uploadImagesUrl.length) {
+      setForm((prevForm) => ({ ...prevForm, imagesUrl: uploadImagesUrl }));
+    }
+  }, [uploadImagesUrl]);
+
+  useEffect(() => {
+    if (form.imagesUrl.length && uploadImagesUrl.length) {
+      handleSumbit(form);
+    }
+  }, [form.imagesUrl, uploadImagesUrl]);
+
   return (
     <Dialog
       open={isVisible}
@@ -135,7 +175,7 @@ export default function FlashCardForm({
           <DialogTitle>{titleText}</DialogTitle>
           <DialogDescription />
         </DialogHeader>
-        <form onSubmit={handleSumbit}>
+        <form onSubmit={handlePreSubmitImg}>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="deck" className="text-right">
@@ -191,8 +231,16 @@ export default function FlashCardForm({
                 value={form.back}
                 name="back"
                 onChange={handleInputChange}
+                onPaste={handlePaste}
               />
             </div>
+            {!!rawImages.length && (
+              <div>
+                <CustomText text="Remove added pics" />
+                <Button onClick={() => setRawImages([])}>Remove</Button>
+              </div>
+            )}
+
             <div className="flex justify-center">
               <Button
                 className="w-full"

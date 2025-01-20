@@ -105,6 +105,18 @@ export default function StudyFlashCard({ cardsToStudy }: StudyFlashCardProps) {
     );
   };
 
+  const _imagesTpl = () =>
+    currentFlashCard.imagesUrl?.map((image) => (
+      <img
+        key={image.id}
+        src={`${image.url}?w=800&auto=compress`}
+        alt="image"
+        loading="lazy"
+        style={{ filter: 'blur(10px)', transition: 'filter 0.3s' }}
+        onLoad={(e) => (e.currentTarget.style.filter = 'none')}
+      />
+    ));
+
   if (isEditDeckLoading) return <Spinner />;
 
   return (
@@ -124,7 +136,10 @@ export default function StudyFlashCard({ cardsToStudy }: StudyFlashCardProps) {
       <div className="mt-8 flex flex-col items-center gap-5 divide-y-2">
         <CustomText styles="text-xl whitespace-pre-wrap" text={currentFlashCard.front} />
         {isAnswerVisible && (
-          <CustomText styles="text-xl whitespace-pre-wrap pt-8" text={currentFlashCard.back} />
+          <>
+            <CustomText styles="text-xl whitespace-pre-wrap pt-8" text={currentFlashCard.back} />
+            {_imagesTpl()}
+          </>
         )}
       </div>
       <div className="fixed bottom-20 w-full flex justify-evenly items-center">

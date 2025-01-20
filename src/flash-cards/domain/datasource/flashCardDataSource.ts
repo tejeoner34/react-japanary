@@ -1,5 +1,5 @@
 import { DeckModel } from '../models/deck.model';
-import { FlashCardModel } from '../models/flashCards.model';
+import { FlashCardModel, Image } from '../models/flashCards.model';
 
 export interface FlashCardDataSource {
   createFlashCard(flashCard: FlashCardModel, decks: DeckModel[]): Promise<DeckModel[]>;
@@ -13,4 +13,5 @@ export interface FlashCardDataSource {
   editDeck(deck: DeckModel): Promise<DeckModel[]>;
   deleteDeck(deck: DeckModel): Promise<DeckModel[]>;
   setDefaultDeck(deckId: string, decks: DeckModel[]): Promise<DeckModel[]>;
+  uploadImages(images: File[]): Promise<Image[]>;
 }

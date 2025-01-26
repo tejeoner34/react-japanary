@@ -41,7 +41,7 @@ export default function SearchResultItem({
         <div>
           <WordMeaningItem senses={senses} />
         </div>
-        {createFlashCardTpl(openForm)}
+        {decks.length ? createFlashCardTpl(openForm) : null}
       </div>
 
       {isFormVisible && (

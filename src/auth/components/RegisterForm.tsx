@@ -29,12 +29,18 @@ export default function RegisterForm({ onFormSubmit }: LoginFormProps) {
       className="flex flex-col justify-center gap-3 p-5 max-w-md m-auto"
       onSubmit={handleSubmit(onSubmit)}
     >
-      <Input {...register('email', EMAIL_REQUIREMENT_OPTIONS)} type="text" placeholder="email..." />
+      <Input
+        {...register('email', EMAIL_REQUIREMENT_OPTIONS)}
+        type="text"
+        placeholder="email..."
+        autoComplete="username"
+      />
       {errors.email?.message && <ErrorMessage message={errors.email.message} />}
       <Input
         {...register('password', PASSWORD_REQUIREMENT_OPTIONS)}
         type="password"
         placeholder="password..."
+        autoComplete="new-password"
       />
       {errors.password?.message && <ErrorMessage message={errors.password.message} />}
 

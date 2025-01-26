@@ -4,12 +4,8 @@ import { SearchResult } from '../models/searchResult';
 import { Button } from '@/common/components/ui';
 import FlashCardForm from '@/flash-cards/components/ui/FlashCardForm';
 import { useCreateCardFromDictionary } from '../hooks/useCreateCardFromDictionary';
-
-const createFlashCardTpl = (onClick: () => void) => (
-  <Button variant="primary" size="sm" onClick={onClick}>
-    Create Card
-  </Button>
-);
+import { useAuth } from '@/auth/hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 type SearchResultItemProps = {
   searchItem: SearchResult;
@@ -19,6 +15,23 @@ export default function SearchResultItem({
 }: SearchResultItemProps) {
   const { isFormVisible, openForm, handleCreateFlashCard, decks, newCardData, closeForm } =
     useCreateCardFromDictionary({ slug, japaneseReadings, isCommon, jlptLevels, senses });
+  const { isUserLogged } = useAuth();
+  const navigate = useNavigate();
+
+  const handleCreateCardClick = () => {
+    if (isUserLogged) {
+      openForm();
+      return;
+    }
+    navigate('/auth/login');
+  };
+
+  const createFlashCardTpl = () =>
+    decks.length || !isUserLogged ? (
+      <Button variant="primary" size="sm" onClick={handleCreateCardClick}>
+        Create Card
+      </Button>
+    ) : null;
 
   return (
     <div className="mb-5 p-4 border-b-2">
@@ -41,7 +54,7 @@ export default function SearchResultItem({
         <div>
           <WordMeaningItem senses={senses} />
         </div>
-        {decks.length ? createFlashCardTpl(openForm) : null}
+        {createFlashCardTpl()}
       </div>
 
       {isFormVisible && (

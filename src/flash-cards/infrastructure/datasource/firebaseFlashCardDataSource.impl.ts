@@ -241,6 +241,9 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
       const decksCollectionRef = collection(userRef, 'decks');
       const q = query(decksCollectionRef);
       const querySnapshot = await getDocs(q);
+      if (querySnapshot.metadata.fromCache) {
+        throw new Error('Error retrieving decks');
+      }
       const rawDecks: DeckModel[] = querySnapshot.docs.map((doc) => {
         // Access the ID from the document object
         const deckId = doc.id;
@@ -252,7 +255,6 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
           id: deckId,
         };
       });
-      console.log(rawDecks);
       return rawDecks;
     } catch (err) {
       console.log(err);

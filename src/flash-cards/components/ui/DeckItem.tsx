@@ -2,7 +2,7 @@ import { useState } from 'react';
 import CustomDropdownMenu from '@/common/components/ui/CustomDropdownMenu';
 import CustomText from '@/common/components/ui/CustomText';
 import { DeckModel } from '@/flash-cards/domain/models/deck.model';
-import { EllipsisVertical, Pencil, X } from 'lucide-react';
+import { EllipsisVertical, Pencil, X, WalletCards } from 'lucide-react';
 import { DeckForm } from './DeckForm';
 import ConfirmationDialog from '@/common/components/ui/ConfirmationDialog';
 import { useNavigate } from 'react-router-dom';
@@ -40,7 +40,7 @@ export default function DeckItem({ deck, onClick, onDelete, onEdit }: DeckItemPr
     },
     {
       name: 'See flashcards',
-      icon: <X className="mr-2 h-4 w-4" />,
+      icon: <WalletCards className="mr-2 h-4 w-4" />,
       action: () => navigate(`/decks/cards/${deck.id}`),
     },
   ];

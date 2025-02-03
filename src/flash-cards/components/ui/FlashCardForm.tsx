@@ -227,7 +227,7 @@ export default function FlashCardForm({
                 Back
               </Label>
               <Textarea
-                className="col-span-3 max-h-52"
+                className="col-span-3 min-h-52"
                 value={form.back}
                 name="back"
                 onChange={handleInputChange}

@@ -170,7 +170,7 @@ export default function FlashCardForm({
         onCloseVisibility();
       }}
     >
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="min-w-[60%] min-h-[60%] sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>{titleText}</DialogTitle>
           <DialogDescription />
@@ -227,7 +227,7 @@ export default function FlashCardForm({
                 Back
               </Label>
               <Textarea
-                className="col-span-3"
+                className="col-span-3 max-h-52"
                 value={form.back}
                 name="back"
                 onChange={handleInputChange}

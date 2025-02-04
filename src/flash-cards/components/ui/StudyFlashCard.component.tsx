@@ -137,8 +137,8 @@ export default function StudyFlashCard({ cardsToStudy }: StudyFlashCardProps) {
         <CustomText styles="text-xl whitespace-pre-wrap" text={currentFlashCard.front} />
         {isAnswerVisible && (
           <>
-            <CustomText styles="text-xl whitespace-pre-wrap pt-8" text={currentFlashCard.back} />
             {_imagesTpl()}
+            <CustomText styles="text-xl whitespace-pre-wrap pt-8" text={currentFlashCard.back} />
           </>
         )}
       </div>

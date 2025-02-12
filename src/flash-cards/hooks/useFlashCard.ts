@@ -72,8 +72,7 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
       setUploadedImgagesUrl([]);
       return repository.createFlashCard(newCard, decks);
     },
-    onSuccess: (updatedDecks) => {
-      queryClient.setQueryData<DeckModel[]>(['decks'], () => updatedDecks);
+    onSuccess: () => {
       toast({ title: 'The card was successfully created!', variant: 'success' });
     },
     onError: () => {

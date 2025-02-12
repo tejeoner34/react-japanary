@@ -31,4 +31,5 @@ export {
   getDocs,
   query,
   updateDoc,
+  arrayUnion,
 } from 'firebase/firestore';

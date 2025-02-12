@@ -9,31 +9,31 @@ import {
   getDocs,
   query,
   updateDoc,
+  arrayUnion,
 } from '@/auth/config/firebase';
+import { arrayRemove, runTransaction } from 'firebase/firestore';
 import { FlashCardDataSource } from '@/flash-cards/domain/datasource/flashCardDataSource';
 import { Deck, DeckModel } from '@/flash-cards/domain/models/deck.model';
 import { FlashCardModel, Image } from '@/flash-cards/domain/models/flashCards.model';
 import { LocalFlashCardDataSourceImpl } from './localFlashCardDataSource.impl';
+import {
+  createDeckInstance,
+  createDeckModel,
+  flashcardAdapter,
+} from '@/flash-cards/utils/firebase';
 
 const BASE_URL: string = import.meta.env.VITE_DICTIONARY_BASE_URL + 'flashcard';
 
 const localImplementation = new LocalFlashCardDataSourceImpl();
 
 export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
-  async createFlashCard(flashCard: FlashCardModel, localDecks: DeckModel[]): Promise<DeckModel[]> {
-    const deck = localDecks.find((deck) => deck.id === flashCard.deckId);
-    if (!deck) {
-      throw new Error('Deck not found');
-    }
-
+  async createFlashCard(flashCard: FlashCardModel): Promise<DeckModel[]> {
     try {
-      console.log('creating flashcard', deck);
-      deck.addFlashCard(flashCard);
-      const deckModelFirebase = this._createDeckModel(deck);
-      console.log('deckModelFirebase', deckModelFirebase);
-      const deckRef = doc(this._getDecksCollection(), deck.id!);
-      await updateDoc(deckRef, deckModelFirebase);
-      return localDecks;
+      const deckRef = doc(this._getDecksCollection(), flashCard.deckId);
+      await updateDoc(deckRef, {
+        'cards.allCards': arrayUnion(flashcardAdapter(flashCard)),
+      });
+      return [];
     } catch (error) {
       console.error('Error creating flashcard:', error);
       throw new Error('Something went wrong while creating the flashcard');
@@ -47,7 +47,7 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
     }
     try {
       deck.deleteFlashCard(flashCard);
-      const deckModelFirebase = this._createDeckModel(deck);
+      const deckModelFirebase = createDeckModel(deck);
       const deckRef = doc(this._getDecksCollection(), deck.id!);
       await updateDoc(deckRef, deckModelFirebase);
       return localDecks;
@@ -63,7 +63,7 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
     }
     try {
       deck.updateFlashCard(flashCard);
-      const deckModelFirebase = this._createDeckModel(deck);
+      const deckModelFirebase = createDeckModel(deck);
       const deckRef = doc(this._getDecksCollection(), deck.id!);
       await updateDoc(deckRef, deckModelFirebase);
       return localDecks;
@@ -100,27 +100,45 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
   async sincronizeDeck(deck: DeckModel): Promise<void> {
     try {
       const cardsToUpdateRaw = localStorage.getItem('cardsToUpdate');
-      const cardsToUpdate = cardsToUpdateRaw ? JSON.parse(cardsToUpdateRaw) : null;
+      if (!cardsToUpdateRaw) return;
 
-      if (deck.id != cardsToUpdate.deckId || !cardsToUpdate) return;
+      const cardsToUpdate = JSON.parse(cardsToUpdateRaw);
+      if (!cardsToUpdate || deck.id !== cardsToUpdate.deckId) return;
 
-      cardsToUpdate.cards.forEach((card: FlashCardModel) => {
-        deck.updateFlashCard(card);
+      const deckRef = doc(this._getDecksCollection(), deck.id!);
+
+      await runTransaction(db, async (transaction) => {
+        const deckSnapshot = await transaction.get(deckRef);
+        if (!deckSnapshot.exists()) return;
+
+        const deckData = deckSnapshot.data();
+        const allCards: FlashCardModel[] = deckData.cards?.allCards || [];
+
+        const outdatedCards = allCards.filter((existingCard) =>
+          cardsToUpdate.cards.some(
+            (updatedCard: FlashCardModel) => updatedCard.id === existingCard.id
+          )
+        );
+
+        transaction.update(deckRef, {
+          'cards.allCards': arrayRemove(...outdatedCards),
+        });
+
+        transaction.update(deckRef, {
+          'cards.allCards': arrayUnion(...cardsToUpdate.cards),
+        });
       });
 
-      const deckModelFirebase = this._createDeckModel(deck);
-      const deckRef = doc(this._getDecksCollection(), deck.id!);
-      await updateDoc(deckRef, deckModelFirebase);
       localStorage.removeItem('cardsToUpdate');
     } catch (error) {
-      console.error('Error sincronizing decks:', error);
-      throw new Error('An error occurred while sincronizing decks.');
+      console.error('Error synchronizing decks:', error);
+      throw new Error('An error occurred while synchronizing decks.');
     }
   }
 
   async getDecks(): Promise<DeckModel[]> {
     try {
-      const decks: DeckModel[] = this._createDeckInstance(await this._getDecksRawDecks());
+      const decks: DeckModel[] = createDeckInstance(await this._getDecksRawDecks());
       localStorage.setItem('decks', JSON.stringify(decks));
       localStorage.removeItem('cardsToUpdate');
 
@@ -140,9 +158,7 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
     try {
       const newDockRef = await addDoc(deckCollection, { ...deck });
       deck.addId(newDockRef.id);
-      const updatedLocalDecks = this._createDeckInstance(
-        await localImplementation.createDeck(deck)
-      );
+      const updatedLocalDecks = createDeckInstance(await localImplementation.createDeck(deck));
       return updatedLocalDecks;
     } catch (error) {
       throw new Error('Error creating deck');
@@ -157,9 +173,7 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
       }
       const deckRef = doc(db, 'users', currentUserId, 'decks', editedDeck.id!);
       await updateDoc(deckRef, { ...editedDeck });
-      const updateLocalDecks = this._createDeckInstance(
-        await localImplementation.editDeck(editedDeck)
-      );
+      const updateLocalDecks = createDeckInstance(await localImplementation.editDeck(editedDeck));
       return updateLocalDecks;
     } catch (error) {
       throw new Error('Something went wrong while editing the deck');
@@ -171,9 +185,7 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
     try {
       const deckRef = doc(deckCollection, deck.id!);
       await deleteDoc(deckRef);
-      const updatedLocalDecks = this._createDeckInstance(
-        await localImplementation.deleteDeck(deck)
-      );
+      const updatedLocalDecks = createDeckInstance(await localImplementation.deleteDeck(deck));
       return updatedLocalDecks;
     } catch (error) {
       throw new Error('Something went wrong while deleting the deck');
@@ -270,59 +282,5 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
     const userRef = doc(db, 'users', currentUserId);
     const decksCollectionRef = collection(userRef, 'decks');
     return decksCollectionRef;
-  }
-
-  _createDeckInstance(rawDecks: DeckModel[]) {
-    return rawDecks.map((deck: DeckModel) => {
-      const deckInstance = new Deck(deck);
-      deckInstance.addId(deck.id || '');
-      deckInstance.setPendingStudyCards();
-      return deckInstance;
-    });
-  }
-
-  _createDeckModel(deck: DeckModel) {
-    const deckModel = {
-      id: deck.id,
-      name: deck.name,
-      description: deck.description,
-      cards: {
-        allCards: deck.cards.allCards.map((card) => ({
-          id: card.id || null,
-          front: card.front,
-          back: card.back,
-          interval: card.interval,
-          repetitions: card.repetitions,
-          easeFactor: card.easeFactor,
-          nextReview:
-            card.nextReview instanceof Date ? card.nextReview.toISOString() : card.nextReview,
-          deckId: card.deckId,
-          imagesUrl:
-            card.imagesUrl?.map((image) => ({
-              id: image.id,
-              url: image.url,
-            })) || [],
-        })),
-        pedingStudyCards: deck.cards.pedingStudyCards.map((card) => ({
-          id: card.id || null,
-          front: card.front,
-          back: card.back,
-          interval: card.interval,
-          repetitions: card.repetitions,
-          easeFactor: card.easeFactor,
-          nextReview:
-            card.nextReview instanceof Date ? card.nextReview.toISOString() : card.nextReview,
-          deckId: card.deckId,
-          imagesUrl:
-            card.imagesUrl?.map((image) => ({
-              id: image.id,
-              url: image.url,
-            })) || [],
-        })),
-        pendingStudyAmount: deck.cards.pendingStudyAmount,
-        totalAmount: deck.cards.totalAmount,
-      },
-    };
-    return deckModel;
   }
 }

@@ -9,18 +9,19 @@ import {
   getDocs,
   query,
   updateDoc,
-  arrayUnion,
 } from '@/auth/config/firebase';
-import { arrayRemove, runTransaction } from 'firebase/firestore';
+import { where, writeBatch } from 'firebase/firestore';
 import { FlashCardDataSource } from '@/flash-cards/domain/datasource/flashCardDataSource';
 import { Deck, DeckModel } from '@/flash-cards/domain/models/deck.model';
 import { FlashCardModel, Image } from '@/flash-cards/domain/models/flashCards.model';
 import { LocalFlashCardDataSourceImpl } from './localFlashCardDataSource.impl';
-import {
-  createDeckInstance,
-  createDeckModel,
-  flashcardAdapter,
-} from '@/flash-cards/utils/firebase';
+import { createDeckInstance, flashcardAdapter } from '@/flash-cards/utils/firebase';
+
+const COLLECTIONS = {
+  USERS: 'users',
+  DECKS: 'decks',
+  FLASHCARDS: 'flashcards',
+};
 
 const BASE_URL: string = import.meta.env.VITE_DICTIONARY_BASE_URL + 'flashcard';
 
@@ -29,10 +30,11 @@ const localImplementation = new LocalFlashCardDataSourceImpl();
 export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
   async createFlashCard(flashCard: FlashCardModel): Promise<DeckModel[]> {
     try {
-      const deckRef = doc(this._getDecksCollection(), flashCard.deckId);
-      await updateDoc(deckRef, {
-        'cards.allCards': arrayUnion(flashcardAdapter(flashCard)),
-      });
+      const allCardsCollectionRef = collection(
+        this._getDeckDocRef(flashCard.deckId),
+        COLLECTIONS.FLASHCARDS
+      );
+      await addDoc(allCardsCollectionRef, flashcardAdapter(flashCard));
       return [];
     } catch (error) {
       console.error('Error creating flashcard:', error);
@@ -46,12 +48,16 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
       throw new Error('Deck not found');
     }
     try {
+      const cardRef = doc(
+        this._getDeckDocRef(flashCard.deckId),
+        COLLECTIONS.FLASHCARDS,
+        flashCard.id
+      );
+      await deleteDoc(cardRef);
       deck.deleteFlashCard(flashCard);
-      const deckModelFirebase = createDeckModel(deck);
-      const deckRef = doc(this._getDecksCollection(), deck.id!);
-      await updateDoc(deckRef, deckModelFirebase);
       return localDecks;
     } catch (error) {
+      console.error('Error deleting flashcard:', error);
       throw new Error('Something went wrong while deleting the flashcard');
     }
   }
@@ -62,20 +68,46 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
       throw new Error('Deck not found');
     }
     try {
+      const cardRef = doc(
+        this._getDeckDocRef(flashCard.deckId),
+        COLLECTIONS.FLASHCARDS,
+        flashCard.id
+      );
+      await updateDoc(cardRef, { ...flashCard });
       deck.updateFlashCard(flashCard);
-      const deckModelFirebase = createDeckModel(deck);
-      const deckRef = doc(this._getDecksCollection(), deck.id!);
-      await updateDoc(deckRef, deckModelFirebase);
       return localDecks;
     } catch (error) {
-      throw new Error('Something went wrong while deleting the flashcard');
+      console.error('Error editing flashcard:', error);
+      throw new Error('Something went wrong while editing the flashcard');
     }
   }
-  getFlashCards(): Promise<FlashCardModel[]> {
-    throw new Error('Method not implemented.');
+
+  async getFlashCards(deckId: string): Promise<FlashCardModel[]> {
+    try {
+      const flashcardsCollectionRef = collection(
+        db,
+        COLLECTIONS.USERS,
+        auth.currentUser!.uid,
+        COLLECTIONS.DECKS,
+        deckId,
+        COLLECTIONS.FLASHCARDS
+      );
+
+      const flashcardsSnapshot = await getDocs(flashcardsCollectionRef);
+
+      const flashcards: FlashCardModel[] = flashcardsSnapshot.docs.map((doc) => {
+        const data = doc.data() as FlashCardModel;
+        return { ...data, id: doc.id };
+      });
+
+      return flashcards;
+    } catch (error) {
+      console.error('Error fetching flashcards for deck:', deckId, error);
+      throw new Error('Failed to fetch flashcards');
+    }
   }
 
-  async updateFlashCardRevision(updatedFlashCard: FlashCardModel, decks: DeckModel[]) {
+  updateFlashCardRevision(updatedFlashCard: FlashCardModel, decks: DeckModel[]) {
     const deck = decks.find((deck) => deck.id === updatedFlashCard.deckId);
     if (!deck) {
       throw new Error('Deck not found');
@@ -102,44 +134,43 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
       const cardsToUpdateRaw = localStorage.getItem('cardsToUpdate');
       if (!cardsToUpdateRaw) return;
 
-      const cardsToUpdate = JSON.parse(cardsToUpdateRaw);
+      const cardsToUpdate = JSON.parse(cardsToUpdateRaw) as {
+        deckId: string;
+        cards: FlashCardModel[];
+      };
+
       if (!cardsToUpdate || deck.id !== cardsToUpdate.deckId) return;
 
-      const deckRef = doc(this._getDecksCollection(), deck.id!);
+      const flashcardsCollectionRef = collection(
+        doc(this._getDecksCollection(), deck.id!),
+        COLLECTIONS.FLASHCARDS
+      );
+      const batch = writeBatch(db);
 
-      await runTransaction(db, async (transaction) => {
-        const deckSnapshot = await transaction.get(deckRef);
-        if (!deckSnapshot.exists()) return;
-
-        const deckData = deckSnapshot.data();
-        const allCards: FlashCardModel[] = deckData.cards?.allCards || [];
-
-        const outdatedCards = allCards.filter((existingCard) =>
-          cardsToUpdate.cards.some(
-            (updatedCard: FlashCardModel) => updatedCard.id === existingCard.id
-          )
-        );
-
-        transaction.update(deckRef, {
-          'cards.allCards': arrayRemove(...outdatedCards),
+      for (const updatedCard of cardsToUpdate.cards) {
+        const cardRef = doc(flashcardsCollectionRef, updatedCard.id);
+        batch.update(cardRef, {
+          interval: updatedCard.interval,
+          repetitions: updatedCard.repetitions,
+          easeFactor: updatedCard.easeFactor,
+          nextReview: updatedCard.nextReview,
         });
+      }
 
-        transaction.update(deckRef, {
-          'cards.allCards': arrayUnion(...cardsToUpdate.cards),
-        });
-      });
+      await batch.commit();
 
       localStorage.removeItem('cardsToUpdate');
     } catch (error) {
-      console.error('Error synchronizing decks:', error);
-      throw new Error('An error occurred while synchronizing decks.');
+      console.error('Error synchronizing deck flashcards:', error);
+      throw new Error('An error occurred while synchronizing deck flashcards.');
     }
   }
 
   async getDecks(): Promise<DeckModel[]> {
     try {
       const decks: DeckModel[] = createDeckInstance(await this._getDecksRawDecks());
-      localStorage.setItem('decks', JSON.stringify(decks));
+      console.log('decks', decks);
+      localStorage.setItem(COLLECTIONS.DECKS, JSON.stringify(decks));
       localStorage.removeItem('cardsToUpdate');
 
       if (!decks.length) {
@@ -156,38 +187,45 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
   async createDeck(deck: DeckModel): Promise<DeckModel[]> {
     const deckCollection = this._getDecksCollection();
     try {
-      const newDockRef = await addDoc(deckCollection, { ...deck });
-      deck.addId(newDockRef.id);
+      const newDeckRef = await addDoc(deckCollection, {
+        name: deck.name,
+        description: deck.description,
+        isDefault: deck.isDefault,
+      });
+      deck.addId(newDeckRef.id);
       const updatedLocalDecks = createDeckInstance(await localImplementation.createDeck(deck));
       return updatedLocalDecks;
     } catch (error) {
+      console.error('Error creating deck:', error);
       throw new Error('Error creating deck');
     }
   }
 
   async editDeck(editedDeck: DeckModel): Promise<DeckModel[]> {
     try {
-      const currentUserId = auth.currentUser?.uid;
-      if (!currentUserId) {
-        throw new Error('User not logged in');
-      }
-      const deckRef = doc(db, 'users', currentUserId, 'decks', editedDeck.id!);
-      await updateDoc(deckRef, { ...editedDeck });
-      const updateLocalDecks = createDeckInstance(await localImplementation.editDeck(editedDeck));
-      return updateLocalDecks;
+      const deckRef = this._getDeckDocRef(editedDeck.id!);
+
+      // Exclude nested fields like 'cards' when updating the deck itself
+      const { cards, ...deckWithoutCards } = editedDeck;
+
+      await updateDoc(deckRef, { ...deckWithoutCards });
+
+      const updatedLocalDecks = createDeckInstance(await localImplementation.editDeck(editedDeck));
+      return updatedLocalDecks;
     } catch (error) {
+      console.error('Error editing deck:', error);
       throw new Error('Something went wrong while editing the deck');
     }
   }
 
   async deleteDeck(deck: DeckModel): Promise<DeckModel[]> {
-    const deckCollection = this._getDecksCollection();
     try {
-      const deckRef = doc(deckCollection, deck.id!);
+      const deckRef = doc(this._getDecksCollection(), deck.id!);
       await deleteDoc(deckRef);
       const updatedLocalDecks = createDeckInstance(await localImplementation.deleteDeck(deck));
       return updatedLocalDecks;
     } catch (error) {
+      console.error('Error deleting deck:', error);
       throw new Error('Something went wrong while deleting the deck');
     }
   }
@@ -248,39 +286,72 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
     if (!currentUserId) {
       throw new Error('User not logged in');
     }
+
     try {
       const userRef = doc(db, 'users', currentUserId);
-      const decksCollectionRef = collection(userRef, 'decks');
-      const q = query(decksCollectionRef);
-      const querySnapshot = await getDocs(q);
-      if (querySnapshot.metadata.fromCache) {
+      const decksCollectionRef = collection(userRef, COLLECTIONS.DECKS);
+      const decksQuerySnapshot = await getDocs(decksCollectionRef);
+
+      if (decksQuerySnapshot.metadata.fromCache) {
         throw new Error('Error retrieving decks');
       }
-      const rawDecks: DeckModel[] = querySnapshot.docs.map((doc) => {
-        // Access the ID from the document object
-        const deckId = doc.id;
-        const deckData = doc.data() as DeckModel;
 
-        // Combine the ID and data into a single object
+      const decks = decksQuerySnapshot.docs.map((deckDoc) => ({
+        id: deckDoc.id,
+        data: deckDoc.data() as DeckModel,
+        ref: deckDoc.ref,
+      }));
+
+      const today = new Date().toISOString();
+
+      const flashcardFetchPromises = decks.map(({ ref, id }) => {
+        const flashcardsCollectionRef = collection(ref, COLLECTIONS.FLASHCARDS);
+        const pendingCardsQuery = query(flashcardsCollectionRef, where('nextReview', '<=', today));
+        return getDocs(pendingCardsQuery).then((snapshot) => ({
+          deckId: id,
+          pendingCards: snapshot.docs.map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          })) as FlashCardModel[],
+        }));
+      });
+
+      const pendingCardsResults = await Promise.all(flashcardFetchPromises);
+
+      const decksWithCards: DeckModel[] = decks.map(({ id, data }) => {
+        const pendingCardsResult = pendingCardsResults.find((result) => result.deckId === id);
         return {
-          ...deckData, // Spread operator to include existing deck data
-          id: deckId,
+          ...data,
+          id,
+          cards: {
+            pedingStudyCards: pendingCardsResult?.pendingCards || [],
+            pendingStudyAmount: pendingCardsResult?.pendingCards.length || 0,
+          },
         };
       });
-      return rawDecks;
+
+      return decksWithCards;
     } catch (err) {
-      console.log(err);
+      console.error('Error retrieving decks and flashcards:', err);
       throw new Error('Error retrieving decks');
     }
   }
 
-  _getDecksCollection() {
+  private _getDecksCollection() {
     const currentUserId = auth.currentUser?.uid;
     if (!currentUserId) {
       throw new Error('User not logged in');
     }
     const userRef = doc(db, 'users', currentUserId);
-    const decksCollectionRef = collection(userRef, 'decks');
+    const decksCollectionRef = collection(userRef, COLLECTIONS.DECKS);
     return decksCollectionRef;
+  }
+
+  private _getDeckDocRef(deckId: string) {
+    const currentUserId = auth.currentUser?.uid;
+    if (!currentUserId) {
+      throw new Error('User not logged in');
+    }
+    return doc(db, 'users', currentUserId, COLLECTIONS.DECKS, deckId);
   }
 }

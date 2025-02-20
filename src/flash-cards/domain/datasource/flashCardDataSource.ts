@@ -5,7 +5,7 @@ export interface FlashCardDataSource {
   createFlashCard(flashCard: FlashCardModel, decks: DeckModel[]): Promise<DeckModel[]>;
   deleteFlashCard(flashCard: FlashCardModel, decks: DeckModel[]): Promise<DeckModel[]>;
   editFlashCard(flashCard: FlashCardModel, decks: DeckModel[]): Promise<DeckModel[]>;
-  getFlashCards(): Promise<FlashCardModel[]>;
+  getFlashCards(deckId: string): Promise<FlashCardModel[]>;
   updateFlashCardRevision(flashCard: FlashCardModel, decks: DeckModel[]): void;
   sincronizeDeck(deck: DeckModel): void;
   getDecks(): Promise<DeckModel[]>;

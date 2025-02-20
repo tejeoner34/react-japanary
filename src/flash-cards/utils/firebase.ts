@@ -5,24 +5,8 @@ export const createDeckInstance = (rawDecks: DeckModel[]) => {
   return rawDecks.map((deck: DeckModel) => {
     const deckInstance = new Deck(deck);
     deckInstance.addId(deck.id || '');
-    deckInstance.setPendingStudyCards();
     return deckInstance;
   });
-};
-
-export const createDeckModel = (deck: DeckModel) => {
-  const deckModel = {
-    id: deck.id,
-    name: deck.name,
-    description: deck.description,
-    cards: {
-      allCards: deck.cards.allCards.map(flashcardAdapter),
-      pedingStudyCards: deck.cards.pedingStudyCards.map(flashcardAdapter),
-      pendingStudyAmount: deck.cards.pendingStudyAmount,
-      totalAmount: deck.cards.totalAmount,
-    },
-  };
-  return deckModel;
 };
 
 export const flashcardAdapter = (flashcard: FlashCardModel) => {

@@ -15,9 +15,9 @@ export interface FlashCardModel {
 }
 
 export interface FlashCardsData {
-  totalAmount: number;
+  totalAmount?: number;
   pendingStudyAmount: number;
-  allCards: FlashCardModel[];
+  allCards?: FlashCardModel[];
   pedingStudyCards: FlashCardModel[];
 }
 

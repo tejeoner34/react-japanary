@@ -161,10 +161,6 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
 
   const getDefaultDeck = () => decks.find((deck) => deck.isDefault) || decks[0];
 
-  const getFlashCardsByDeckId = (deckId: string): FlashCardModel[] => {
-    return decks.find((deck) => deck.id === deckId)?.cards.allCards || [];
-  };
-
   useEffect(() => {
     if (isDecksError) {
       toast({
@@ -187,7 +183,6 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
     refetchDecks,
     getDefaultDeck,
     setDefaultDeck: setDefaultDeck.mutate,
-    getFlashCardsByDeckId,
     decks,
     isLoading: isLoadingDecks,
     isEditDeckLoading: sincronizeDeck.isPending,
@@ -208,7 +203,6 @@ export interface useFlashCardType {
   refetchDecks: () => void;
   getDefaultDeck: () => DeckModel;
   setDefaultDeck: (deckId: string) => void;
-  getFlashCardsByDeckId: (deckId: string) => FlashCardModel[];
   decks: DeckModel[];
   isLoading: boolean;
   isEditDeckLoading: boolean;

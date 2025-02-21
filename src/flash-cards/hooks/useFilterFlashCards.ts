@@ -21,7 +21,6 @@ export function useFilterFlashCards(flashCards: FlashCardModel[] = [], debounceD
   );
 
   useEffect(() => {
-    console.log('enters in useEffect');
     setFilteredCards(flashCards);
   }, [flashCards]);
 

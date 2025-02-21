@@ -91,7 +91,6 @@ export default function FlashCardForm({
       nextReview: flashCardToEdit?.nextReview,
       imagesUrl: formData.imagesUrl,
     });
-    console.log(newFlashCardData, 'newFlashCardData');
     onSubmit(newFlashCardData);
     handleCloseVisibility();
   };

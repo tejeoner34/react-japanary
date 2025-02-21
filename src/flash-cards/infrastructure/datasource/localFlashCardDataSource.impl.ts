@@ -45,7 +45,7 @@ export class LocalFlashCardDataSourceImpl implements FlashCardDataSource {
     const rawDecks = LocalFlashCardDataSourceImpl._getLocalStorageData<DeckModel[]>('decks') ?? [];
     const decks: DeckModel[] = rawDecks.map((deck: DeckModel) => {
       const deckInstance = new Deck(deck);
-      deckInstance.setPendingStudyCards();
+      // deckInstance.setPendingStudyCards();
       return deckInstance;
     });
     const deck = decks.find((deck) => deck.id === updatedFlashCard.deckId);
@@ -56,7 +56,8 @@ export class LocalFlashCardDataSourceImpl implements FlashCardDataSource {
     localStorage.setItem('decks', JSON.stringify(decks));
   }
 
-  getFlashCards(): Promise<FlashCardModel[]> {
+  getFlashCards(deckId: string): Promise<FlashCardModel[]> {
+    console.log(deckId);
     const storedCards = localStorage.getItem('flashcards');
     return storedCards ? JSON.parse(storedCards) : [];
   }
@@ -72,7 +73,7 @@ export class LocalFlashCardDataSourceImpl implements FlashCardDataSource {
     const rawDecks = LocalFlashCardDataSourceImpl._getLocalStorageData<DeckModel[]>('decks') ?? [];
     const storedDecks: DeckModel[] = rawDecks.map((deck: DeckModel) => {
       const deckInstance = new Deck(deck);
-      deckInstance.setPendingStudyCards();
+      // deckInstance.setPendingStudyCards();
       return deckInstance;
     });
     //Local implementation, in non local implementation it should get the default deck from backend

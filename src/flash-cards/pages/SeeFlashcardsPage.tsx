@@ -1,19 +1,18 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Card, CardContent } from '@/common/components/ui/card';
-import { useFlashCardsContext } from '../hooks/useFlashCardsContext';
 import CustomText from '@/common/components/ui/CustomText';
 import FlashCardDetailDialog from '../components/ui/FlashCardDetailDialog';
 import { FlashCardModel } from '../domain/models/flashCards.model';
 import { Input } from '@/common/components/ui';
 import { useFilterFlashCards } from '../hooks/useFilterFlashCards';
+import { useFlashCardsByDeckId } from '../hooks/useFlashCardsByDeckId';
 
 export default function SeeFlashcardsPage() {
   const [isVisible, setIsVisible] = useState(false);
   const [chosenCard, setChosenCard] = useState<FlashCardModel>({} as FlashCardModel);
   const { deckId } = useParams();
-  const { getFlashCardsByDeckId } = useFlashCardsContext();
-  const flashCards = useMemo(() => getFlashCardsByDeckId(deckId!), [deckId, getFlashCardsByDeckId]);
+  const { flashCards, isFetching } = useFlashCardsByDeckId(deckId || '');
   const { onFilter, filteredCards } = useFilterFlashCards(flashCards);
 
   const toggleVisibility = () => setIsVisible(!isVisible);
@@ -22,7 +21,8 @@ export default function SeeFlashcardsPage() {
     toggleVisibility();
   };
 
-  if (!flashCards.length) return <CustomText tag="h2" text="Loading..." />;
+  if (isFetching) return <CustomText tag="h2" text="Loading..." />;
+  if (!flashCards.length) return <CustomText tag="h2" text="No flash cards found" />;
 
   return (
     <>

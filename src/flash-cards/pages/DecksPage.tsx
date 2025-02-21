@@ -47,7 +47,6 @@ export default function DecksPage() {
   return (
     <>
       <CustomText tag="h1" text="Your decks" />
-
       <div className="flex flex-col gap-3 w-full max-w-3xl">
         {decks.map((deck) => (
           <DeckItem

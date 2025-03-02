@@ -16,6 +16,7 @@ With this application you can do eveything in just one click. Plus it gives you 
 - OpenAI
 - Shadcn
 - Tanstack Query
+- React Testing Library, Vitest
 
 ## Preview
 

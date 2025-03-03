@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Card, CardContent } from '@/common/components/ui/card';
 import CustomText from '@/common/components/ui/CustomText';
@@ -12,7 +12,7 @@ export default function SeeFlashcardsPage() {
   const [isVisible, setIsVisible] = useState(false);
   const [chosenCard, setChosenCard] = useState<FlashCardModel>({} as FlashCardModel);
   const { deckId } = useParams();
-  const { flashCards, isFetching } = useFlashCardsByDeckId(deckId || '');
+  const { flashCards, isFetching, isFetched } = useFlashCardsByDeckId(deckId || '');
   const { onFilter, filteredCards } = useFilterFlashCards(flashCards);
 
   const toggleVisibility = () => setIsVisible(!isVisible);
@@ -20,16 +20,18 @@ export default function SeeFlashcardsPage() {
     setChosenCard(flashCard);
     toggleVisibility();
   };
-  useEffect(() => {
-    console.log('entre en main effect');
-  }, []);
-  if (isFetching) return <CustomText tag="h2" text="Loading..." />;
+
+  if (isFetching || (deckId && !isFetched)) return <CustomText tag="h2" text="Loading..." />;
   if (!flashCards.length) return <CustomText tag="h2" text="No flash cards found" />;
 
   return (
     <>
       <CustomText tag="h2" text="All flash cards" />
-      <Input type="text" placeholder="Filter value..." onChange={(ev) => {}} />
+      <Input
+        type="text"
+        placeholder="Filter value..."
+        onChange={(ev) => onFilter(ev.target.value)}
+      />
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {filteredCards.map((flashCard) => (
           <Card

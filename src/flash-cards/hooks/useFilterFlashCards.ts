@@ -1,31 +1,29 @@
+import { useState, useMemo } from 'react';
 import { debounce } from 'lodash';
-import { useEffect, useMemo, useState } from 'react';
 import { FlashCardModel } from '../domain/models/flashCards.model';
 
-export function useFilterFlashCards(flashCards: FlashCardModel[] = [], debounceDelay = 1000) {
-  const [filteredCards, setFilteredCards] = useState<FlashCardModel[]>([]);
+export function useFilterFlashCards(flashCards: FlashCardModel[] = [], debounceDelay = 300) {
+  const [filterValue, setFilterValue] = useState('');
 
-  // Memoize the debounced function
-  const onFilter = useMemo(
+  const debouncedSetFilterValue = useMemo(
     () =>
-      debounce((filterValue: string) => {
-        setFilteredCards(
-          flashCards.filter(
-            (card) =>
-              card.front.toLowerCase().includes(filterValue.toLowerCase()) ||
-              card.back.toLowerCase().includes(filterValue.toLowerCase())
-          )
-        );
+      debounce((value: string) => {
+        setFilterValue(value);
       }, debounceDelay),
-    [flashCards, debounceDelay]
+    [debounceDelay]
   );
 
-  useEffect(() => {
-    setFilteredCards(flashCards);
-  }, [flashCards]);
+  const filteredCards = useMemo(() => {
+    if (!filterValue) return flashCards;
+    return flashCards.filter(
+      (card) =>
+        card.front.toLowerCase().includes(filterValue.toLowerCase()) ||
+        card.back.toLowerCase().includes(filterValue.toLowerCase())
+    );
+  }, [flashCards, filterValue]);
 
   return {
-    onFilter,
     filteredCards,
+    onFilter: debouncedSetFilterValue,
   };
 }

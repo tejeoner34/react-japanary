@@ -1,37 +1,27 @@
-# React + TypeScript + Vite
+# Japanary
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Description
 
-Currently, two official plugins are available:
+Project created with two goals, first one practice React as the front end development library and sencond, create an application that would help me with my Japanese language studies.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+As a Japanese learner, I realized the amount of time spent when creating Anki flashcards. First we need to look for the work in a dictionary, then go to Anki, create a new card, look for some sample sentence...etc.
 
-## Expanding the ESLint configuration
+With this application you can do eveything in just one click. Plus it gives you the option to receive extra information using OpenAI API.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-};
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
-
-### Technologies used
+## Tecnologies
 
 - React
-- Vite
+- TypeScript
+- TailwindCSS
+- OpenAI
 - Shadcn
-- Tailwind
+- Tanstack Query
+- React Testing Library, Vitest
+
+## Preview
+
+![Japanary](https://res.cloudinary.com/dejzrr9lt/image/upload/v1740898914/japanary_gmjs74.gif)
+
+## Thoughts
+
+Application that I keep updating as I have been using it everyday for the past 7 months. I keep trying to add interesting features to improve the learning experience. For example, recently added the possibility to add images to the flashcard body content.

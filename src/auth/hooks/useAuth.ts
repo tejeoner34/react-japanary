@@ -9,7 +9,7 @@ import authServiceError from '../utils/errors';
 
 export function useAuth() {
   const navigate = useNavigate();
-  const { isUserLogged } = useAuthContext();
+  const { isUserLogged, userData } = useAuthContext();
   const [errorMessage, setErrorMessage] = useState('');
 
   const signUpUser = useMutation({
@@ -48,6 +48,7 @@ export function useAuth() {
     isFetching: signInUser.isPending || signUpUser.isPending || signOutUser.isPending,
     isError,
     isUserLogged,
+    userData,
     errorMessage: isError ? errorMessage : '',
     signUpUser: signUpUser.mutate,
     signInUser: signInUser.mutate,

@@ -12,7 +12,7 @@ export default function SeeFlashcardsPage() {
   const [isVisible, setIsVisible] = useState(false);
   const [chosenCard, setChosenCard] = useState<FlashCardModel>({} as FlashCardModel);
   const { deckId } = useParams();
-  const { flashCards, isFetching } = useFlashCardsByDeckId(deckId || '');
+  const { flashCards, isFetching, isFetched } = useFlashCardsByDeckId(deckId || '');
   const { onFilter, filteredCards } = useFilterFlashCards(flashCards);
 
   const toggleVisibility = () => setIsVisible(!isVisible);
@@ -21,7 +21,7 @@ export default function SeeFlashcardsPage() {
     toggleVisibility();
   };
 
-  if (isFetching) return <CustomText tag="h2" text="Loading..." />;
+  if (isFetching || (deckId && !isFetched)) return <CustomText tag="h2" text="Loading..." />;
   if (!flashCards.length) return <CustomText tag="h2" text="No flash cards found" />;
 
   return (

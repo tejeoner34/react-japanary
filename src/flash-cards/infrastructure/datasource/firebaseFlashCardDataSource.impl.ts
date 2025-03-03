@@ -169,7 +169,6 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
   async getDecks(): Promise<DeckModel[]> {
     try {
       const decks: DeckModel[] = createDeckInstance(await this._getDecksRawDecks());
-      console.log('decks', decks);
       localStorage.setItem(COLLECTIONS.DECKS, JSON.stringify(decks));
       localStorage.removeItem('cardsToUpdate');
 
@@ -263,7 +262,6 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
 
   async uploadImages(images: File[]): Promise<Image[]> {
     try {
-      console.log('Uploading images...', images);
       const formData = new FormData();
       images.forEach((image) => {
         formData.append(`images`, image);
@@ -273,7 +271,7 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log(response.data);
+      response.data;
       return response.data;
     } catch (error) {
       console.error('Error uploading images:', error);

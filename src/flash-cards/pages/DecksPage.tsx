@@ -10,6 +10,7 @@ import FlashCardForm from '../components/ui/FlashCardForm';
 import { Spinner } from '@/common/components/ui/Spinner';
 import { DeckModel } from '../domain/models/deck.model';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { FlashCard } from '../domain/models/flashCards.model';
 
 export default function DecksPage() {
   const location = useLocation();
@@ -79,6 +80,7 @@ export default function DecksPage() {
             isVisible={isFlashCardFormVisible}
             onCloseVisibility={() => setIsFlashCardFormVisible(false)}
             onSubmit={createFlashCard}
+            flashCardToEdit={{} as FlashCard}
           />
         </>
       )}

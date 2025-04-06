@@ -138,10 +138,12 @@ export default function FlashCardForm({
   }, [flashCardToEdit]);
 
   useEffect(() => {
-    setForm({
-      ...form,
-      back: flashCardToEdit?.back + '\n' + aiResponse,
-    });
+    if (aiResponse) {
+      setForm({
+        ...form,
+        back: flashCardToEdit?.back + '\n' + '\n' + aiResponse,
+      });
+    }
   }, [aiResponse]);
 
   useEffect(() => {

@@ -59,6 +59,21 @@ export default function Header() {
               Compare
             </Link>
           </li>
+          {!location.pathname.startsWith('/dictionary/search') && (
+            <li>
+              <Link
+                to="/dictionary/meaning"
+                className={`cursor-pointer opacity-70 hover:opacity-100 p-3 hover:bg-backgroundTertiaryHover rounded ${
+                  location.pathname === '/dictionary/meaning' ||
+                  location.pathname.startsWith('/dictionary/meaning/')
+                    ? 'bg-backgroundTertiaryHover rounded opacity-100 p-3'
+                    : ''
+                }`}
+              >
+                Meaning
+              </Link>
+            </li>
+          )}
         </ul>
       </nav>
 

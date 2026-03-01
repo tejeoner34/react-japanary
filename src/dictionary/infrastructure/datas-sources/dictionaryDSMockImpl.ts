@@ -3,6 +3,14 @@ import { DictionaryDataSource } from './dictionaryDataSource';
 import { SAMPLE_SENTENCES_MOCK, WORD_QUERY_MOCK } from '@/dictionary/mocks/dictionary.mocks';
 
 export class DictionaryDSMockImpl implements DictionaryDataSource {
+  searchMeaningInJapaneseAi(word: string): Promise<AiResponse> {
+    console.log(word);
+    throw new Error('Method not implemented.');
+  }
+  searchCompareWords(words: string[]): Promise<AiResponse> {
+    console.log(words);
+    throw new Error('Method not implemented.');
+  }
   searchAi(word: string): Promise<AiResponse> {
     console.log(word);
     throw new Error('Method not implemented.');

@@ -52,4 +52,16 @@ export class DictionaryDataSourceImpl implements DictionaryDataSource {
       throw new Error('Something went wrong while comparing words');
     }
   }
+
+  async searchMeaningInJapaneseAi(word: string): Promise<AiResponse> {
+    try {
+      const response = await axios.get<AiResponse>(
+        `${BASE_URL}/meaning-in-japanese?keyword=${word}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error searching meaning in Japanese AI:', error);
+      throw new Error('Something went wrong while searching meaning in Japanese AI');
+    }
+  }
 }

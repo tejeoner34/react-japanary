@@ -5,4 +5,5 @@ export interface DictionaryDataSource {
   searchSampleSenteces(word: string): Promise<ExampleSentence[]>;
   searchAi(word: string): Promise<AiResponse>;
   searchCompareWords(words: string[]): Promise<AiResponse>;
+  searchMeaningInJapaneseAi(word: string): Promise<AiResponse>;
 }

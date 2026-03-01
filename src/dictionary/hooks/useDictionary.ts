@@ -12,6 +12,7 @@ const errorToastVariant = 'destructive';
 
 export const useDictionary = (repository: DictionaryRepository = defaultRepository) => {
   const [word, setWord] = useState('');
+  const [meaningWord, setMeaningWord] = useState('');
   const [aiResponse, setAiResponse] = useState('');
   const [compareResponse, setCompareResponse] = useState<AiResponse | null>(null);
   const { toast } = useToast();
@@ -39,6 +40,16 @@ export const useDictionary = (repository: DictionaryRepository = defaultReposito
     queryKey: ['sampleSentences', word],
     queryFn: () => repository.searchSampleSenteces(word),
     ...config,
+  });
+
+  const {
+    data: meaningResult = '',
+    isLoading: isMeaningLoading,
+    isError: isMeaningError,
+  } = useQuery({
+    queryKey: ['meaningResult', meaningWord],
+    queryFn: () => repository.searchMeaningInJapaneseAi(meaningWord),
+    enabled: !!meaningWord,
   });
 
   const {
@@ -76,6 +87,14 @@ export const useDictionary = (repository: DictionaryRepository = defaultReposito
     setCompareResponse(null);
   };
 
+  const searchMeaning = (word: string) => {
+    if (!word) return;
+    setMeaningWord(word);
+  };
+
+  const resetMeaning = () => {
+    setMeaningWord('');
+  };
   useEffect(() => {
     if (isSearchedWordResultError) {
       toast({
@@ -103,20 +122,34 @@ export const useDictionary = (repository: DictionaryRepository = defaultReposito
     }
   }, [isCompareWordsError, toast]);
 
+  useEffect(() => {
+    if (isMeaningError) {
+      toast({
+        title: 'Error fetching meaning',
+        variant: errorToastVariant,
+      });
+    }
+  }, [isMeaningError, toast]);
+
   return {
     searchWord,
     searchAi,
     searchCompareWords,
+    searchMeaning,
     resetAiResponse,
     resetCompareResponse,
+    resetMeaning,
     searchedWordResult,
     sampleSentences,
+    meaningResult,
     aiResponse,
     compareResponse,
     isSearchWordLoading,
     isSampleSentenceLoading,
+    isMeaningLoading,
     isSearchedWordResultError,
     isSampleSentencesError,
+    isMeaningError,
     isAiResponseError,
     isAiResponseLoading,
     isCompareWordsLoading,
@@ -128,16 +161,21 @@ export interface UseDictionaryType {
   searchWord: (word: string) => void;
   searchAi: (word: string) => void;
   searchCompareWords: (words: string[]) => void;
+  searchMeaning: (word: string) => void;
   resetAiResponse: () => void;
   resetCompareResponse: () => void;
+  resetMeaning: () => void;
   searchedWordResult: SearchResult[];
   sampleSentences: ExampleSentence[];
+  meaningResult: string;
   aiResponse: string;
   compareResponse: AiResponse | null;
   isSampleSentenceLoading: boolean;
   isSearchWordLoading: boolean;
+  isMeaningLoading: boolean;
   isSearchedWordResultError: boolean;
   isSampleSentencesError: boolean;
+  isMeaningError: boolean;
   isAiResponseError: boolean;
   isAiResponseLoading: boolean;
   isCompareWordsLoading: boolean;

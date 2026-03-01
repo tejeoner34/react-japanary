@@ -13,6 +13,7 @@ const errorToastVariant = 'destructive';
 export const useDictionary = (repository: DictionaryRepository = defaultRepository) => {
   const [word, setWord] = useState('');
   const [aiResponse, setAiResponse] = useState('');
+  const [compareResponse, setCompareResponse] = useState<AiResponse | null>(null);
   const { toast } = useToast();
   const config = {
     enabled: !!word,
@@ -51,6 +52,17 @@ export const useDictionary = (repository: DictionaryRepository = defaultReposito
     },
   });
 
+  const {
+    mutate: searchCompareWords,
+    isPending: isCompareWordsLoading,
+    isError: isCompareWordsError,
+  } = useMutation({
+    mutationFn: (words: string[]) => repository.searchCompareWords(words),
+    onSuccess: (data: AiResponse) => {
+      setCompareResponse(data);
+    },
+  });
+
   const searchWord = (word: string) => {
     if (!word) return;
     setWord(word);
@@ -58,6 +70,10 @@ export const useDictionary = (repository: DictionaryRepository = defaultReposito
 
   const resetAiResponse = () => {
     setAiResponse('');
+  };
+
+  const resetCompareResponse = () => {
+    setCompareResponse(null);
   };
 
   useEffect(() => {
@@ -78,33 +94,52 @@ export const useDictionary = (repository: DictionaryRepository = defaultReposito
     }
   }, [isAiResponseError, toast]);
 
+  useEffect(() => {
+    if (isCompareWordsError) {
+      toast({
+        title: 'Error comparing words',
+        variant: errorToastVariant,
+      });
+    }
+  }, [isCompareWordsError, toast]);
+
   return {
     searchWord,
     searchAi,
+    searchCompareWords,
     resetAiResponse,
+    resetCompareResponse,
     searchedWordResult,
     sampleSentences,
     aiResponse,
+    compareResponse,
     isSearchWordLoading,
     isSampleSentenceLoading,
     isSearchedWordResultError,
     isSampleSentencesError,
     isAiResponseError,
     isAiResponseLoading,
+    isCompareWordsLoading,
+    isCompareWordsError,
   };
 };
 
 export interface UseDictionaryType {
   searchWord: (word: string) => void;
   searchAi: (word: string) => void;
+  searchCompareWords: (words: string[]) => void;
   resetAiResponse: () => void;
+  resetCompareResponse: () => void;
   searchedWordResult: SearchResult[];
   sampleSentences: ExampleSentence[];
   aiResponse: string;
+  compareResponse: AiResponse | null;
   isSampleSentenceLoading: boolean;
   isSearchWordLoading: boolean;
   isSearchedWordResultError: boolean;
   isSampleSentencesError: boolean;
   isAiResponseError: boolean;
   isAiResponseLoading: boolean;
+  isCompareWordsLoading: boolean;
+  isCompareWordsError: boolean;
 }

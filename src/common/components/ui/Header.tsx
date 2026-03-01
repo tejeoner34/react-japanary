@@ -47,6 +47,18 @@ export default function Header() {
               Dictionary
             </Link>
           </li>
+          <li>
+            <Link
+              to="/dictionary/compare"
+              className={`cursor-pointer opacity-70 hover:opacity-100 p-3 hover:bg-backgroundTertiaryHover rounded ${
+                location.pathname === '/dictionary/compare'
+                  ? 'bg-backgroundTertiaryHover rounded opacity-100 p-3'
+                  : ''
+              }`}
+            >
+              Compare
+            </Link>
+          </li>
         </ul>
       </nav>
 

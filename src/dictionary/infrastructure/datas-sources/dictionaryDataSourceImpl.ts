@@ -40,4 +40,16 @@ export class DictionaryDataSourceImpl implements DictionaryDataSource {
       throw new Error('Something went wrong while searching the word');
     }
   }
+
+  async searchCompareWords(words: string[]): Promise<AiResponse> {
+    try {
+      const response = await axios.post<AiResponse>(`${BASE_URL}/compare-words`, {
+        words,
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error comparing words:', error);
+      throw new Error('Something went wrong while comparing words');
+    }
+  }
 }

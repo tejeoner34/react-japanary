@@ -7,6 +7,10 @@ export class DictionaryRepositoryImpl implements DictionaryRepository {
   constructor(dataSource: DictionaryDataSource) {
     this.dataSource = dataSource;
   }
+  async searchCompareWords(words: string[]): Promise<AiResponse> {
+    return this.dataSource.searchCompareWords(words);
+  }
+  
   async searchAi(word: string): Promise<AiResponse> {
     return this.dataSource.searchAi(word);
   }

@@ -12,6 +12,7 @@ import DictionaryScreen from './dictionary/pages/Dictionary';
 import LoginScreen from './auth/pages/LoginScreen';
 import RegisterScreen from './auth/pages/RegisterScreen';
 import SearchResultsScreen from './dictionary/pages/SearchResultScreen';
+import WordComparison from './dictionary/pages/WordComparison';
 import StudyPage from './flash-cards/pages/StudyPage';
 import ProtectedRoute from './auth/components/ProtectedRoute';
 import IsLoggedGuard from './auth/components/IsLoggedGuard';
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
           {
             path: '/dictionary',
             element: <DictionaryScreen />,
+          },
+          {
+            path: '/dictionary/compare',
+            element: <WordComparison />,
           },
           {
             path: 'dictionary/search/:query',

@@ -4,4 +4,5 @@ export interface DictionaryRepository {
   searchWord(word: string): Promise<SearchResult[]>;
   searchSampleSenteces(word: string): Promise<ExampleSentence[]>;
   searchAi(word: string): Promise<AiResponse>;
+  searchCompareWords(words: string[]): Promise<AiResponse>;
 }

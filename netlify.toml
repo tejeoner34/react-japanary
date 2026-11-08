@@ -1,4 +1,16 @@
 [[redirects]]
+from = "/proxy/jisho"
+to = "https://jisho.org/api/v1/search/words"
+status = 200
+force = true
+
+[[redirects]]
+from = "/proxy/tatoeba"
+to = "https://tatoeba.org/en/api_v0/search"
+status = 200
+force = true
+
+[[redirects]]
 from = "/*"
 to = "/index.html"
 status = 200

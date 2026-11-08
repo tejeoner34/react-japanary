@@ -21,6 +21,10 @@ describe('DictionaryDataSourceImpl', () => {
 
   it('should call the correct API endpoint', async () => {
     const response = await dataSource.searchSampleSenteces('test');
-    expect(response).toStrictEqual(SAMPLE_SENTENCES_MOCK);
+    const expectedSentences = SAMPLE_SENTENCES_MOCK.map((sentence) => ({
+      ...sentence,
+      japanese: sentence.japanese.map((part) => ({ ...part, furigana: '' })),
+    }));
+    expect(response).toStrictEqual(expectedSentences);
   });
 });

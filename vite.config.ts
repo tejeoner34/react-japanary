@@ -11,6 +11,20 @@ export default defineConfig({
     setupFiles: 'tests/config/setup.ts',
   },
   plugins: [react()],
+  server: {
+    proxy: {
+      '/proxy/jisho': {
+        target: 'https://jisho.org',
+        changeOrigin: true,
+        rewrite: (requestPath) => requestPath.replace(/^\/proxy\/jisho/, '/api/v1/search/words'),
+      },
+      '/proxy/tatoeba': {
+        target: 'https://tatoeba.org',
+        changeOrigin: true,
+        rewrite: (requestPath) => requestPath.replace(/^\/proxy\/tatoeba/, '/en/api_v0/search'),
+      },
+    },
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

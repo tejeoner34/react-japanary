@@ -1,4 +1,3 @@
-import axios from 'axios';
 import {
   auth,
   db,
@@ -13,7 +12,7 @@ import {
 import { where, writeBatch } from 'firebase/firestore';
 import { FlashCardDataSource } from '@/flash-cards/domain/datasource/flashCardDataSource';
 import { Deck, DeckModel } from '@/flash-cards/domain/models/deck.model';
-import { FlashCardModel, Image } from '@/flash-cards/domain/models/flashCards.model';
+import { FlashCardModel } from '@/flash-cards/domain/models/flashCards.model';
 import { LocalFlashCardDataSourceImpl } from './localFlashCardDataSource.impl';
 import { createDeckInstance, flashcardAdapter } from '@/flash-cards/utils/firebase';
 
@@ -22,8 +21,6 @@ const COLLECTIONS = {
   DECKS: 'decks',
   FLASHCARDS: 'flashcards',
 };
-
-const BASE_URL: string = import.meta.env.VITE_DICTIONARY_BASE_URL + 'flashcard';
 
 const localImplementation = new LocalFlashCardDataSourceImpl();
 
@@ -205,7 +202,8 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
       const deckRef = this._getDeckDocRef(editedDeck.id!);
 
       // Exclude nested fields like 'cards' when updating the deck itself
-      const { cards, ...deckWithoutCards } = editedDeck;
+      const deckWithoutCards = { ...editedDeck };
+      delete (deckWithoutCards as Partial<typeof editedDeck>).cards;
 
       await updateDoc(deckRef, { ...deckWithoutCards });
 
@@ -257,25 +255,6 @@ export class FirebaseFlashCardDataSourceImpl implements FlashCardDataSource {
     } catch (error) {
       console.error('Error setting default deck:', error);
       throw new Error('Something went wrong while setting the default deck');
-    }
-  }
-
-  async uploadImages(images: File[]): Promise<Image[]> {
-    try {
-      const formData = new FormData();
-      images.forEach((image) => {
-        formData.append(`images`, image);
-      });
-      const response = await axios.post(BASE_URL + '/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      response.data;
-      return response.data;
-    } catch (error) {
-      console.error('Error uploading images:', error);
-      throw new Error('Error uploading images');
     }
   }
 

@@ -1,3 +1,14 @@
+[functions]
+directory = "netlify/functions"
+node_bundler = "esbuild"
+
+[dev]
+command = "npm run dev"
+port = 8888
+targetPort = 5173
+framework = "vite"
+autoLaunch = false
+
 [[redirects]]
 from = "/proxy/jisho"
 to = "https://jisho.org/api/v1/search/words"
@@ -7,6 +18,24 @@ force = true
 [[redirects]]
 from = "/proxy/tatoeba"
 to = "https://tatoeba.org/en/api_v0/search"
+status = 200
+force = true
+
+[[redirects]]
+from = "/api/dictionary/search-ai"
+to = "/.netlify/functions/search-ai"
+status = 200
+force = true
+
+[[redirects]]
+from = "/api/dictionary/compare-words"
+to = "/.netlify/functions/compare-words"
+status = 200
+force = true
+
+[[redirects]]
+from = "/api/dictionary/meaning-in-japanese"
+to = "/.netlify/functions/meaning-in-japanese"
 status = 200
 force = true
 

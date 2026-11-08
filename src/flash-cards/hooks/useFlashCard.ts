@@ -1,11 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { FlashCardModel, Image } from '../domain/models/flashCards.model';
+import { FlashCardModel } from '../domain/models/flashCards.model';
 import { initializeRepository } from '../infrastructure/repositories/flashCardRepository.impl';
 import { DeckModel } from '../domain/models/deck.model';
 import { FlashCardRepository } from '../domain/repositories/flashCardRepository';
 import { useToast } from '@/common/components/ui';
 import { FirebaseFlashCardDataSourceImpl } from '../infrastructure/datasource/firebaseFlashCardDataSource.impl';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useAuth } from '@/auth/hooks/useAuth';
 
 const defaultRepository = initializeRepository(new FirebaseFlashCardDataSourceImpl());
@@ -15,7 +15,6 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
   const { isUserLogged } = useAuth();
   const queryClient = useQueryClient();
   const { toast } = useToast();
-  const [uploadImagesUrl, setUploadedImgagesUrl] = useState<Image[]>([]);
 
   const {
     data: decks = [],
@@ -69,7 +68,6 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
 
   const createFlashCard = useMutation({
     mutationFn: (newCard: FlashCardModel) => {
-      setUploadedImgagesUrl([]);
       return repository.createFlashCard(newCard, decks);
     },
     onSuccess: () => {
@@ -80,20 +78,6 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
 
       toast({
         title: 'Error creating flash card',
-        variant,
-      });
-    },
-  });
-
-  const uploadImages = useMutation({
-    mutationFn: (images: File[]) => repository.uploadImages(images),
-    onSuccess: (images) => {
-      setUploadedImgagesUrl(images);
-      toast({ title: 'The card was successfully created!', variant: 'success' });
-    },
-    onError: () => {
-      toast({
-        title: 'Error uploading images',
         variant,
       });
     },
@@ -177,7 +161,6 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
     createFlashCard: createFlashCard.mutate,
     editFlashCard: editFlashCard.mutate,
     deleteFlashCard: deleteFlashCard.mutate,
-    uploadImages: uploadImages.mutate,
     updateFlashCardRevision,
     sincronizeDeck: sincronizeDeck.mutate,
     refetchDecks,
@@ -186,7 +169,6 @@ export function useFlashCard(repository: FlashCardRepository = defaultRepository
     decks,
     isLoading: isLoadingDecks,
     isEditDeckLoading: sincronizeDeck.isPending,
-    uploadImagesUrl,
   };
 }
 
@@ -197,7 +179,6 @@ export interface useFlashCardType {
   createFlashCard: (newCard: FlashCardModel) => void;
   editFlashCard: (flashCard: FlashCardModel) => void;
   updateFlashCardRevision: (flashCard: FlashCardModel) => void;
-  uploadImages: (images: File[]) => void;
   sincronizeDeck(deck: DeckModel): void;
   deleteFlashCard: (flashCard: FlashCardModel) => void;
   refetchDecks: () => void;
@@ -206,5 +187,4 @@ export interface useFlashCardType {
   decks: DeckModel[];
   isLoading: boolean;
   isEditDeckLoading: boolean;
-  uploadImagesUrl: Image[];
 }

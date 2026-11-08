@@ -15,4 +15,10 @@ module.exports = {
       { allowConstantExport: true },
     ],
   },
+  overrides: [
+    {
+      files: ['netlify/**/*.ts'],
+      env: { node: true },
+    },
+  ],
 }

@@ -7,7 +7,7 @@ import {
   tatoebaAdapter,
 } from '@/dictionary/infrastructure/adapters/tatoebaAdapter';
 
-const AI_BASE_URL: string = import.meta.env.VITE_DICTIONARY_BASE_URL + 'dictionary';
+const AI_BASE_URL = '/api/dictionary';
 const JISHO_PROXY_URL = '/proxy/jisho';
 const TATOEBA_PROXY_URL = '/proxy/tatoeba';
 
